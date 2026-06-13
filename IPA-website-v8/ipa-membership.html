@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Become a Member — IPA UK & Ireland</title>
+    <link rel="icon" type="image/png" href="favicon-32.png"/>
+  <link rel="apple-touch-icon" href="icon-180.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9963a;
+      --gold-light: #e8b86d;
+      --cream: #fdf6ec;
+      --warm-white: #fffaf3;
+      --text-dark: #1c1c1c;
+      --text-mid: #3d3d3d;
+      --text-light: #7a6a5a;
+      --error: #c0392b;
+      --success: #27ae60;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text-dark); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(26,71,49,0.97); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 70px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.05rem; font-weight: 800; text-decoration: none; }
+    .nav-logo img { height: 46px; width: 46px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
+    .nav-logo-text { display: flex; flex-direction: column; }
+    .nav-logo span { display: block; font-size: 0.62rem; color: #b8d4c2; font-family: 'DM Sans', sans-serif; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-back { color: #d4ead9; font-size: 0.85rem; text-decoration: none; letter-spacing: 0.06em; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold-light); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: var(--green-deep);
+      padding: 130px 8% 70px;
+      position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 400px; height: 400px; border-radius: 50%;
+      border: 1px solid rgba(201,150,58,0.12);
+      box-shadow: 0 0 0 50px rgba(201,150,58,0.05);
+    }
+    .page-header-tag {
+      display: inline-block;
+      background: rgba(201,150,58,0.15); border: 1px solid rgba(201,150,58,0.35);
+      color: var(--gold-light); font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 2px;
+      margin-bottom: 1.2rem;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800;
+      color: #fff; line-height: 1.2; margin-bottom: 1rem;
+    }
+    .page-header h1 em { font-style: italic; color: var(--gold-light); }
+    .page-header p { font-family: 'Lora', serif; color: #b8d4c2; font-size: 1rem; line-height: 1.8; max-width: 560px; }
+
+    /* ── STEPS INDICATOR ── */
+    .steps-bar {
+      background: var(--cream);
+      border-bottom: 1px solid #e8dece;
+      padding: 1.4rem 8%;
+      display: flex; align-items: center; gap: 0;
+      position: sticky; top: 70px; z-index: 90;
+    }
+    .step-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: #b0a090; transition: color 0.3s;
+    }
+    .step-item.active { color: var(--green-deep); }
+    .step-item.done { color: var(--green-mid); }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #ddd; color: #999;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    .step-item.active .step-num { background: var(--green-deep); color: #fff; }
+    .step-item.done .step-num { background: var(--green-mid); color: #fff; }
+    .step-connector { flex: 1; height: 1px; background: #ddd; min-width: 20px; max-width: 60px; margin: 0 0.5rem; }
+
+    /* ── MAIN LAYOUT ── */
+    .main-content { padding: 60px 8%; max-width: 1100px; margin: 0 auto; }
+
+    /* ── PANELS (steps) ── */
+    .step-panel { display: none; animation: fadeIn 0.4s ease; }
+    .step-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+    /* ── FORM STYLING ── */
+    .form-section-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep); font-size: 1.4rem; font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+    .form-section-sub { color: var(--text-light); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6; }
+    .gold-line { width: 50px; height: 3px; background: var(--gold); margin-bottom: 1.6rem; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+    .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .form-full { grid-column: 1 / -1; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-size: 0.76rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--green-mid);
+    }
+    .form-group label .req { color: var(--gold); margin-left: 2px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid #ddd4c8;
+      border-radius: 4px; padding: 0.8rem 1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+      color: var(--text-dark); background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+    .form-group input.error,
+    .form-group select.error { border-color: var(--error); }
+    .form-group .hint { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .radio-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem; }
+    .radio-option {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; padding: 0.6rem 1rem;
+      border: 1.5px solid #ddd4c8; border-radius: 4px;
+      font-size: 0.88rem; color: var(--text-mid);
+      transition: border-color 0.2s, background 0.2s; flex: 1; min-width: 140px;
+    }
+    .radio-option input[type="radio"] { accent-color: var(--green-mid); }
+    .radio-option:has(input:checked) {
+      border-color: var(--green-mid);
+      background: rgba(45,106,79,0.06);
+      color: var(--green-deep); font-weight: 600;
+    }
+
+    .divider { border: none; border-top: 1px solid #e8dece; margin: 2rem 0; }
+
+    /* ── PAYMENT STEP ── */
+    .payment-summary {
+      background: var(--green-deep); border-radius: 8px;
+      padding: 2rem 2.4rem; margin-bottom: 2rem; color: #fff;
+    }
+    .payment-summary h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.2rem;
+      color: var(--gold-light); margin-bottom: 1.2rem;
+    }
+    .fee-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.92rem; color: #c8e6d8;
+    }
+    .fee-row:last-child { border-bottom: none; }
+    .fee-row .amount { font-weight: 700; color: var(--gold-light); font-size: 1rem; }
+    .fee-row.total { color: #fff; font-weight: 700; font-size: 1rem; margin-top: 0.3rem; padding-top: 1rem; border-top: 1px solid rgba(201,150,58,0.4); border-bottom: none; }
+    .fee-row.total .amount { font-size: 1.3rem; color: var(--gold-light); }
+
+    .bank-details {
+      background: #fff; border: 1.5px solid #e8dece;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 8px 8px 0; padding: 1.6rem 2rem; margin-bottom: 2rem;
+    }
+    .bank-details h4 {
+      font-family: 'Playfair Display', serif; color: var(--green-deep);
+      font-size: 1.05rem; margin-bottom: 1rem;
+    }
+    .bank-row { display: flex; gap: 1rem; margin-bottom: 0.6rem; font-size: 0.9rem; align-items: baseline; }
+    .bank-row .label { color: var(--text-light); min-width: 130px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .bank-row .value { color: var(--text-dark); font-weight: 600; font-family: 'Lora', serif; }
+    .bank-note {
+      background: rgba(201,150,58,0.08); border: 1px solid rgba(201,150,58,0.3);
+      border-radius: 4px; padding: 0.8rem 1rem;
+      font-size: 0.82rem; color: #7a5a1a; line-height: 1.6; margin-top: 1rem;
+    }
+
+    .upload-box {
+      border: 2px dashed #c8b89a; border-radius: 6px;
+      padding: 2rem; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: #fff;
+    }
+    .upload-box:hover { border-color: var(--green-mid); background: rgba(45,106,79,0.03); }
+    .upload-box.has-file { border-color: var(--green-mid); background: rgba(45,106,79,0.05); }
+    .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .upload-box p { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; }
+    .upload-box .file-name { color: var(--green-mid); font-weight: 600; font-size: 0.88rem; margin-top: 0.5rem; }
+    #receiptInput { display: none; }
+
+    /* ── CONFIRMATION STEP ── */
+    .confirmation-card {
+      background: var(--green-deep); border-radius: 12px;
+      padding: 3rem; text-align: center; margin-bottom: 2rem;
+    }
+    .confirm-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .confirmation-card h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light); font-size: 2rem; margin-bottom: 0.8rem;
+    }
+    .confirmation-card p { color: #b8d4c2; font-family: 'Lora', serif; line-height: 1.8; max-width: 500px; margin: 0 auto 1.5rem; }
+    .member-id-box {
+      display: inline-block;
+      background: rgba(201,150,58,0.15); border: 1px solid rgba(201,150,58,0.4);
+      border-radius: 4px; padding: 0.6rem 1.5rem;
+      font-family: 'Playfair Display', serif; color: var(--gold-light);
+      font-size: 1.1rem; letter-spacing: 0.1em; margin-bottom: 1.5rem;
+    }
+
+    .resources-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.4rem; margin-top: 2rem;
+    }
+    .resource-card {
+      background: #fff; border: 1.5px solid #e8dece;
+      border-radius: 8px; padding: 1.6rem;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+    }
+    .resource-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); border-color: var(--gold); }
+    .resource-icon { font-size: 1.8rem; }
+    .resource-card h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1rem; }
+    .resource-card p { font-size: 0.82rem; color: var(--text-light); line-height: 1.6; }
+    .resource-card .download-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--green-deep); color: #fff;
+      border: none; border-radius: 3px;
+      padding: 0.5rem 1rem; font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      letter-spacing: 0.06em; cursor: pointer;
+      text-transform: uppercase; transition: background 0.2s;
+      text-decoration: none; margin-top: auto;
+    }
+    .resource-card .download-btn:hover { background: var(--green-mid); }
+    .resource-card .locked {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: #e8dece; color: #999;
+      border-radius: 3px; padding: 0.5rem 1rem;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.06em; margin-top: auto;
+      text-transform: uppercase;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .form-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 2.5rem; padding-top: 1.5rem;
+      border-top: 1px solid #e8dece;
+    }
+    .btn-back {
+      background: transparent; border: 1.5px solid #c8b89a;
+      color: var(--text-mid); padding: 0.8rem 1.8rem;
+      border-radius: 3px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; font-weight: 600; cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-back:hover { border-color: var(--green-mid); color: var(--green-mid); }
+    .btn-next {
+      background: var(--green-deep); color: #fff;
+      border: none; border-radius: 3px;
+      padding: 0.85rem 2.2rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.9rem; letter-spacing: 0.05em;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-next:hover { background: var(--green-mid); transform: translateY(-2px); }
+    .btn-submit {
+      background: var(--gold); color: var(--green-deep);
+      border: none; border-radius: 3px;
+      padding: 0.85rem 2.5rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.9rem; letter-spacing: 0.05em;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ── SIDEBAR INFO ── */
+    .layout-two-col { display: grid; grid-template-columns: 1fr 340px; gap: 4rem; align-items: start; }
+    .sidebar { position: sticky; top: 130px; }
+    .sidebar-card {
+      background: var(--cream); border: 1.5px solid #e8dece;
+      border-radius: 8px; padding: 1.6rem; margin-bottom: 1.4rem;
+    }
+    .sidebar-card h4 {
+      font-family: 'Playfair Display', serif; color: var(--green-deep);
+      font-size: 1rem; margin-bottom: 1rem;
+      padding-bottom: 0.6rem; border-bottom: 1px solid #e8dece;
+    }
+    .sidebar-fee { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.85rem; }
+    .sidebar-fee .label { color: var(--text-light); }
+    .sidebar-fee .val { font-weight: 700; color: var(--green-deep); }
+    .sidebar-benefit { display: flex; gap: 0.6rem; align-items: flex-start; margin-bottom: 0.7rem; font-size: 0.83rem; color: var(--text-mid); line-height: 1.5; }
+    .sidebar-benefit .tick { color: var(--green-mid); font-weight: 700; flex-shrink: 0; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar-wrap { height: 4px; background: #e8dece; margin-bottom: 2.5rem; border-radius: 2px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
+
+    /* ── ERROR MSG ── */
+    .error-msg { color: var(--error); font-size: 0.78rem; margin-top: 0.2rem; display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .layout-two-col { grid-template-columns: 1fr; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    }
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid.three { grid-template-columns: 1fr; }
+      .steps-bar { gap: 0.3rem; padding: 1rem 4%; overflow-x: auto; }
+      .step-item span { display: none; }
+      .main-content { padding: 40px 5%; }
+      .sidebar { grid-template-columns: 1fr; }
+    }
+
+    /* ── MINI FOOTER ── */
+    .footer-mini {
+      background: #0a1f14;
+      border-top: 1px solid rgba(201,150,58,0.2);
+      padding: 1.4rem 8%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.8rem;
+    }
+    .footer-mini-logo { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 800; }
+    .footer-mini-copy { font-size: 0.75rem; color: #3d5a4a; }
+    .footer-mini a { color: #5a8070; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
+    .footer-mini a:hover { color: var(--gold-light); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="ipa.png" alt="IPA Logo"/>
+    <div class="nav-logo-text">
+      IPA UK & Ireland
+      <span>Igbere Progressive Association</span>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Main Site</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-tag">🌿 Membership Application</div>
+  <h1>Join the <em>IPA Family</em></h1>
+  <p>Complete the form below to become an official member of the Igbere Progressive Association UK & Ireland. Once your registration fee is received and verified, you'll have full access to all member benefits.</p>
+</div>
+
+<!-- STEPS BAR -->
+<div class="steps-bar" id="stepsBar">
+  <div class="step-item active" id="step-ind-1">
+    <div class="step-num">1</div>
+    <span>Personal Details</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="step-ind-2">
+    <div class="step-num">2</div>
+    <span>Community Info</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="step-ind-3">
+    <div class="step-num">3</div>
+    <span>Payment</span>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="step-ind-4">
+    <div class="step-num">4</div>
+    <span>Confirmation</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width: 25%"></div>
+  </div>
+
+  <div class="layout-two-col">
+    <div class="form-area">
+
+      <!-- ── STEP 1: PERSONAL DETAILS ── -->
+      <div class="step-panel active" id="panel-1">
+        <div class="form-section-title">Personal Details</div>
+        <div class="gold-line"></div>
+        <p class="form-section-sub">Please provide your personal information exactly as it appears on your official documents.</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Title</label>
+            <select id="title">
+              <option value="">Select…</option>
+              <option>Mr</option><option>Mrs</option><option>Miss</option>
+              <option>Ms</option><option>Dr</option><option>Prof</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gender <span class="req">*</span></label>
+            <select id="gender" required>
+              <option value="">Select…</option>
+              <option>Male</option><option>Female</option><option>Prefer not to say</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" id="firstName" placeholder="e.g. Chukwuemeka" required/>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" id="lastName" placeholder="e.g. Nwosu" required/>
+          </div>
+          <div class="form-group">
+            <label>Telephone Number <span class="req">*</span></label>
+            <input type="tel" id="phone" placeholder="+44 7700 000000" required/>
+          </div>
+          <div class="form-group form-full">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="your@email.com" required/>
+          </div>
+        </div>
+
+        <hr class="divider"/>
+        <div class="form-section-title" style="font-size:1.1rem; margin-bottom:0.4rem;">Residential Address (UK / Ireland)</div>
+        <p class="form-section-sub">Your current address in the UK or Ireland.</p>
+
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label>Address Line 1 <span class="req">*</span></label>
+            <input type="text" id="addr1" placeholder="House number and street name" required/>
+          </div>
+          <div class="form-group form-full">
+            <label>Address Line 2</label>
+            <input type="text" id="addr2" placeholder="Flat, apartment, or area (optional)"/>
+          </div>
+          <div class="form-group">
+            <label>City / Town <span class="req">*</span></label>
+            <input type="text" id="city" placeholder="e.g. London" required/>
+          </div>
+          <div class="form-group">
+            <label>Postcode / Eircode <span class="req">*</span></label>
+            <input type="text" id="postcode" placeholder="e.g. E1 6AN or D01 F5P2" required/>
+          </div>
+          <div class="form-group">
+            <label>Country <span class="req">*</span></label>
+            <select id="country" required>
+              <option value="">Select…</option>
+              <option>England</option><option>Scotland</option>
+              <option>Wales</option><option>Northern Ireland</option>
+              <option>Republic of Ireland</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="divider"/>
+        <div class="form-section-title" style="font-size:1.1rem; margin-bottom:0.4rem;">Profession / Occupation</div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Occupation <span class="req">*</span></label>
+            <input type="text" id="occupation" placeholder="e.g. Nurse, Engineer, Teacher…" required/>
+          </div>
+          <div class="form-group">
+            <label>Employer / Organisation</label>
+            <input type="text" id="employer" placeholder="Optional"/>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <div></div>
+          <button class="btn-next" onclick="goStep(2)">Continue to Community Info →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: COMMUNITY INFO ── -->
+      <div class="step-panel" id="panel-2">
+        <div class="form-section-title">Community Information</div>
+        <div class="gold-line"></div>
+        <p class="form-section-sub">Tell us about your Igbere roots and your connection to our association.</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Village Name <span class="req">*</span></label>
+            <select id="village" required>
+              <option value="">Select your village…</option>
+              <option>Agbo</option>
+              <option>Amakpo</option>
+              <option>Amaiyi</option>
+              <option>Amankalu</option>
+              <option>Amaofufe</option>
+              <option>Amaoji</option>
+              <option>Amaukwu</option>
+              <option>Eziama</option>
+              <option>Ibina Ukwu</option>
+              <option>Ibina Nta</option>
+              <option>Ohumola</option>
+              <option>Okafia</option>
+              <option>Umuisi</option>
+            </select>
+            <span class="hint">Igbere is made up of 13 villages. Select the one you originate from.</span>
+          </div>
+          <div class="form-group">
+            <label>Local Community / Kindred</label>
+            <input type="text" id="kindred" placeholder="e.g. Umunna, Ama…"/>
+            <span class="hint">Your specific family unit or quarter within the village.</span>
+          </div>
+        </div>
+
+        <hr class="divider"/>
+        <div class="form-group">
+          <label>Why do you want to join IPA UK & Ireland? <span class="req">*</span></label>
+          <textarea id="whyJoin" placeholder="Tell us what drew you to the association and what you hope to contribute and gain from membership…" required></textarea>
+        </div>
+
+        <div class="form-group" style="margin-top:1.4rem;">
+          <label>How did you hear about us? <span class="req">*</span></label>
+          <select id="hearAbout" required>
+            <option value="">Select…</option>
+            <option>A current member referred me</option>
+            <option>Social media (Facebook, WhatsApp, Instagram)</option>
+            <option>Community event or gathering</option>
+            <option>Word of mouth / family</option>
+            <option>Online search / website</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-top:1.4rem;" id="referralGroup">
+          <label>If referred, member's name (optional)</label>
+          <input type="text" id="referral" placeholder="Name of the member who referred you"/>
+        </div>
+
+        <hr class="divider"/>
+        <div class="form-group">
+          <label>Membership Category <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="memberType" value="male" onchange="updateFees()"/>
+              <div>
+                <div style="font-weight:700;">Male Member</div>
+                <div style="font-size:0.78rem; color:var(--text-light); margin-top:2px;">£120 per annum</div>
+              </div>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="memberType" value="female" onchange="updateFees()"/>
+              <div>
+                <div style="font-weight:700;">Female Member</div>
+                <div style="font-size:0.78rem; color:var(--text-light); margin-top:2px;">£60 per annum</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Continue to Payment →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: PAYMENT ── -->
+      <div class="step-panel" id="panel-3">
+        <div class="form-section-title">Registration Fee & Payment</div>
+        <div class="gold-line"></div>
+        <p class="form-section-sub">A one-time registration fee of <strong>£10</strong> is required to complete your membership application, plus your first annual dues payment.</p>
+
+        <div class="payment-summary">
+          <h3>💷 Your Payment Summary</h3>
+          <div class="fee-row">
+            <span>Registration Fee (one-time)</span>
+            <span class="amount">£10.00</span>
+          </div>
+          <div class="fee-row" id="annualFeeRow">
+            <span>Annual Dues (first year) <span id="annualFeeLabel" style="font-size:0.78rem; opacity:0.7;"></span></span>
+            <span class="amount" id="annualFeeAmount">£—</span>
+          </div>
+          <div class="fee-row total">
+            <span>Total Due Now</span>
+            <span class="amount" id="totalAmount">Select membership above</span>
+          </div>
+        </div>
+
+        <div class="bank-details">
+          <h4>🏦 Bank Transfer Details</h4>
+          <div class="bank-row">
+            <span class="label">Account Name</span>
+            <span class="value">IPA UK & Ireland</span>
+          </div>
+          <div class="bank-row">
+            <span class="label">Sort Code</span>
+            <span class="value">30-96-26</span>
+          </div>
+          <div class="bank-row">
+            <span class="label">Account Number</span>
+            <span class="value">44518068</span>
+          </div>
+          <div class="bank-row">
+            <span class="label">Bank</span>
+            <span class="value">Lloyds Bank Plc</span>
+          </div>
+          <div class="bank-row">
+            <span class="label">Reference</span>
+            <span class="value" id="payRef">Your Full Name</span>
+          </div>
+          <div class="bank-note">
+            ⚠️ Please use your <strong>full name</strong> as the payment reference so we can match your payment to your application. After transferring, upload your payment receipt below.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Payment Receipt <span class="req">*</span></label>
+          <div class="upload-box" id="uploadBox" onclick="document.getElementById('receiptInput').click()">
+            <div class="upload-icon">📄</div>
+            <p>Click to upload your bank transfer receipt or screenshot<br/>
+            <strong>Accepted formats:</strong> PDF, JPG, PNG (max 5MB)</p>
+            <div class="file-name" id="fileName"></div>
+          </div>
+          <input type="file" id="receiptInput" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(this)"/>
+          <span class="hint">Your receipt will be reviewed by the IPA treasurer. You will receive confirmation within 3–5 working days.</span>
+        </div>
+
+        <hr class="divider"/>
+        <div class="form-group">
+          <label style="display:flex; align-items:flex-start; gap:0.6rem; cursor:pointer; text-transform:none; letter-spacing:0; font-size:0.88rem; font-weight:400; color:var(--text-mid);">
+            <input type="checkbox" id="agreeTerms" style="margin-top:2px; accent-color:var(--green-mid); flex-shrink:0;"/>
+            I confirm that all information provided is accurate and true. I agree to uphold the values and obligations of the Igbere Progressive Association UK & Ireland, including my annual dues commitment.
+          </label>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-submit" onclick="submitApplication()">Submit Application ✓</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: CONFIRMATION ── -->
+      <div class="step-panel" id="panel-4">
+        <div class="confirmation-card">
+          <div class="confirm-icon">🎉</div>
+          <h2>Application Received!</h2>
+          <p>Welcome to the Igbere Progressive Association UK & Ireland family. Your application has been submitted successfully and your payment receipt is under review.</p>
+          <div class="member-id-box" id="memberIdBox">IPA-2026-XXXX</div>
+          <p style="font-size:0.82rem; opacity:0.7;">Save this reference number. You will receive an email confirmation within <strong>3–5 working days</strong> once your payment is verified.</p>
+        </div>
+
+        <div class="form-section-title" style="margin-bottom:0.5rem;">📂 Member Resources</div>
+        <div class="gold-line"></div>
+        <p class="form-section-sub">Once your membership is fully confirmed, you will have access to all the resources below. Some are available immediately.</p>
+
+        <div class="resources-grid">
+          <div class="resource-card">
+            <div class="resource-icon">📜</div>
+            <h4>Association Constitution</h4>
+            <p>The founding document outlining the rules, objectives, and governance of IPA UK & Ireland.</p>
+            <a href="#" class="download-btn" onclick="alert('Constitution download will be available once membership is confirmed.')">⬇ Download PDF</a>
+          </div>
+          <div class="resource-card">
+            <div class="resource-icon">📋</div>
+            <h4>Meeting Minutes</h4>
+            <p>Access past meeting minutes and resolutions from IPA UK & Ireland general meetings.</p>
+            <span class="locked">🔒 Pending Approval</span>
+          </div>
+          <div class="resource-card">
+            <div class="resource-icon">📅</div>
+            <h4>Events Calendar</h4>
+            <p>Stay up to date with upcoming meetings, fundraisers, and community events.</p>
+            <a href="#" class="download-btn">📅 View Events</a>
+          </div>
+          <div class="resource-card">
+            <div class="resource-icon">💰</div>
+            <h4>Financial Reports</h4>
+            <p>Annual financial reports showing how member contributions are used for community projects.</p>
+            <span class="locked">🔒 Pending Approval</span>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:2.5rem;">
+          <a href="index.html" class="btn-next" style="display:inline-block; text-decoration:none;">← Return to Main Site</a>
+        </div>
+      </div>
+
+    </div><!-- /form-area -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-card">
+        <h4>💷 Membership Fees</h4>
+        <div class="sidebar-fee"><span class="label">Registration (once)</span><span class="val">£10</span></div>
+        <div class="sidebar-fee"><span class="label">Annual Dues — Male</span><span class="val">£120/yr</span></div>
+        <div class="sidebar-fee"><span class="label">Annual Dues — Female</span><span class="val">£60/yr</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h4>✅ Member Benefits</h4>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Community support network in UK & Ireland</span></div>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Access to member resources & constitution</span></div>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Past meeting minutes & decisions</span></div>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Voting rights at general meetings</span></div>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Contribute to back-home community projects</span></div>
+        <div class="sidebar-benefit"><span class="tick">✓</span><span>Events, socials & gatherings</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h4>❓ Need Help?</h4>
+        <p style="font-size:0.83rem; color:var(--text-light); line-height:1.7;">Questions about membership? Contact us at<br/><strong style="color:var(--green-deep);">info@ipaukandireland.org</strong></p>
+      </div>
+    </div>
+
+  </div><!-- /layout -->
+</div><!-- /main-content -->
+
+<script>
+  let currentStep = 1;
+
+  function goStep(n) {
+    if (n > currentStep && !validateStep(currentStep)) return;
+
+    document.getElementById('panel-' + currentStep).classList.remove('active');
+    document.getElementById('step-ind-' + currentStep).classList.remove('active');
+    document.getElementById('step-ind-' + currentStep).classList.add('done');
+
+    currentStep = n;
+
+    document.getElementById('panel-' + currentStep).classList.add('active');
+    document.getElementById('step-ind-' + currentStep).classList.remove('done');
+    document.getElementById('step-ind-' + currentStep).classList.add('active');
+
+    const pct = (n / 4) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    // Update payment ref
+    const fn = document.getElementById('firstName').value;
+    const ln = document.getElementById('lastName').value;
+    if (fn || ln) document.getElementById('payRef').textContent = (fn + ' ' + ln).trim();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validateStep(step) {
+    if (step === 1) {
+      const req = ['firstName','lastName','phone','email','addr1','city','postcode','country','occupation','gender'];
+      let ok = true;
+      req.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); ok = false; }
+        else el.classList.remove('error');
+      });
+      if (!ok) { alert('Please fill in all required fields before continuing.'); return false; }
+      const em = document.getElementById('email').value;
+      if (!/\S+@\S+\.\S+/.test(em)) { alert('Please enter a valid email address.'); return false; }
+    }
+    if (step === 2) {
+      const village = document.getElementById('village').value;
+      const why = document.getElementById('whyJoin').value.trim();
+      const hear = document.getElementById('hearAbout').value;
+      const type = document.querySelector('input[name="memberType"]:checked');
+      if (!village || !why || !hear) { alert('Please complete all required community fields.'); return false; }
+      if (!type) { alert('Please select your membership category (Male or Female).'); return false; }
+    }
+    if (step === 3) {
+      const agree = document.getElementById('agreeTerms').checked;
+      if (!agree) { alert('Please agree to the membership terms before submitting.'); return false; }
+    }
+    return true;
+  }
+
+  function updateFees() {
+    const type = document.querySelector('input[name="memberType"]:checked');
+    if (!type) return;
+    const isMale = type.value === 'male';
+    const annual = isMale ? 120 : 60;
+    const total = 10 + annual;
+    document.getElementById('annualFeeLabel').textContent = isMale ? '(Male)' : '(Female)';
+    document.getElementById('annualFeeAmount').textContent = '£' + annual + '.00';
+    document.getElementById('totalAmount').textContent = '£' + total + '.00';
+  }
+
+  function handleFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const box = document.getElementById('uploadBox');
+    box.classList.add('has-file');
+    document.getElementById('fileName').textContent = '✅ ' + file.name;
+  }
+
+  const API = 'https://ipa-api.ipaukandireland.workers.dev';
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  async function submitApplication() {
+    if (!validateStep(3)) return;
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
+    const addr = [getVal('addr1'), getVal('addr2'), getVal('city'), getVal('postcode'), getVal('country')]
+      .filter(Boolean).join(', ');
+
+    const data = {
+      firstName:  getVal('firstName'),
+      lastName:   getVal('lastName'),
+      email:      getVal('email'),
+      phone:      getVal('phone'),
+      address:    addr,
+      occupation: getVal('occupation'),
+      employer:   getVal('employer'),
+      village:    getVal('village'),
+      kindred:    getVal('kindred'),
+      whyJoin:    getVal('whyJoin'),
+      title:      getVal('title'),
+      gender:     getVal('gender'),
+      referral:   getVal('referral'),
+    };
+
+    try {
+      const res = await fetch(`${API}/api/apply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (result.success) {
+        const idBox = document.getElementById('memberIdBox');
+        if (idBox && result.id) idBox.textContent = result.id;
+        goStep(4);
+        document.getElementById('sidebar').style.display = 'none';
+      } else {
+        alert(result.error || 'Submission failed. Please try again.');
+        btn.textContent = 'Submit Application ✓';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('Connection error. Please check your internet and try again.');
+      btn.textContent = 'Submit Application ✓';
+      btn.disabled = false;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('hearAbout').addEventListener('change', function() {
+      const show = this.value === 'A current member referred me';
+      document.getElementById('referralGroup').style.display = show ? 'flex' : 'none';
+    });
+    document.getElementById('referralGroup').style.display = 'none';
+  });
+</script>
+
+
+<footer class="footer-mini">
+  <div class="footer-mini-logo">IPA UK &amp; Ireland</div>
+  <div class="footer-mini-copy">© 2026 Igbere Progressive Association UK &amp; Ireland</div>
+  <a href="index.html">← Back to Main Site</a>
+</footer>
+</body>
+</html>

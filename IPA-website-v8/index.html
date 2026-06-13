@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IPA UK & Ireland — Igbere Progressive Association</title>
+    <link rel="icon" type="image/png" href="favicon-32.png"/>
+  <link rel="apple-touch-icon" href="icon-180.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9963a;
+      --gold-light: #e8b86d;
+      --cream: #fdf6ec;
+      --warm-white: #fffaf3;
+      --brown-soft: #6b4c2a;
+      --text-dark: #1c1c1c;
+      --text-mid: #3d3d3d;
+      --text-light: #7a6a5a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(26,71,49,0.97);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 70px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      height: 48px;
+      width: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+    }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+    }
+    .nav-logo-text span { display: block; font-size: 0.65rem; color: #b8d4c2; font-family: 'DM Sans', sans-serif; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: #d4ead9;
+      text-decoration: none;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--green-deep) !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 2px;
+      font-weight: 700 !important;
+    }
+
+    .nav-admin {
+      color: rgba(201,150,58,0.6) !important;
+      font-size: 0.78rem !important;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(201,150,58,0.25);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      transition: color 0.2s, border-color 0.2s !important;
+    }
+    .nav-admin:hover { color: var(--gold-light) !important; border-color: rgba(201,150,58,0.5) !important; }
+    .nav-cta:hover { background: var(--gold-light) !important; color: var(--green-deep) !important; }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      background: var(--green-deep);
+      display: flex; align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 70px;
+    }
+    .hero-bg-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(82,183,136,0.12) 0%, transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(201,150,58,0.1) 0%, transparent 45%),
+        radial-gradient(circle at 60% 80%, rgba(45,106,79,0.2) 0%, transparent 40%);
+    }
+    .hero-ornament {
+      position: absolute;
+      right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,150,58,0.15);
+      box-shadow: 0 0 0 40px rgba(201,150,58,0.05), 0 0 0 80px rgba(201,150,58,0.03);
+    }
+    .hero-ornament::before {
+      content: '';
+      position: absolute; inset: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(82,183,136,0.2);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 720px;
+      padding: 0 8%;
+      animation: fadeUp 1s ease both;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(201,150,58,0.15);
+      border: 1px solid rgba(201,150,58,0.4);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.8rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 1.4rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      color: #b8d4c2;
+      line-height: 1.8;
+      max-width: 560px;
+      margin-bottom: 2.8rem;
+    }
+    .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--green-deep);
+      padding: 0.85rem 2rem;
+      border: none; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: #d4ead9;
+      padding: 0.85rem 2rem;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500; font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+    .hero-stats {
+      position: absolute; bottom: 3rem; right: 8%;
+      display: flex; gap: 3rem;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--gold-light);
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      color: #8ab5a0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 100px 8%; }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: var(--green-deep);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .gold-line {
+      width: 60px; height: 3px;
+      background: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    /* ── MISSION BAND ── */
+    .mission-band {
+      background: var(--green-mid);
+      padding: 60px 8%;
+      display: flex; align-items: center; gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .mission-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-style: italic;
+      color: #fff;
+      flex: 1; min-width: 280px;
+      line-height: 1.5;
+    }
+    .mission-quote span { color: var(--gold-light); }
+    .mission-text {
+      flex: 1; min-width: 280px;
+      color: #c2ddd0;
+      font-size: 0.95rem;
+      line-height: 1.85;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--cream); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    .about-text p {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: var(--text-mid);
+      line-height: 1.9;
+      margin-bottom: 1.4rem;
+    }
+    .about-values { display: flex; flex-direction: column; gap: 1.5rem; }
+    .value-card {
+      background: #fff;
+      border-left: 4px solid var(--gold);
+      padding: 1.4rem 1.6rem;
+      border-radius: 0 6px 6px 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .value-card:hover { transform: translateX(6px); box-shadow: 0 4px 20px rgba(0,0,0,0.09); }
+    .value-card h4 {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep);
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+    }
+    .value-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.7; }
+
+    /* ── WHAT WE DO ── */
+    #what-we-do { background: var(--warm-white); }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .pillar {
+      background: #fff;
+      border-radius: 8px;
+      padding: 2.2rem 1.8rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border-top: 3px solid var(--green-light);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pillar:nth-child(2) { border-top-color: var(--gold); }
+    .pillar:nth-child(3) { border-top-color: var(--green-mid); }
+    .pillar:nth-child(4) { border-top-color: var(--brown-soft); }
+    .pillar:hover { transform: translateY(-6px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+    .pillar-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .pillar h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep);
+      font-size: 1.15rem;
+      margin-bottom: 0.7rem;
+    }
+    .pillar p { font-size: 0.88rem; color: var(--text-light); line-height: 1.75; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--green-deep); }
+    #contact .section-label { color: var(--gold-light); }
+    #contact .section-title { color: #fff; }
+    #contact .gold-line { background: var(--gold-light); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+    .contact-info p {
+      font-family: 'Lora', serif;
+      color: #b8d4c2;
+      line-height: 1.85;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    .contact-details { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      color: #d4ead9; font-size: 0.9rem;
+    }
+    .contact-item .icon {
+      width: 36px; height: 36px;
+      background: rgba(201,150,58,0.15);
+      border: 1px solid rgba(201,150,58,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8ab5a0;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+      background: rgba(255,255,255,0.1);
+    }
+    .form-group select option { background: var(--green-deep); color: #fff; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit {
+      background: var(--gold);
+      color: var(--green-deep);
+      border: none; border-radius: 2px;
+      padding: 1rem 2.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      align-self: flex-start;
+    }
+    .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .form-success {
+      display: none;
+      background: rgba(82,183,136,0.15);
+      border: 1px solid rgba(82,183,136,0.4);
+      color: #a8dbc0;
+      padding: 1rem 1.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #0a1f14; border-top: 2px solid rgba(201,150,58,0.25); }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 3rem;
+      padding: 4rem 8% 3rem;
+    }
+    .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
+    .footer-logo-row { display: flex; align-items: center; gap: 0.75rem; }
+    .footer-logo-img { height: 44px; width: 44px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4)); }
+    .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1rem; font-weight: 800; }
+    .footer-tagline { font-size: 0.65rem; color: #7aaa8a; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.15rem; }
+    .footer-desc { font-size: 0.85rem; color: #5a8070; line-height: 1.75; max-width: 280px; }
+    .footer-social { display: flex; gap: 0.6rem; margin-top: 0.25rem; }
+    .social-link {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,150,58,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .social-link:hover { background: rgba(201,150,58,0.15); border-color: var(--gold); }
+    .footer-col { display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-col h4 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light); font-size: 0.9rem;
+      font-weight: 800; letter-spacing: 0.05em;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(201,150,58,0.2);
+      margin-bottom: 0.3rem;
+    }
+    .footer-col a {
+      color: #5a8070; font-size: 0.83rem; text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-col a:hover { color: var(--gold-light); }
+    .footer-contact-item { font-size: 0.83rem; color: #5a8070; line-height: 1.6; }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 8%;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-wrap: wrap; gap: 0.8rem;
+    }
+    .footer-copy { font-size: 0.78rem; color: #3d5a4a; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: #3d5a4a; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    /* ── ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── MEMBERS PORTAL ── */
+    #members-portal { background: var(--cream); }
+    .portal-gate {
+      max-width: 520px; margin: 3rem auto 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 32px rgba(26,71,49,0.1);
+      overflow: hidden;
+    }
+    .portal-gate-header {
+      background: var(--green-deep);
+      padding: 2rem 2.4rem 1.6rem;
+      text-align: center;
+    }
+    .portal-gate-header .lock-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .portal-gate-header h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light); font-size: 1.3rem; margin-bottom: 0.4rem;
+    }
+    .portal-gate-header p { color: #b8d4c2; font-size: 0.85rem; line-height: 1.6; }
+    .portal-gate-body { padding: 2rem 2.4rem; }
+    .portal-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .portal-field label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--green-mid);
+    }
+    .portal-field input {
+      border: 1.5px solid #ddd4c8; border-radius: 4px;
+      padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem; color: var(--text-dark);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .portal-field input:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+    .portal-login-btn {
+      width: 100%; background: var(--green-deep); color: #fff;
+      border: none; border-radius: 4px; padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.92rem; letter-spacing: 0.05em; cursor: pointer;
+      transition: background 0.2s; margin-top: 0.4rem;
+    }
+    .portal-login-btn:hover { background: var(--green-mid); }
+    .portal-error {
+      background: #fdf0ef; border: 1px solid #e8b4b0;
+      color: #c0392b; border-radius: 4px;
+      padding: 0.7rem 1rem; font-size: 0.83rem;
+      margin-top: 0.8rem; display: none;
+    }
+    .portal-hint {
+      text-align: center; font-size: 0.78rem;
+      color: var(--text-light); margin-top: 1rem; line-height: 1.6;
+    }
+    .portal-hint a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
+    .portal-hint a:hover { text-decoration: underline; }
+
+    /* Portal — logged in view */
+    .portal-dashboard { display: none; }
+    .portal-welcome {
+      background: var(--green-deep); border-radius: 10px;
+      padding: 1.8rem 2.2rem; display: flex;
+      align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem;
+    }
+    .portal-welcome-text h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light); font-size: 1.3rem; margin-bottom: 0.3rem;
+    }
+    .portal-welcome-text p { color: #b8d4c2; font-size: 0.88rem; }
+    .portal-logout-btn {
+      background: rgba(255,255,255,0.1); color: #d4ead9;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+      padding: 0.5rem 1.2rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .portal-logout-btn:hover { background: rgba(255,255,255,0.18); }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.6rem;
+    }
+    .doc-card {
+      background: #fff; border: 1.5px solid #e8dece;
+      border-radius: 10px; padding: 1.8rem;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .doc-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); border-color: var(--gold); }
+    .doc-card-icon { font-size: 2.2rem; }
+    .doc-card-category {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--green-mid);
+    }
+    .doc-card h4 {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep); font-size: 1.05rem; line-height: 1.3;
+    }
+    .doc-card p { font-size: 0.83rem; color: var(--text-light); line-height: 1.65; flex: 1; }
+    .doc-card-meta {
+      font-size: 0.75rem; color: #b0a090;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .doc-download-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--green-deep); color: #fff;
+      border: none; border-radius: 4px;
+      padding: 0.65rem 1.2rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background 0.2s; text-decoration: none;
+      margin-top: auto;
+    }
+    .doc-download-btn:hover { background: var(--green-mid); }
+    .doc-download-btn.gold { background: var(--gold); color: var(--green-deep); }
+    .doc-download-btn.gold:hover { background: var(--gold-light); }
+
+    .docs-section-label {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep); font-size: 1.1rem; font-weight: 800;
+      margin: 2.5rem 0 1rem; padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--gold);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+
+
+    /* ── HAMBURGER MENU ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+      z-index: 200;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--gold-light);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0; right: 0;
+      background: rgba(15,43,30,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--gold);
+      padding: 1.5rem 6%;
+      flex-direction: column;
+      gap: 0;
+      z-index: 99;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .mobile-menu.open {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .mobile-menu a {
+      color: #d4ead9;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--gold-light); }
+    .mobile-menu .mob-cta {
+      margin-top: 0.5rem;
+      background: var(--gold);
+      color: var(--green-deep) !important;
+      text-align: center;
+      padding: 0.8rem !important;
+      border-radius: 2px;
+      font-weight: 700 !important;
+      border-bottom: none !important;
+    }
+    .mobile-menu .mob-cta:hover { background: var(--gold-light) !important; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 70px 5%; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero-stats { position: relative; bottom: auto; right: auto; padding: 3rem 8% 0; justify-content: center; }
+      footer { display: block; }
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 6% 2rem; }
+      .footer-desc { max-width: 100%; }
+      .footer-bottom { flex-direction: column; text-align: center; padding: 1rem 6%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="ipa.png" alt="IPA Logo"/>
+    <div class="nav-logo-text">
+      IPA UK & Ireland
+      <span>Igbere Progressive Association</span>
+    </div>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#what-we-do">Our Work</a></li>
+    <li><a href="ipa-projects.html">Projects</a></li>
+    <li><a href="ipa-announcements.html">Announcements</a></li>
+    <li><a href="ipa-membership.html">Membership</a></li>
+    <li><a href="ipa-members.html" class="nav-cta">Members</a></li>
+    <li><a href="ipa-admin.html" class="nav-admin">Admin</a></li>
+  </ul>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="closeMenu()">Home</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#what-we-do" onclick="closeMenu()">Our Work</a>
+  <a href="ipa-projects.html">Projects</a>
+  <a href="ipa-announcements.html">Announcements</a>
+  <a href="ipa-membership.html">Membership</a>
+  <a href="ipa-members.html" class="mob-cta">Members Portal</a>
+  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">🛡️ Admin (Executives)</a>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-ornament"></div>
+  <div class="hero-content">
+    <div class="hero-tag">🌿 Igbere Progressive Association · UK & Ireland</div>
+    <h1 class="hero-title">
+      One Family,<br>
+      <em>Far From Home.</em>
+    </h1>
+    <p class="hero-sub">
+      We are Igbere sons and daughters across the UK and Ireland — supporting one another in our new cities, and investing back into the community we love.
+    </p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn-primary">Join the Association</a>
+      <a href="#about" class="btn-outline">Learn Our Story</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">🇬🇧🇮🇪</div>
+      <div class="stat-label">UK & Ireland</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Unity</div>
+      <div class="stat-label">Our Foundation</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Giving</div>
+      <div class="stat-label">Our Purpose</div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION BAND -->
+<div class="mission-band">
+  <p class="mission-quote">"No one should feel <span>alone</span> in a strange city — and no one back home should be <span>forgotten</span>."</p>
+  <p class="mission-text">The Igbere Progressive Association UK & Ireland exists to build a bridge — between our members here who need support and solidarity, and the community back home that needs investment and care. We are both refuge and resource.</p>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="reveal">
+    <div class="section-label">Who We Are</div>
+    <h2 class="section-title">Our Story & Values</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>We are men and women from Igbere who made the journey to the United Kingdom and Ireland — leaving behind familiar faces, warm neighbourhoods, and the comfort of home. In a new land, we found each other.</p>
+      <p>The Igbere Progressive Association UK & Ireland was born out of that recognition: that we are stronger together. We meet, we share, we support. When one of us struggles, the others show up. When one succeeds, we all celebrate.</p>
+      <p>But our vision extends beyond ourselves. Time and again, we pool our resources to fund meaningful projects back home — for the elderly who shaped us, the youth who will carry the torch, and the community that lives in our hearts no matter how far we travel.</p>
+    </div>
+    <div class="about-values reveal">
+      <div class="value-card">
+        <h4>🤝 Solidarity</h4>
+        <p>No member faces a difficult moment alone. We show up — practically, financially, and emotionally — for one another in our adopted cities.</p>
+      </div>
+      <div class="value-card">
+        <h4>🌱 Giving Back</h4>
+        <p>We never forget where we came from. Regular contributions fund projects that improve life for the elderly, the young, and the wider Igbere community.</p>
+      </div>
+      <div class="value-card">
+        <h4>🏡 Belonging</h4>
+        <p>We create a home away from home — a space where Igbere culture, language, and warmth are kept alive across the miles.</p>
+      </div>
+      <div class="value-card">
+        <h4>📈 Progress</h4>
+        <p>We believe in growth — of our members, our community back home, and the legacy we leave for those who come after us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section id="what-we-do">
+  <div class="reveal">
+    <div class="section-label">Our Work</div>
+    <h2 class="section-title">How We Make a Difference</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="pillars-grid">
+    <div class="pillar reveal">
+      <div class="pillar-icon">🏙️</div>
+      <h3>Member Support</h3>
+      <p>Helping members settle, navigate systems, find community, and get back on their feet when life gets hard in a new city.</p>
+    </div>
+    <div class="pillar reveal">
+      <div class="pillar-icon">👴🏾</div>
+      <h3>Elderly Care Back Home</h3>
+      <p>Funding welfare support, healthcare assistance, and comfort projects for our elders in Igbere who sacrificed so much for us.</p>
+    </div>
+    <div class="pillar reveal">
+      <div class="pillar-icon">🎓</div>
+      <h3>Youth Empowerment</h3>
+      <p>Scholarships, skills training, and mentorship for the youth of Igbere — investing in the next generation's potential.</p>
+    </div>
+    <div class="pillar reveal">
+      <div class="pillar-icon">🔨</div>
+      <h3>Community Projects</h3>
+      <p>Pooling resources to build and improve infrastructure, facilities, and services that benefit the whole Igbere community.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS PREVIEW -->
+<section id="projects-preview" style="background: var(--green-deep); padding: 80px 8%;">
+  <div class="reveal" style="text-align:center; margin-bottom: 3rem;">
+    <div class="section-label" style="color: var(--gold-light);">Community Impact</div>
+    <h2 class="section-title" style="color: #fff;">See What Your Membership Funds</h2>
+    <div class="gold-line" style="margin: 0 auto 1.2rem;"></div>
+    <p style="font-family:'Lora',serif; color:#b8d4c2; font-size:1rem; line-height:1.8; max-width:560px; margin:0 auto;">From boreholes and scholarships to health centres and street lighting — here is the real difference IPA UK & Ireland is making in Igbere.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.5rem; margin-bottom:2.5rem;">
+    <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">✅</div>
+      <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Completed Projects</div>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Infrastructure, welfare and education initiatives successfully delivered.</p>
+    </div>
+    <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🔄</div>
+      <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Ongoing Work</div>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Active programmes currently running back home in Igbere.</p>
+    </div>
+    <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🎯</div>
+      <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Fundraising Goals</div>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Support our current drives — health centre, school renovation, and more.</p>
+    </div>
+    <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🎥</div>
+      <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Videos & Photos</div>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">See our work in action — ceremonies, handovers, and community moments.</p>
+    </div>
+  </div>
+  <div style="text-align:center;">
+    <a href="ipa-projects.html" style="display:inline-block; background:var(--gold); color:var(--green-deep); padding:0.9rem 2.4rem; border-radius:2px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.05em; text-decoration:none; transition:background 0.2s;">View All Projects →</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Join Our Family</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <p>Whether you are from Igbere and living in the UK or Ireland, or you simply want to support our work — we warmly welcome you. Reach out and let's connect.</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="icon">📍</div>
+          <span>United Kingdom & Ireland</span>
+        </div>
+        <div class="contact-item">
+          <div class="icon">✉️</div>
+          <span>info@ipaukandireland.org</span>
+        </div>
+        <div class="contact-item">
+          <div class="icon">🌐</div>
+          <span>www.ipaukandireland.org</span>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Your first name" id="fname"/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Your last name" id="lname"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com" id="email"/>
+        </div>
+        <div class="form-group">
+          <label>I am reaching out to…</label>
+          <select id="reason">
+            <option value="">Select a reason</option>
+            <option>Join the Association</option>
+            <option>Support a project</option>
+            <option>Make a donation</option>
+            <option>Learn more about IPA</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us a little about yourself or your enquiry…" id="message"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">Send Message →</button>
+        <div class="form-success" id="formSuccess">
+          ✅ Thank you! Your message has been received. A member of IPA UK & Ireland will be in touch with you shortly. Welcome to the family! 🌿
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <img src="ipa.png" alt="IPA Logo" class="footer-logo-img"/>
+        <div>
+          <div class="footer-logo">IPA UK &amp; Ireland</div>
+          <div class="footer-tagline">Igbere Progressive Association</div>
+        </div>
+      </div>
+      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love.</p>
+      <div class="footer-social">
+        <a href="mailto:info@ipaukandireland.org" class="social-link" title="Email us">✉️</a>
+        <a href="#" class="social-link" title="Facebook">📘</a>
+        <a href="#" class="social-link" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#home">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#what-we-do">Our Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Members</h4>
+      <a href="ipa-membership.html">Join IPA</a>
+      <a href="ipa-members.html">Members Portal</a>
+      <a href="#contact">Donate / Support</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p class="footer-contact-item">✉️ info@ipaukandireland.org</p>
+      <p class="footer-contact-item">🌐 www.ipaukandireland.org</p>
+      <p class="footer-contact-item">📍 United Kingdom &amp; Ireland</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="ipa-membership.html">Membership</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Hamburger menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  // Close menu on outside click
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+  // Form submit
+  function submitForm() {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!fname || !email) {
+      alert('Please fill in at least your name and email address.');
+      return;
+    }
+    document.getElementById('formSuccess').style.display = 'block';
+    document.querySelector('.form-submit').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — IPA UK & Ireland</title>
+  <link rel="icon" type="image/png" href="favicon-32.png"/>
+  <link rel="apple-touch-icon" href="icon-180.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-deep: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9963a;
+      --gold-light: #e8b86d;
+      --cream: #fdf6ec;
+      --warm-white: #fffaf3;
+      --text-dark: #1c1c1c;
+      --text-mid: #3d3d3d;
+      --text-light: #7a6a5a;
+      --red: #c0392b;
+      --red-light: #fdf0ef;
+      --amber: #e67e22;
+      --amber-light: #fef9f0;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f0ea; color: var(--text-dark); min-height: 100vh; }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--green-deep);
+      padding: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .login-screen::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(82,183,136,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(201,150,58,0.08) 0%, transparent 50%);
+    }
+    .login-box {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      width: 100%; max-width: 420px;
+      overflow: hidden; position: relative; z-index: 2;
+    }
+    .login-header {
+      background: var(--green-deep);
+      padding: 2.2rem 2.4rem 1.8rem;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .login-header .shield { font-size: 2.4rem; margin-bottom: 0.6rem; }
+    .login-header h2 { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .login-header p { color: #b8d4c2; font-size: 0.82rem; line-height: 1.6; }
+    .login-body { padding: 2rem 2.4rem 2.4rem; }
+    .login-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .login-field label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+    .login-field input {
+      border: 1.5px solid #ddd4c8; border-radius: 6px;
+      padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem; color: var(--text-dark);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,106,79,0.1); }
+    .login-btn {
+      width: 100%; background: var(--green-deep); color: #fff;
+      border: none; border-radius: 6px; padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.92rem; letter-spacing: 0.05em; cursor: pointer;
+      transition: background 0.2s; margin-top: 0.4rem;
+    }
+    .login-btn:hover { background: var(--green-mid); }
+    .login-error {
+      background: var(--red-light); border: 1px solid #e8b4b0;
+      color: var(--red); border-radius: 6px;
+      padding: 0.7rem 1rem; font-size: 0.82rem;
+      margin-top: 0.8rem; display: none;
+    }
+    .login-back { text-align: center; margin-top: 1.2rem; font-size: 0.78rem; }
+    .login-back a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
+
+    /* ── ADMIN SHELL ── */
+    .admin-shell { display: none; min-height: 100vh; }
+
+    .admin-topbar {
+      background: var(--green-deep);
+      border-bottom: 3px solid var(--gold);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 0.8rem; }
+    .topbar-left img { height: 40px; width: 40px; object-fit: contain; }
+    .topbar-title { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.05rem; font-weight: 800; }
+    .topbar-badge { background: rgba(201,150,58,0.2); border: 1px solid rgba(201,150,58,0.4); color: var(--gold-light); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 3px; }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .topbar-admin-name { color: #b8d4c2; font-size: 0.82rem; }
+    .topbar-logout {
+      background: rgba(255,255,255,0.1); color: #d4ead9;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+      padding: 0.4rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+    }
+    .topbar-logout:hover { background: rgba(255,255,255,0.18); }
+
+    .admin-main { display: flex; min-height: calc(100vh - 64px); }
+
+    .admin-sidebar {
+      width: 220px; flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid #e8dece;
+      padding: 1.5rem 0;
+    }
+    .sidebar-section { padding: 0 1rem; margin-bottom: 1.5rem; }
+    .sidebar-section-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #b0a090; padding: 0 0.6rem; margin-bottom: 0.5rem; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.65rem 0.8rem; border-radius: 6px;
+      color: var(--text-mid); font-size: 0.86rem; font-weight: 500;
+      text-decoration: none; cursor: pointer; border: none; background: none;
+      width: 100%; text-align: left;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-link:hover { background: #f4f0ea; color: var(--green-deep); }
+    .sidebar-link.active { background: rgba(26,71,49,0.08); color: var(--green-deep); font-weight: 700; }
+    .sidebar-link .icon { font-size: 1rem; width: 20px; text-align: center; }
+    .sidebar-link .badge-count { margin-left: auto; background: var(--red); color: #fff; font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 10px; }
+
+    .admin-content { flex: 1; padding: 2rem; overflow-y: auto; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .panel-title { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.5rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .panel-sub { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.8rem; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: #fff; border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-top: 3px solid var(--green-light);
+    }
+    .stat-card:nth-child(2) { border-top-color: var(--gold); }
+    .stat-card:nth-child(3) { border-top-color: var(--red); }
+    .stat-card:nth-child(4) { border-top-color: var(--amber); }
+    .stat-card .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--green-deep); }
+    .stat-card .stat-label { font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+    .table-toolbar {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.2rem; flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1; min-width: 200px;
+      border: 1.5px solid #ddd4c8; border-radius: 6px;
+      padding: 0.6rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus { border-color: var(--green-mid); }
+    .filter-select {
+      border: 1.5px solid #ddd4c8; border-radius: 6px;
+      padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; outline: none; background: #fff; cursor: pointer;
+    }
+
+    .members-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .members-table th {
+      background: var(--green-deep); color: #d4ead9;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.9rem 1rem; text-align: left;
+    }
+    .members-table td { padding: 0.85rem 1rem; font-size: 0.85rem; border-bottom: 1px solid #f0ebe3; vertical-align: middle; }
+    .members-table tr:last-child td { border-bottom: none; }
+    .members-table tr:hover td { background: #fdf9f4; }
+
+    .status-pill { display: inline-block; padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .status-active { background: rgba(82,183,136,0.15); color: #1a7a4a; }
+    .status-pending { background: rgba(201,150,58,0.15); color: #8a5f1a; }
+    .status-suspended { background: rgba(192,57,43,0.12); color: var(--red); }
+    .status-overdue { background: rgba(230,126,34,0.15); color: var(--amber); }
+
+    .action-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .act-btn {
+      border: none; border-radius: 4px; padding: 0.3rem 0.65rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 700;
+      cursor: pointer; transition: opacity 0.2s; white-space: nowrap;
+    }
+    .act-btn:hover { opacity: 0.8; }
+    .act-approve { background: rgba(82,183,136,0.15); color: #1a7a4a; }
+    .act-password { background: rgba(26,71,49,0.1); color: var(--green-deep); }
+    .act-suspend { background: rgba(230,126,34,0.15); color: var(--amber); }
+    .act-reinstate { background: rgba(82,183,136,0.15); color: #1a7a4a; }
+    .act-remove { background: rgba(192,57,43,0.1); color: var(--red); }
+
+    /* Modals */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 500;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 12px;
+      padding: 2rem; width: 100%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal h3 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .modal p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.2rem; line-height: 1.6; }
+    .modal-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .modal-field label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+    .modal-field input { border: 1.5px solid #ddd4c8; border-radius: 6px; padding: 0.7rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+    .modal-field input:focus { border-color: var(--green-mid); }
+    .modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; margin-top: 1.2rem; }
+    .modal-cancel { background: #f4f0ea; color: var(--text-mid); border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+    .modal-confirm { background: var(--green-deep); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.4rem; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+    .modal-confirm:hover { background: var(--green-mid); }
+    .modal-success { display: none; background: rgba(82,183,136,0.1); border: 1px solid rgba(82,183,136,0.4); color: #1a7a4a; border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.85rem; margin-top: 0.8rem; }
+    .generated-pw { font-family: monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.08em; color: var(--green-deep); background: #f4f0ea; padding: 0.4rem 0.8rem; border-radius: 4px; }
+
+    /* Member detail grid inside view modal */
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 1.5rem; }
+    .detail-row { border-bottom: 1px solid #f0ebe3; padding: 0.5rem 0; }
+    .detail-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #7aaa8a; }
+    .detail-value { font-size: 0.88rem; color: #1c1c1c; margin-top: 0.15rem; }
+
+    .settings-card { background: #fff; border-radius: 10px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 480px; margin-bottom: 1.5rem; }
+    .settings-card h3 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .settings-card p { font-size: 0.84rem; color: var(--text-light); line-height: 1.65; margin-bottom: 1.2rem; }
+    .settings-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .settings-field label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+    .settings-field input { border: 1.5px solid #ddd4c8; border-radius: 6px; padding: 0.7rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+    .settings-field input:focus { border-color: var(--green-mid); }
+    .settings-save { background: var(--green-deep); color: #fff; border: none; border-radius: 6px; padding: 0.7rem 1.6rem; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: background 0.2s; }
+    .settings-save:hover { background: var(--green-mid); }
+    .settings-msg { display: none; margin-top: 0.8rem; padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.82rem; }
+    .settings-msg.ok { background: rgba(82,183,136,0.1); color: #1a7a4a; border: 1px solid rgba(82,183,136,0.3); display: block; }
+    .settings-msg.err { background: var(--red-light); color: var(--red); border: 1px solid #e8b4b0; display: block; }
+
+    .alert-banner {
+      background: var(--amber-light); border: 1px solid rgba(230,126,34,0.3);
+      border-radius: 8px; padding: 1rem 1.4rem;
+      margin-bottom: 1.5rem; display: flex; gap: 0.8rem; align-items: flex-start;
+    }
+    .alert-banner .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .alert-banner p { font-size: 0.85rem; color: #7a4a10; line-height: 1.65; }
+    .alert-banner strong { color: var(--amber); }
+
+    .announcement-admin-card {
+      background: #fff; border-radius: 8px;
+      border-left: 4px solid var(--green-light);
+      padding: 1rem 1.2rem; margin-bottom: 0.8rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .announcement-admin-card.pinned { border-left-color: var(--gold); }
+    .announcement-admin-card.cat-bereavement { border-left-color: #7a8a7a; }
+    .announcement-admin-card.cat-baby { border-left-color: #f0a8c0; }
+    .announcement-admin-card.cat-event { border-left-color: var(--gold); }
+    .announcement-admin-card.cat-achievement { border-left-color: var(--green-light); }
+    .announcement-admin-card.cat-notice { border-left-color: #8ab0c8; }
+    .ann-card-title { font-weight: 700; font-size: 0.9rem; color: var(--green-deep); margin-bottom: 0.2rem; }
+    .ann-card-meta { font-size: 0.75rem; color: #b0a090; margin-bottom: 0.4rem; }
+    .ann-card-body { font-size: 0.82rem; color: var(--text-light); line-height: 1.6; }
+    .ann-card-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-content { padding: 1rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .members-table { font-size: 0.78rem; }
+      .members-table th, .members-table td { padding: 0.6rem 0.7rem; }
+      .action-btns { flex-direction: column; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-header">
+      <div class="shield">🛡️</div>
+      <h2>Admin Access</h2>
+      <p>IPA UK & Ireland — Executives Only<br>Enter the admin password to continue</p>
+    </div>
+    <div class="login-body">
+      <div class="login-field">
+        <label>Admin Password</label>
+        <input type="password" id="adminPassInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') doAdminLogin()"/>
+      </div>
+      <button class="login-btn" onclick="doAdminLogin()">Access Admin Panel →</button>
+      <div class="login-error" id="loginError">Incorrect password. Please try again or contact the association secretary.</div>
+      <div class="login-back"><a href="index.html">← Back to Main Site</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SHELL -->
+<div class="admin-shell" id="adminShell">
+
+  <div class="admin-topbar">
+    <div class="topbar-left">
+      <img src="ipa.png" alt="IPA Logo"/>
+      <span class="topbar-title">IPA Admin</span>
+      <span class="topbar-badge">Executives Only</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-admin-name">🟢 Admin</span>
+      <button class="topbar-logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+
+  <div class="admin-main">
+
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Overview</div>
+        <button class="sidebar-link active" onclick="showTab('dashboard', this)">
+          <span class="icon">📊</span> Dashboard
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Members</div>
+        <button class="sidebar-link" onclick="showTab('members', this)">
+          <span class="icon">👥</span> All Members
+          <span class="badge-count" id="pendingCount" style="display:none">0</span>
+        </button>
+        <button class="sidebar-link" onclick="showTab('pending', this)">
+          <span class="icon">⏳</span> Pending Approval
+        </button>
+        <button class="sidebar-link" onclick="showTab('overdue', this)">
+          <span class="icon">⚠️</span> Dues Overdue
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Settings</div>
+        <button class="sidebar-link" onclick="showTab('password', this)">
+          <span class="icon">🔑</span> Change Admin Password
+        </button>
+        <button class="sidebar-link" onclick="showTab('addmember', this)">
+          <span class="icon">➕</span> Add New Member
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Announcements</div>
+        <button class="sidebar-link" onclick="showTab('announcements', this)">
+          <span class="icon">📢</span> Manage Posts
+        </button>
+        <button class="sidebar-link" onclick="showTab('birthdays', this)">
+          <span class="icon">🎂</span> Member Birthdays
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Site</div>
+        <a href="index.html" class="sidebar-link"><span class="icon">🌐</span> Main Website</a>
+        <a href="ipa-announcements.html" class="sidebar-link"><span class="icon">📢</span> Announcements Page</a>
+        <a href="ipa-projects.html" class="sidebar-link"><span class="icon">🏗️</span> Projects Page</a>
+        <a href="ipa-members.html" class="sidebar-link"><span class="icon">👤</span> Members Portal</a>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="panel-title">Dashboard</div>
+        <div class="panel-sub">Welcome to the IPA Admin Panel. Manage members, passwords, and monitor dues.</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Members</div></div>
+          <div class="stat-card"><div class="stat-num" id="statActive">—</div><div class="stat-label">Active</div></div>
+          <div class="stat-card"><div class="stat-num" id="statOverdue">—</div><div class="stat-label">Dues Overdue</div></div>
+          <div class="stat-card"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending Approval</div></div>
+        </div>
+        <div class="alert-banner" id="overdueAlert" style="display:none">
+          <div class="icon">⚠️</div>
+          <p><strong id="overdueAlertCount">0</strong> members have not paid dues for 3 or more months. They are flagged in the Members tab and may need to be suspended.</p>
+        </div>
+        <div class="alert-banner" id="pendingAlert" style="display:none; background:#f0f7ff; border-color:rgba(52,130,200,0.3);">
+          <div class="icon">📋</div>
+          <p style="color:#1a4a7a"><strong id="pendingAlertCount">0</strong> new membership applications are waiting for your approval. Go to <strong>Pending Approval</strong> in the sidebar to review them.</p>
+        </div>
+      </div>
+
+      <!-- ALL MEMBERS -->
+      <div class="tab-panel" id="tab-members">
+        <div class="panel-title">All Members</div>
+        <div class="panel-sub">Manage member accounts, set passwords, suspend or remove members.</div>
+        <div class="table-toolbar">
+          <input type="text" class="search-box" id="memberSearch" placeholder="🔍  Search by name, ID or email…" oninput="filterMembers()"/>
+          <select class="filter-select" id="statusFilter" onchange="filterMembers()">
+            <option value="all">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="overdue">Overdue</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="members-table">
+            <thead>
+              <tr>
+                <th>Mem. No.</th><th>Full Name</th><th>Email</th>
+                <th>Joined</th><th>Last Dues</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="membersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PENDING -->
+      <div class="tab-panel" id="tab-pending">
+        <div class="panel-title">Pending Approval</div>
+        <div class="panel-sub">New membership applications awaiting executive approval.</div>
+        <div style="overflow-x:auto;">
+          <table class="members-table">
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Applied</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="pendingTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OVERDUE -->
+      <div class="tab-panel" id="tab-overdue">
+        <div class="panel-title">Dues Overdue</div>
+        <div class="panel-sub">Members who have not paid dues for 3 or more months.</div>
+        <div style="overflow-x:auto;">
+          <table class="members-table">
+            <thead>
+              <tr><th>Mem. No.</th><th>Full Name</th><th>Email</th><th>Months Overdue</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="overdueTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADD MEMBER -->
+      <div class="tab-panel" id="tab-addmember">
+        <div class="panel-title">Add New Member</div>
+        <div class="panel-sub">Manually add a member and assign their login password.</div>
+        <div class="settings-card">
+          <h3>New Member Details</h3>
+          <p>Fill in the member's details and set an initial password. Share the password with the member securely.</p>
+          <div class="settings-field"><label>Full Name</label><input type="text" id="newName" placeholder="e.g. Chukwuemeka Obi"/></div>
+          <div class="settings-field"><label>Email Address</label><input type="email" id="newEmail" placeholder="member@email.com"/></div>
+          <div class="settings-field"><label>Phone Number</label><input type="tel" id="newPhone" placeholder="+44 7700 000000"/></div>
+          <div class="settings-field"><label>Initial Password</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="text" id="newPassword" placeholder="Set a password for this member" style="flex:1"/>
+              <button onclick="generatePassword()" style="background:var(--green-deep);color:#fff;border:none;border-radius:6px;padding:0 1rem;cursor:pointer;font-size:0.8rem;font-weight:700;white-space:nowrap;">Auto Generate</button>
+            </div>
+          </div>
+          <button class="settings-save" onclick="addNewMember()">Add Member & Save →</button>
+          <div class="settings-msg" id="addMemberMsg"></div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="tab-panel" id="tab-password">
+        <div class="panel-title">Change Admin Password</div>
+        <div class="panel-sub">Update the shared admin password — do this after every election when a new executive team takes over.</div>
+        <div class="settings-card">
+          <h3>Update Admin Password</h3>
+          <p>⚠️ After changing the password, immediately share the new one with all current executives. The old team will no longer be able to log in.</p>
+          <div class="settings-field"><label>Current Password</label><input type="password" id="currentPw" placeholder="Enter current admin password"/></div>
+          <div class="settings-field"><label>New Password</label><input type="password" id="newPw" placeholder="Choose a strong new password"/></div>
+          <div class="settings-field"><label>Confirm New Password</label><input type="password" id="confirmPw" placeholder="Repeat the new password"/></div>
+          <button class="settings-save" onclick="changeAdminPw()">Update Admin Password →</button>
+          <div class="settings-msg" id="pwMsg"></div>
+        </div>
+        <div class="settings-card">
+          <h3>💡 Best Practice for Election Changeover</h3>
+          <p>1. Incoming President or Secretary logs in with old password<br>2. Goes to this page and sets a new strong password<br>3. Shares new password securely with new executive team only<br>4. Old executives lose access immediately<br><br>Recommended: change password within 48 hours of election results.</p>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="tab-panel" id="tab-announcements">
+        <div class="panel-title">Manage Announcements</div>
+        <div class="panel-sub">Post updates for birthdays, bereavements, new arrivals, events, achievements and notices.</div>
+        <div class="settings-card" style="max-width:100%;">
+          <h3>➕ Post New Announcement</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+            <div class="settings-field">
+              <label>Category</label>
+              <select id="aCategory" style="border:1.5px solid #ddd4c8;border-radius:6px;padding:0.7rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;">
+                <option value="bereavement">🙏 Bereavement</option>
+                <option value="baby">👶 New Arrival (Baby)</option>
+                <option value="event">🎉 Event / Meeting</option>
+                <option value="achievement">🏆 Achievement</option>
+                <option value="notice">📢 General Notice</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label>Date</label>
+              <input type="date" id="aDate" style="border:1.5px solid #ddd4c8;border-radius:6px;padding:0.7rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;width:100%;"/>
+            </div>
+          </div>
+          <div class="settings-field">
+            <label>Title</label>
+            <input type="text" id="aTitle" placeholder="e.g. Congratulations — Emeka & Ngozi on their new baby"/>
+          </div>
+          <div class="settings-field">
+            <label>Message</label>
+            <textarea id="aBody" rows="4" placeholder="Write the full announcement here…" style="border:1.5px solid #ddd4c8;border-radius:6px;padding:0.7rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;width:100%;resize:vertical;"></textarea>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;cursor:pointer;">
+              <input type="checkbox" id="aPinned" style="width:16px;height:16px;cursor:pointer;"/> Pin to top of announcements
+            </label>
+          </div>
+          <button class="settings-save" onclick="postAnnouncement()">Post Announcement →</button>
+          <div class="settings-msg" id="announcementMsg"></div>
+        </div>
+        <div style="margin-top:2rem;">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--green-deep);font-size:1.1rem;margin-bottom:1rem;">📋 Posted Announcements</h3>
+          <div id="announcementsList"></div>
+        </div>
+      </div>
+
+      <!-- BIRTHDAYS -->
+      <div class="tab-panel" id="tab-birthdays">
+        <div class="panel-title">Member Birthdays</div>
+        <div class="panel-sub">Add or update birthday month and day for members. No year is ever stored or shown.</div>
+        <div style="background:#fff;border-radius:10px;padding:1.5rem;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:1.5rem;">
+          <p style="font-size:0.85rem;color:var(--text-light);line-height:1.7;margin-bottom:1rem;">
+            ✅ <strong>Privacy protected:</strong> Only the member's name, birth day and birth month are stored — no year, no age.<br/>
+            🎂 <strong>Automatic:</strong> Members with birthdays this month appear automatically on the Announcements page.
+          </p>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="members-table">
+            <thead>
+              <tr><th>Member</th><th>Email</th><th>Birthday (Day)</th><th>Birthday (Month)</th><th>Save</th></tr>
+            </thead>
+            <tbody id="birthdayTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal">
+    <h3>🔑 Set Member Password</h3>
+    <p>Set a login password for <strong id="modalMemberName">—</strong>. Share it with them securely after saving.</p>
+    <div class="modal-field">
+      <label>New Password</label>
+      <div style="display:flex;gap:0.5rem;">
+        <input type="text" id="modalPassword" placeholder="Enter or generate a password" style="flex:1"/>
+        <button onclick="generateModalPassword()" style="background:var(--green-deep);color:#fff;border:none;border-radius:6px;padding:0 0.9rem;cursor:pointer;font-size:0.78rem;font-weight:700;white-space:nowrap;">Generate</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closePasswordModal()">Cancel</button>
+      <button class="modal-confirm" onclick="savePassword()">Save Password →</button>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      ✅ Password saved! Share it with the member: <span class="generated-pw" id="modalSavedPw"></span>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW MEMBER MODAL -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal" style="max-width:560px;">
+    <h3 id="viewModalTitle">Member Details</h3>
+    <div class="detail-grid" id="viewModalBody" style="max-height:55vh;overflow-y:auto;margin-bottom:1rem;"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeViewModal()">Close</button>
+      <button class="modal-confirm" id="viewModalPwBtn">🔑 Set Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h3 id="confirmTitle">Confirm Action</h3>
+    <p id="confirmText">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+      <button class="modal-confirm" id="confirmBtn">Confirm →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'https://ipa-api.ipaukandireland.workers.dev';
+  let _members = [];
+  let _announcements = [];
+  let _adminToken = false;
+
+  // ── API ──
+  async function apiFetch(path, method = 'GET', body = null) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(API + path, opts);
+    return res.json();
+  }
+
+  // ── LOGIN ──
+  async function doAdminLogin() {
+    const val = document.getElementById('adminPassInput').value;
+    const btn = document.querySelector('.login-btn');
+    btn.textContent = 'Checking…'; btn.disabled = true;
+    try {
+      const res = await apiFetch('/api/admin/login', 'POST', { password: val });
+      if (res.success) {
+        _adminToken = true;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminShell').style.display = 'block';
+        await refreshAll();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    } catch(e) {
+      document.getElementById('loginError').style.display = 'block';
+    }
+    btn.textContent = 'Access Admin Panel →'; btn.disabled = false;
+  }
+
+  function doLogout() {
+    document.getElementById('adminShell').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('loginError').style.display = 'none';
+    _adminToken = false;
+  }
+
+  // ── TABS ── (no override tricks — clean single function)
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+
+    // Load data for specific tabs
+    if (name === 'announcements') {
+      loadAnnouncements().then(renderAnnouncementsList);
+    }
+    if (name === 'birthdays') {
+      renderBirthdayTable();
+    }
+  }
+
+  // ── DATA ──
+  async function loadMembers() {
+    try {
+      const data = await apiFetch('/api/members');
+      _members = Array.isArray(data) ? data : [];
+    } catch(e) { _members = []; }
+  }
+
+  async function loadAnnouncements() {
+    try {
+      const data = await apiFetch('/api/announcements');
+      _announcements = Array.isArray(data) ? data : [];
+    } catch(e) { _announcements = []; }
+  }
+
+  // ── REFRESH ──
+  async function refreshAll() {
+    await loadMembers();
+    const total   = _members.length;
+    const active  = _members.filter(m => m.status === 'active').length;
+    const overdue = _members.filter(m => m.status === 'overdue').length;
+    const pending = _members.filter(m => m.status === 'pending').length;
+
+    document.getElementById('statTotal').textContent   = total;
+    document.getElementById('statActive').textContent  = active;
+    document.getElementById('statOverdue').textContent = overdue;
+    document.getElementById('statPending').textContent = pending;
+
+    const pc = document.getElementById('pendingCount');
+    pc.textContent = pending;
+    pc.style.display = pending ? '' : 'none';
+
+    const oa = document.getElementById('overdueAlert');
+    oa.style.display = overdue > 0 ? '' : 'none';
+    document.getElementById('overdueAlertCount').textContent = overdue;
+
+    const pa = document.getElementById('pendingAlert');
+    pa.style.display = pending > 0 ? '' : 'none';
+    document.getElementById('pendingAlertCount').textContent = pending;
+
+    renderMembersTable(_members);
+    renderPendingTable(_members.filter(m => m.status === 'pending'));
+    renderOverdueTable(_members.filter(m => m.status === 'overdue'));
+    renderBirthdayTable();
+  }
+
+  // ── HELPERS ──
+  function statusPill(status) {
+    const map = {
+      active:    ['Active',      'status-active'],
+      pending:   ['Pending',     'status-pending'],
+      suspended: ['Suspended',   'status-suspended'],
+      overdue:   ['Overdue 3m+', 'status-overdue']
+    };
+    const [label, cls] = map[status] || ['Unknown', ''];
+    return `<span class="status-pill ${cls}">${label}</span>`;
+  }
+
+  function esc(str) {
+    // Escape for safe use inside HTML attribute single-quote strings
+    return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  }
+
+  // ── MEMBER ACTIONS (use data-id attributes, not inline onclick with name) ──
+  function actionBtns(m) {
+    let btns = `<button class="act-btn act-password" data-action="view" data-id="${m.id}">👁 View</button>`;
+    if (m.status === 'pending')
+      btns += `<button class="act-btn act-approve" data-action="approve" data-id="${m.id}">✅ Approve</button>`;
+    if (m.status !== 'suspended')
+      btns += `<button class="act-btn act-password" data-action="setpw" data-id="${m.id}" data-name="${esc(m.name)}">🔑 Set PW</button>`;
+    if (m.status === 'active' || m.status === 'overdue')
+      btns += `<button class="act-btn act-suspend" data-action="suspend" data-id="${m.id}">🔒 Suspend</button>`;
+    if (m.status === 'suspended')
+      btns += `<button class="act-btn act-reinstate" data-action="reinstate" data-id="${m.id}">🔓 Reinstate</button>`;
+    btns += `<button class="act-btn act-remove" data-action="remove" data-id="${m.id}" data-name="${esc(m.name)}">✕ Remove</button>`;
+    return `<div class="action-btns">${btns}</div>`;
+  }
+
+  // Single delegated event listener — no more inline onclick breaking on apostrophes
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id     = btn.dataset.id;
+    const name   = btn.dataset.name || '';
+    if (action === 'view')      viewMember(id);
+    if (action === 'approve')   approveMember(id);
+    if (action === 'setpw')     openPasswordModal(id, name);
+    if (action === 'suspend')   suspendMember(id);
+    if (action === 'reinstate') reinstateMember(id);
+    if (action === 'remove')    confirmRemoveMember(id, name);
+  });
+
+  // ── RENDER TABLES ──
+  function renderMembersTable(list) {
+    const tbody = document.getElementById('membersTableBody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#b0a090;padding:2rem">No members found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(m => `
+      <tr>
+        <td><strong>${m.id}</strong></td>
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.joined || '—'}</td>
+        <td>${m.lastDues || '—'}</td>
+        <td>${statusPill(m.status)}</td>
+        <td>${actionBtns(m)}</td>
+      </tr>`).join('');
+  }
+
+  function renderPendingTable(list) {
+    const tbody = document.getElementById('pendingTableBody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#b0a090;padding:2rem">No pending applications.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(m => `
+      <tr>
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.joined || '—'}</td>
+        <td><div class="action-btns">
+          <button class="act-btn act-approve" data-action="approve" data-id="${m.id}">✅ Approve</button>
+          <button class="act-btn act-password" data-action="setpw" data-id="${m.id}" data-name="${esc(m.name)}">🔑 Set Password</button>
+          <button class="act-btn act-remove" data-action="remove" data-id="${m.id}" data-name="${esc(m.name)}">✕ Reject</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function renderOverdueTable(list) {
+    const tbody = document.getElementById('overdueTableBody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#b0a090;padding:2rem">No overdue accounts. 🎉</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(m => `
+      <tr>
+        <td><strong>${m.id}</strong></td>
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td><span class="status-pill status-overdue">3+ months</span></td>
+        <td><div class="action-btns">
+          <button class="act-btn act-suspend" data-action="suspend" data-id="${m.id}">🔒 Suspend</button>
+          <button class="act-btn act-reinstate" data-action="reinstate" data-id="${m.id}">🔓 Reinstate</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function filterMembers() {
+    const q = document.getElementById('memberSearch').value.toLowerCase();
+    const s = document.getElementById('statusFilter').value;
+    let list = _members;
+    if (s !== 'all') list = list.filter(m => m.status === s);
+    if (q) list = list.filter(m =>
+      (m.name||'').toLowerCase().includes(q) ||
+      (m.id||'').toLowerCase().includes(q) ||
+      (m.email||'').toLowerCase().includes(q)
+    );
+    renderMembersTable(list);
+  }
+
+  // ── VIEW MEMBER ──
+  function viewMember(id) {
+    const m = _members.find(x => x.id === id);
+    if (!m) return;
+    const row = (label, val) => `
+      <div class="detail-row">
+        <div class="detail-label">${label}</div>
+        <div class="detail-value">${val || '—'}</div>
+      </div>`;
+    document.getElementById('viewModalTitle').textContent = m.name + ' (' + m.id + ')';
+    document.getElementById('viewModalBody').innerHTML = `
+      ${row('Membership ID', m.id)}
+      ${row('Status', m.status)}
+      ${row('Full Name', m.name)}
+      ${row('Title', m.title)}
+      ${row('Gender', m.gender)}
+      ${row('Email', m.email)}
+      ${row('Phone', m.phone)}
+      ${row('Address', m.address)}
+      ${row('Occupation', m.occupation)}
+      ${row('Employer', m.employer)}
+      ${row('Village/Town', m.village)}
+      ${row('Kindred', m.kindred)}
+      ${row('Referred By', m.referral)}
+      ${row('Why Join', m.whyJoin)}
+      ${row('Applied', m.appliedAt ? new Date(m.appliedAt).toLocaleDateString('en-GB') : '')}
+      ${row('Joined', m.joined)}
+      ${row('Last Dues', m.lastDues)}
+      ${row('Password Set', m.password ? 'Yes' : 'Not yet')}
+      ${row('Birthday', m.birthdayDay && m.birthdayMonth ? m.birthdayDay + '/' + m.birthdayMonth : '')}
+      ${row('Notes', m.notes)}
+    `;
+    // Wire up the Set Password button in this modal
+    document.getElementById('viewModalPwBtn').onclick = function() {
+      closeViewModal();
+      openPasswordModal(m.id, m.name);
+    };
+    document.getElementById('viewModal').classList.add('open');
+  }
+  function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
+
+  // ── MEMBER ACTIONS ──
+  async function approveMember(id) {
+    await apiFetch(`/api/members/${id}`, 'PUT', { status: 'active' });
+    await refreshAll();
+  }
+
+  async function suspendMember(id) {
+    await apiFetch(`/api/members/${id}`, 'PUT', { status: 'suspended' });
+    await refreshAll();
+  }
+
+  async function reinstateMember(id) {
+    await apiFetch(`/api/members/${id}`, 'PUT', { status: 'active' });
+    await refreshAll();
+  }
+
+  let _removeTargetId = null;
+  function confirmRemoveMember(id, name) {
+    _removeTargetId = id;
+    document.getElementById('confirmTitle').textContent = 'Remove Member';
+    document.getElementById('confirmText').textContent =
+      `Are you sure you want to permanently remove ${name} from the system? This cannot be undone.`;
+    document.getElementById('confirmBtn').onclick = doRemoveMember;
+    document.getElementById('confirmModal').classList.add('open');
+  }
+  async function doRemoveMember() {
+    if (!_removeTargetId) return;
+    await apiFetch(`/api/members/${_removeTargetId}`, 'DELETE');
+    _removeTargetId = null;
+    closeConfirmModal();
+    await refreshAll();
+  }
+  function closeConfirmModal() { document.getElementById('confirmModal').classList.remove('open'); }
+
+  // ── PASSWORD MODAL ──
+  let _pwTargetId = null;
+  function openPasswordModal(id, name) {
+    _pwTargetId = id;
+    document.getElementById('modalMemberName').textContent = name;
+    document.getElementById('modalPassword').value = '';
+    document.getElementById('modalSuccess').style.display = 'none';
+    document.getElementById('passwordModal').classList.add('open');
+  }
+  function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('open');
+    _pwTargetId = null;
+  }
+  function generateModalPassword() {
+    document.getElementById('modalPassword').value = generatePw();
+  }
+  async function savePassword() {
+    const pw = document.getElementById('modalPassword').value.trim();
+    if (!pw) { alert('Please enter or generate a password first.'); return; }
+    const m = _members.find(x => x.id === _pwTargetId);
+    const update = { password: pw };
+    if (m && m.status === 'pending') update.status = 'active';
+    await apiFetch(`/api/members/${_pwTargetId}`, 'PUT', update);
+    document.getElementById('modalSuccess').style.display = 'block';
+    document.getElementById('modalSavedPw').textContent = pw;
+    await refreshAll();
+  }
+
+  // ── ADD MEMBER ──
+  async function addNewMember() {
+    const name  = document.getElementById('newName').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    const phone = document.getElementById('newPhone').value.trim();
+    const pw    = document.getElementById('newPassword').value.trim();
+    const msg   = document.getElementById('addMemberMsg');
+    if (!name || !email) { msg.className = 'settings-msg err'; msg.textContent = 'Name and email are required.'; return; }
+    const res = await apiFetch('/api/members', 'POST', {
+      name, email, phone,
+      joined: new Date().toISOString().slice(0,7),
+      status: pw ? 'active' : 'pending',
+      password: pw || ''
+    });
+    if (res.success) {
+      msg.className = 'settings-msg ok';
+      msg.textContent = `✅ ${name} added as ${res.member.id}${pw ? ' with password set.' : ' — remember to set a password.'}`;
+      document.getElementById('newName').value = '';
+      document.getElementById('newEmail').value = '';
+      document.getElementById('newPhone').value = '';
+      document.getElementById('newPassword').value = '';
+      await refreshAll();
+    } else {
+      msg.className = 'settings-msg err';
+      msg.textContent = res.error || 'Failed to add member.';
+    }
+  }
+
+  function generatePassword() {
+    document.getElementById('newPassword').value = generatePw();
+  }
+  function generatePw() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#!';
+    let pw = '';
+    for (let i = 0; i < 10; i++) pw += chars[Math.floor(Math.random() * chars.length)];
+    return pw;
+  }
+
+  // ── CHANGE ADMIN PASSWORD ──
+  async function changeAdminPw() {
+    const cur  = document.getElementById('currentPw').value;
+    const nw   = document.getElementById('newPw').value;
+    const conf = document.getElementById('confirmPw').value;
+    const msg  = document.getElementById('pwMsg');
+    if (nw.length < 8) { msg.className = 'settings-msg err'; msg.textContent = 'New password must be at least 8 characters.'; return; }
+    if (nw !== conf)   { msg.className = 'settings-msg err'; msg.textContent = 'New passwords do not match.'; return; }
+    const res = await apiFetch('/api/admin/change-password', 'POST', { currentPassword: cur, newPassword: nw });
+    if (res.success) {
+      msg.className = 'settings-msg ok';
+      msg.textContent = '✅ Admin password updated! Share the new password with all current executives only.';
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value = '';
+      document.getElementById('confirmPw').value = '';
+    } else {
+      msg.className = 'settings-msg err';
+      msg.textContent = res.error || 'Failed to update password.';
+    }
+  }
+
+  // ── ANNOUNCEMENTS ──
+  async function postAnnouncement() {
+    const category = document.getElementById('aCategory').value;
+    const title    = document.getElementById('aTitle').value.trim();
+    const body     = document.getElementById('aBody').value.trim();
+    const date     = document.getElementById('aDate').value;
+    const pinned   = document.getElementById('aPinned').checked;
+    const msg      = document.getElementById('announcementMsg');
+    if (!title || !body || !date) {
+      msg.className = 'settings-msg err';
+      msg.textContent = 'Please fill in the title, message and date.';
+      return;
+    }
+    const res = await apiFetch('/api/announcements', 'POST', { category, title, body, date, pinned });
+    if (res.success) {
+      msg.className = 'settings-msg ok';
+      msg.textContent = '✅ Posted! It is now live on the Announcements page.';
+      document.getElementById('aTitle').value = '';
+      document.getElementById('aBody').value = '';
+      document.getElementById('aPinned').checked = false;
+      document.getElementById('aDate').value = new Date().toISOString().slice(0,10);
+      await loadAnnouncements();
+      renderAnnouncementsList();
+    } else {
+      msg.className = 'settings-msg err';
+      msg.textContent = 'Failed to post. Please try again.';
+    }
+  }
+
+  async function deleteAnnouncement(id) {
+    await apiFetch(`/api/announcements/${id}`, 'DELETE');
+    await loadAnnouncements();
+    renderAnnouncementsList();
+  }
+
+  async function togglePin(id) {
+    const a = _announcements.find(x => x.id === id);
+    if (a) {
+      await apiFetch(`/api/announcements/${id}`, 'PUT', { pinned: !a.pinned });
+      await loadAnnouncements();
+      renderAnnouncementsList();
+    }
+  }
+
+  const CAT_EMOJIS = { bereavement:'🙏', baby:'👶', event:'🎉', achievement:'🏆', notice:'📢' };
+
+  function renderAnnouncementsList() {
+    const container = document.getElementById('announcementsList');
+    if (!container) return;
+    const list = [..._announcements].sort((a,b) => new Date(b.date) - new Date(a.date));
+    if (!list.length) {
+      container.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">No announcements posted yet.</p>';
+      return;
+    }
+    container.innerHTML = list.map(a => `
+      <div class="announcement-admin-card cat-${a.category}${a.pinned ? ' pinned' : ''}">
+        <div style="flex:1;">
+          <div class="ann-card-meta">${CAT_EMOJIS[a.category]||'📢'} ${a.category.toUpperCase()} · ${a.date}${a.pinned ? ' · 📌 Pinned' : ''}</div>
+          <div class="ann-card-title">${a.title}</div>
+          <div class="ann-card-body">${(a.body||'').slice(0,120)}${(a.body||'').length>120?'…':''}</div>
+        </div>
+        <div class="ann-card-actions">
+          <button class="act-btn act-password" onclick="togglePin('${a.id}')">${a.pinned ? '📌 Unpin' : '📌 Pin'}</button>
+          <button class="act-btn act-remove" onclick="deleteAnnouncement('${a.id}')">✕ Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── BIRTHDAYS ──
+  function renderBirthdayTable() {
+    const tbody = document.getElementById('birthdayTableBody');
+    if (!tbody) return;
+    if (!_members.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#b0a090;padding:1.5rem;">No members yet.</td></tr>';
+      return;
+    }
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    tbody.innerHTML = _members.map((m, i) => `
+      <tr>
+        <td><strong>${m.name}</strong></td>
+        <td>${m.email}</td>
+        <td><input type="number" min="1" max="31" placeholder="Day" value="${m.birthdayDay||''}"
+          id="bday_day_${i}" style="width:70px;border:1.5px solid #ddd4c8;border-radius:4px;padding:0.4rem 0.5rem;font-size:0.85rem;outline:none;"/></td>
+        <td>
+          <select id="bday_month_${i}" style="border:1.5px solid #ddd4c8;border-radius:4px;padding:0.4rem 0.5rem;font-size:0.85rem;outline:none;">
+            <option value="">— Month —</option>
+            ${MONTHS.map((mn, idx) => `<option value="${idx+1}" ${parseInt(m.birthdayMonth)===idx+1?'selected':''}>${mn}</option>`).join('')}
+          </select>
+        </td>
+        <td><button class="act-btn act-approve" onclick="saveBirthday('${m.id}',${i})">💾 Save</button></td>
+      </tr>`).join('');
+  }
+
+  async function saveBirthday(memberId, rowIndex) {
+    const day   = document.getElementById(`bday_day_${rowIndex}`).value;
+    const month = document.getElementById(`bday_month_${rowIndex}`).value;
+    await apiFetch(`/api/members/${memberId}`, 'PUT', { birthdayDay: day, birthdayMonth: month });
+    await loadMembers();
+    const saveBtn = document.querySelector(`#bday_day_${rowIndex}`).closest('tr').querySelector('.act-approve');
+    const orig = saveBtn.textContent;
+    saveBtn.textContent = '✅ Saved!';
+    setTimeout(() => { saveBtn.textContent = orig; }, 1500);
+  }
+
+  // Set today's date as default for announcement date
+  const dateField = document.getElementById('aDate');
+  if (dateField) dateField.value = new Date().toISOString().slice(0,10);
+</script>
+</body>
+</html>

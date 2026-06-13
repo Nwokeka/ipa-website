@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Announcements — IPA UK & Ireland</title>
+  <link rel="icon" type="image/png" href="favicon-32.png"/>
+  <link rel="apple-touch-icon" href="icon-180.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-deep: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9963a;
+      --gold-light: #e8b86d;
+      --cream: #fdf6ec;
+      --warm-white: #fffaf3;
+      --text-dark: #1c1c1c;
+      --text-mid: #3d3d3d;
+      --text-light: #7a6a5a;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text-dark); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(26,71,49,0.97); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 70px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-logo img { height: 48px; width: 48px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
+    .nav-logo-text { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.03em; line-height: 1.2; }
+    .nav-logo-text span { display: block; font-size: 0.65rem; color: #b8d4c2; font-family: 'DM Sans', sans-serif; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { color: #d4ead9; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
+    .nav-cta { background: var(--gold); color: var(--green-deep) !important; padding: 0.45rem 1.2rem; border-radius: 2px; font-weight: 700 !important; }
+    .nav-cta:hover { background: var(--gold-light) !important; }
+    .nav-admin { color: rgba(201,150,58,0.6) !important; font-size: 0.78rem !important; border: 1px solid rgba(201,150,58,0.25); padding: 0.3rem 0.8rem; border-radius: 2px; }
+    .nav-admin:hover { color: var(--gold-light) !important; border-color: rgba(201,150,58,0.5) !important; }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; cursor: pointer; padding: 6px; background: none; border: none; z-index: 200; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: rgba(15,43,30,0.98); backdrop-filter: blur(12px); border-bottom: 2px solid var(--gold); padding: 1.5rem 6%; flex-direction: column; z-index: 99; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: #d4ead9; text-decoration: none; font-size: 1rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.2s; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--gold-light); }
+    .mobile-menu .mob-cta { margin-top: 0.5rem; background: var(--gold); color: var(--green-deep) !important; text-align: center; padding: 0.8rem !important; border-radius: 2px; font-weight: 700 !important; border-bottom: none !important; }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      background: var(--green-deep);
+      padding: 130px 8% 70px;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(201,150,58,0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(82,183,136,0.1) 0%, transparent 50%);
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .page-hero-tag { display: inline-block; background: rgba(201,150,58,0.15); border: 1px solid rgba(201,150,58,0.4); color: var(--gold-light); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 2px; margin-bottom: 1.2rem; }
+    .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 1rem; }
+    .page-hero h1 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-family: 'Lora', serif; color: #b8d4c2; font-size: 1.05rem; line-height: 1.8; max-width: 580px; }
+    .hero-month-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(201,150,58,0.15); border: 1px solid rgba(201,150,58,0.3);
+      color: var(--gold-light); padding: 0.5rem 1.2rem; border-radius: 4px;
+      font-size: 0.85rem; font-weight: 600; margin-top: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: #fff; border-bottom: 1px solid #ede4d8;
+      padding: 0 8%; display: flex; gap: 0; overflow-x: auto;
+      position: sticky; top: 70px; z-index: 50;
+    }
+    .filter-btn { background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); padding: 1rem 1.4rem; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+    .filter-btn:hover { color: var(--green-mid); }
+    .filter-btn.active { color: var(--green-deep); border-bottom-color: var(--gold); }
+
+    /* ── MAIN LAYOUT ── */
+    .announcements-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2.5rem;
+      padding: 50px 8%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── BIRTHDAY SPOTLIGHT ── */
+    .birthday-spotlight {
+      background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+      border-radius: 14px;
+      padding: 2.2rem 2.4rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .birthday-spotlight::before {
+      content: '🎂';
+      position: absolute; right: 1.5rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 6rem; opacity: 0.12;
+    }
+    .birthday-spotlight-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 0.5rem; }
+    .birthday-spotlight h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.4rem; margin-bottom: 1.2rem; }
+    .birthday-names { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .birthday-chip {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; border-radius: 30px;
+      padding: 0.4rem 1rem; font-size: 0.85rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .birthday-chip .bday-day { font-weight: 700; color: var(--gold-light); }
+    .no-birthdays { color: #8ab5a0; font-size: 0.88rem; font-style: italic; }
+
+    /* ── ANNOUNCEMENT CARDS ── */
+    .announcement-feed { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    .announcement-card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-left: 5px solid var(--green-light);
+    }
+    .announcement-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+    .announcement-card.cat-bereavement { border-left-color: #7a8a7a; }
+    .announcement-card.cat-baby { border-left-color: #f0a8c0; }
+    .announcement-card.cat-event { border-left-color: var(--gold); }
+    .announcement-card.cat-achievement { border-left-color: var(--green-light); }
+    .announcement-card.cat-notice { border-left-color: #8ab0c8; }
+    .announcement-card.pinned { border-left-color: var(--gold); box-shadow: 0 2px 14px rgba(201,150,58,0.15); }
+
+    .card-inner { padding: 1.5rem 1.8rem; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.8rem; }
+    .card-category-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .cat-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 20px; }
+    .cat-badge.bereavement { background: rgba(122,138,122,0.12); color: #4a5a4a; }
+    .cat-badge.baby        { background: rgba(240,168,192,0.2); color: #9a3a5a; }
+    .cat-badge.event       { background: rgba(201,150,58,0.12); color: #7a5010; }
+    .cat-badge.achievement { background: rgba(82,183,136,0.12); color: #1a6a3a; }
+    .cat-badge.notice      { background: rgba(138,176,200,0.15); color: #2a5a7a; }
+    .pin-badge { font-size: 0.68rem; font-weight: 700; color: var(--gold); background: rgba(201,150,58,0.1); padding: 0.2rem 0.5rem; border-radius: 4px; }
+    .card-date { font-size: 0.75rem; color: #b0a090; white-space: nowrap; }
+    .card-title { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.3; }
+    .card-body { font-size: 0.88rem; color: var(--text-mid); line-height: 1.8; }
+    .card-body p { margin-bottom: 0.4rem; }
+
+    .empty-feed { text-align: center; padding: 3rem 2rem; background: #fff; border-radius: 12px; border: 2px dashed #e8dece; }
+    .empty-feed .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .empty-feed h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .empty-feed p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
+
+    /* ── SIDEBAR ── */
+    .announcements-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .sidebar-widget {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .widget-header {
+      background: var(--green-deep);
+      padding: 1rem 1.4rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light); font-size: 0.95rem; font-weight: 800;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .widget-body { padding: 1.2rem 1.4rem; }
+
+    /* Upcoming birthdays sidebar */
+    .upcoming-bday-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0; border-bottom: 1px solid #f0ebe3; }
+    .upcoming-bday-item:last-child { border-bottom: none; }
+    .bday-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green-mid), var(--green-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: #fff; font-weight: 700; flex-shrink: 0; }
+    .bday-info .bday-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+    .bday-info .bday-date-str { font-size: 0.72rem; color: var(--text-light); margin-top: 0.1rem; }
+
+    /* Upcoming events sidebar */
+    .event-item { padding: 0.7rem 0; border-bottom: 1px solid #f0ebe3; }
+    .event-item:last-child { border-bottom: none; }
+    .event-item .event-date-badge { display: inline-block; background: var(--gold); color: var(--green-deep); font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 3px; margin-bottom: 0.3rem; }
+    .event-item .event-title { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); line-height: 1.4; }
+
+    /* Category legend */
+    .legend-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.82rem; color: var(--text-mid); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer { background: #0a1f14; border-top: 2px solid rgba(201,150,58,0.25); }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 3rem; padding: 4rem 8% 3rem; }
+    .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
+    .footer-logo-row { display: flex; align-items: center; gap: 0.75rem; }
+    .footer-logo-img { height: 44px; width: 44px; object-fit: contain; }
+    .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1rem; font-weight: 800; }
+    .footer-tagline { font-size: 0.65rem; color: #7aaa8a; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.15rem; }
+    .footer-desc { font-size: 0.85rem; color: #5a8070; line-height: 1.75; max-width: 280px; }
+    .footer-col { display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-col h4 { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 800; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(201,150,58,0.2); margin-bottom: 0.3rem; }
+    .footer-col a { color: #5a8070; font-size: 0.83rem; text-decoration: none; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--gold-light); }
+    .footer-contact-item { font-size: 0.83rem; color: #5a8070; line-height: 1.6; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 8%; border-top: 1px solid rgba(255,255,255,0.05); flex-wrap: wrap; gap: 0.8rem; }
+    .footer-copy { font-size: 0.78rem; color: #3d5a4a; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: #3d5a4a; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .announcements-layout { grid-template-columns: 1fr; }
+      .announcements-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .announcements-layout { padding: 40px 5%; }
+      .filter-bar { padding: 0 4%; }
+      .announcements-sidebar { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 6% 2rem; }
+      .footer-bottom { flex-direction: column; text-align: center; padding: 1rem 6%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="ipa.png" alt="IPA Logo"/>
+    <div class="nav-logo-text">IPA UK & Ireland <span>Igbere Progressive Association</span></div>
+  </a>
+  <button class="hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="ipa-projects.html">Projects</a></li>
+    <li><a href="ipa-announcements.html" class="active">Announcements</a></li>
+    <li><a href="ipa-membership.html">Membership</a></li>
+    <li><a href="ipa-members.html" class="nav-cta">Members</a></li>
+    <li><a href="ipa-admin.html" class="nav-admin">Admin</a></li>
+  </ul>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="index.html#about" onclick="closeMenu()">About</a>
+  <a href="ipa-projects.html" onclick="closeMenu()">Projects</a>
+  <a href="ipa-announcements.html" onclick="closeMenu()">Announcements</a>
+  <a href="ipa-membership.html">Membership</a>
+  <a href="ipa-members.html" class="mob-cta">Members Portal</a>
+  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">🛡️ Admin (Executives)</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="page-hero-tag">🌿 Community Updates</div>
+    <h1>IPA <em>Announcements</em></h1>
+    <p>Birthdays, bereavements, new arrivals, events and news from our IPA family across the UK and Ireland.</p>
+    <div class="hero-month-badge" id="heroMonthBadge">📅 Loading...</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterAnnouncements('all', this)">All</button>
+  <button class="filter-btn" onclick="filterAnnouncements('birthday', this)">🎂 Birthdays</button>
+  <button class="filter-btn" onclick="filterAnnouncements('bereavement', this)">🙏 Bereavements</button>
+  <button class="filter-btn" onclick="filterAnnouncements('baby', this)">👶 New Arrivals</button>
+  <button class="filter-btn" onclick="filterAnnouncements('event', this)">🎉 Events</button>
+  <button class="filter-btn" onclick="filterAnnouncements('achievement', this)">🏆 Achievements</button>
+  <button class="filter-btn" onclick="filterAnnouncements('notice', this)">📢 Notices</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="announcements-layout">
+
+  <!-- FEED COLUMN -->
+  <div>
+    <!-- BIRTHDAY SPOTLIGHT -->
+    <div class="birthday-spotlight reveal" id="birthdaySpotlight">
+      <div class="birthday-spotlight-label">🎂 This Month's Birthdays</div>
+      <h2 id="spotlightMonthTitle">Celebrating in —</h2>
+      <div class="birthday-names" id="birthdayNamesList">
+        <span class="no-birthdays">Loading birthdays...</span>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT FEED -->
+    <div class="announcement-feed" id="announcementFeed"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="announcements-sidebar">
+
+    <!-- UPCOMING BIRTHDAYS -->
+    <div class="sidebar-widget">
+      <div class="widget-header">🎂 Upcoming Birthdays</div>
+      <div class="widget-body" id="upcomingBdayWidget">
+        <p style="font-size:0.82rem;color:var(--text-light);">Loading...</p>
+      </div>
+    </div>
+
+    <!-- UPCOMING EVENTS -->
+    <div class="sidebar-widget">
+      <div class="widget-header">🗓️ Upcoming Events</div>
+      <div class="widget-body" id="upcomingEventsWidget">
+        <p style="font-size:0.82rem;color:var(--text-light);">No upcoming events posted yet.</p>
+      </div>
+    </div>
+
+    <!-- CATEGORY LEGEND -->
+    <div class="sidebar-widget">
+      <div class="widget-header">📋 Categories</div>
+      <div class="widget-body">
+        <div class="legend-item"><div class="legend-dot" style="background:#f0a8c0"></div> New Arrival (Baby)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Event / Meeting</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green-light)"></div> Achievement</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7a8a7a"></div> Bereavement</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#8ab0c8"></div> General Notice</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <img src="ipa.png" alt="IPA Logo" class="footer-logo-img"/>
+        <div>
+          <div class="footer-logo">IPA UK &amp; Ireland</div>
+          <div class="footer-tagline">Igbere Progressive Association</div>
+        </div>
+      </div>
+      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About Us</a>
+      <a href="ipa-projects.html">Projects</a>
+      <a href="ipa-announcements.html">Announcements</a>
+    </div>
+    <div class="footer-col">
+      <h4>Members</h4>
+      <a href="ipa-membership.html">Join IPA</a>
+      <a href="ipa-members.html">Members Portal</a>
+      <a href="index.html#contact">Donate / Support</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p class="footer-contact-item">✉️ info@ipaukandireland.org</p>
+      <p class="footer-contact-item">🌐 www.ipaukandireland.org</p>
+      <p class="footer-contact-item">📍 United Kingdom &amp; Ireland</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="ipa-membership.html">Membership</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const API = 'https://ipa-api.ipaukandireland.workers.dev';
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const CATEGORY_CONFIG = {
+    bereavement: { label: 'Bereavement', emoji: '🙏' },
+    baby:        { label: 'New Arrival', emoji: '👶' },
+    event:       { label: 'Event',       emoji: '🎉' },
+    achievement: { label: 'Achievement', emoji: '🏆' },
+    notice:      { label: 'Notice',      emoji: '📢' },
+  };
+
+  let _members = [];
+  let _announcements = [];
+
+  async function loadData() {
+    try {
+      const [m, a] = await Promise.all([
+        fetch(`${API}/api/members`).then(r => r.json()),
+        fetch(`${API}/api/announcements`).then(r => r.json()),
+      ]);
+      _members = Array.isArray(m) ? m : [];
+      _announcements = Array.isArray(a) ? a : [];
+    } catch(e) {
+      _members = []; _announcements = [];
+    }
+  }
+
+  function getMembers() { return _members; }
+  function getAnnouncements() { return _announcements; }
+
+  // ── INIT ──
+  async function init() {
+    await loadData();
+    const now = new Date();
+    const thisMonth = now.getMonth(); // 0-indexed
+    const nextMonth = (thisMonth + 1) % 12;
+
+    // Set hero badge
+    document.getElementById('heroMonthBadge').textContent = `📅 ${MONTHS[thisMonth]} ${now.getFullYear()} Announcements`;
+
+    // Birthday spotlight
+    renderBirthdaySpotlight(thisMonth);
+
+    // Upcoming birthdays sidebar (this + next 2 months)
+    renderUpcomingBirthdays(thisMonth);
+
+    // Announcements feed
+    renderFeed('all');
+
+    // Upcoming events sidebar
+    renderUpcomingEvents();
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // ── BIRTHDAYS ──
+  function getMembersWithBirthdayInMonth(month) {
+    return getMembers().filter(m => {
+      if (!m.birthdayMonth) return false;
+      return parseInt(m.birthdayMonth) - 1 === month;
+    });
+  }
+
+  function renderBirthdaySpotlight(month) {
+    const members = getMembersWithBirthdayInMonth(month);
+    document.getElementById('spotlightMonthTitle').textContent = `Celebrating in ${MONTHS[month]}`;
+    const container = document.getElementById('birthdayNamesList');
+    if (!members.length) {
+      container.innerHTML = '<span class="no-birthdays">No birthdays recorded this month yet.</span>';
+      return;
+    }
+    // Sort by day
+    members.sort((a,b) => parseInt(a.birthdayDay||0) - parseInt(b.birthdayDay||0));
+    container.innerHTML = members.map(m => {
+      const day = m.birthdayDay ? `<span class="bday-day">${ordinal(parseInt(m.birthdayDay))}</span>` : '';
+      return `<div class="birthday-chip">🎂 ${m.name.split(' ')[0]} ${day}</div>`;
+    }).join('');
+  }
+
+  function renderUpcomingBirthdays(thisMonth) {
+    const widget = document.getElementById('upcomingBdayWidget');
+    const months = [thisMonth, (thisMonth+1)%12, (thisMonth+2)%12];
+    let items = [];
+    months.forEach(m => {
+      getMembersWithBirthdayInMonth(m).forEach(mem => {
+        items.push({ name: mem.name, month: m, day: mem.birthdayDay });
+      });
+    });
+    if (!items.length) {
+      widget.innerHTML = '<p style="font-size:0.82rem;color:var(--text-light);font-style:italic;">No birthdays on record yet. Admins can add birthday month/day when editing members.</p>';
+      return;
+    }
+    // Sort by month proximity then day
+    items.sort((a,b) => {
+      const am = (a.month - thisMonth + 12) % 12;
+      const bm = (b.month - thisMonth + 12) % 12;
+      if (am !== bm) return am - bm;
+      return parseInt(a.day||0) - parseInt(b.day||0);
+    });
+    widget.innerHTML = items.slice(0,6).map(item => {
+      const initials = item.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+      const dateStr = item.day ? `${ordinal(parseInt(item.day))} ${SHORT_MONTHS[item.month]}` : SHORT_MONTHS[item.month];
+      return `<div class="upcoming-bday-item">
+        <div class="bday-avatar">${initials}</div>
+        <div class="bday-info">
+          <div class="bday-name">${item.name}</div>
+          <div class="bday-date-str">🎂 ${dateStr}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── ANNOUNCEMENTS FEED ──
+  function renderFeed(filterCat) {
+    const feed = document.getElementById('announcementFeed');
+    let items = getAnnouncements();
+
+    // Sort: pinned first, then by date descending
+    items.sort((a,b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.date) - new Date(a.date);
+    });
+
+    if (filterCat !== 'all' && filterCat !== 'birthday') {
+      items = items.filter(a => a.category === filterCat);
+    }
+    if (filterCat === 'birthday') {
+      feed.innerHTML = '<div class="empty-feed"><div class="icon">🎂</div><h4>Birthdays are shown above</h4><p>This month\'s birthdays are displayed in the birthday spotlight at the top of the page. Use the sidebar to see upcoming birthdays in the coming months.</p></div>';
+      return;
+    }
+
+    if (!items.length) {
+      feed.innerHTML = '<div class="empty-feed"><div class="icon">📭</div><h4>No announcements yet</h4><p>Check back soon — the executive team will post updates here.</p></div>';
+      return;
+    }
+
+    feed.innerHTML = items.map(a => {
+      const cfg = CATEGORY_CONFIG[a.category] || { label: a.category, emoji: '📢' };
+      const dateStr = formatDate(a.date);
+      return `<div class="announcement-card cat-${a.category} ${a.pinned ? 'pinned' : ''} reveal">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="card-category-row">
+              <span class="cat-badge ${a.category}">${cfg.emoji} ${cfg.label}</span>
+              ${a.pinned ? '<span class="pin-badge">📌 Pinned</span>' : ''}
+            </div>
+            <span class="card-date">${dateStr}</span>
+          </div>
+          <div class="card-title">${a.title}</div>
+          <div class="card-body"><p>${a.body}</p></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Re-observe new cards
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e,i) => {
+        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    feed.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  function renderUpcomingEvents() {
+    const widget = document.getElementById('upcomingEventsWidget');
+    const now = new Date();
+    const events = getAnnouncements()
+      .filter(a => a.category === 'event' && new Date(a.date) >= now)
+      .sort((a,b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 4);
+    if (!events.length) {
+      widget.innerHTML = '<p style="font-size:0.82rem;color:var(--text-light);font-style:italic;">No upcoming events posted yet.</p>';
+      return;
+    }
+    widget.innerHTML = events.map(e => `
+      <div class="event-item">
+        <div class="event-date-badge">${formatDate(e.date)}</div>
+        <div class="event-title">${e.title}</div>
+      </div>`).join('');
+  }
+
+  // ── FILTER ──
+  function filterAnnouncements(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const spotlight = document.getElementById('birthdaySpotlight');
+    spotlight.style.display = (cat === 'all' || cat === 'birthday') ? '' : 'none';
+    renderFeed(cat);
+  }
+
+  // ── HELPERS ──
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${ordinal(d.getDate())} ${SHORT_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  }
+  function ordinal(n) {
+    const s = ['th','st','nd','rd'], v = n % 100;
+    return n + (s[(v-20)%10] || s[v] || s[0]);
+  }
+
+  // ── HAMBURGER ──
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) closeMenu();
+  });
+
+  init();
+</script>
+</body>
+</html>

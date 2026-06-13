@@ -1,0 +1,19 @@
+{
+  "name": "IPA UK & Ireland — Members Portal",
+  "short_name": "IPA Members",
+  "description": "Igbere Progressive Association UK & Ireland — Members Portal",
+  "start_url": "./ipa-app.html",
+  "display": "standalone",
+  "background_color": "#1a4731",
+  "theme_color": "#1a4731",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-120.png", "sizes": "120x120", "type": "image/png" },
+    { "src": "icon-152.png", "sizes": "152x152", "type": "image/png" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["lifestyle", "social"],
+  "lang": "en-GB"
+}

@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="IPA Members"/>
+  <meta name="theme-color" content="#1a4731"/>
+  <title>IPA Members — UK & Ireland</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="120x120" href="icon-120.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"/>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --green:      #1a4731;
+      --green-mid:  #2d6a4f;
+      --green-light:#52b788;
+      --gold:       #c9963a;
+      --gold-light: #e8b86d;
+      --cream:      #fdf6ec;
+      --warm-white: #fffaf3;
+      --surface:    #ffffff;
+      --border:     #e8dece;
+      --text:       #1c1c1c;
+      --text-mid:   #3d3d3d;
+      --text-soft:  #7a6a5a;
+      --red:        #c0392b;
+      --red-bg:     #fef0ef;
+      --safe-top:   env(safe-area-inset-top, 0px);
+      --safe-bot:   env(safe-area-inset-bottom, 0px);
+      --nav-h:      60px;
+      --tab-h:      64px;
+    }
+
+    html { height: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--text);
+      height: 100%;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════
+       LOGIN SCREEN
+    ══════════════════════════════════ */
+    #loginScreen {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--green);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: calc(var(--safe-top) + 2rem) 1.5rem calc(var(--safe-bot) + 2rem);
+      overflow-y: auto;
+    }
+
+    .login-logo {
+      width: 110px; height: 110px; object-fit: contain;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      margin-bottom: 1.4rem;
+      animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+    .login-title {
+      font-family: 'Playfair Display', serif;
+      color: #fff; font-size: 1.6rem; font-weight: 800;
+      text-align: center; margin-bottom: 0.3rem;
+    }
+    .login-sub { color: #8ab5a0; font-size: 0.85rem; text-align: center; margin-bottom: 2rem; line-height: 1.5; }
+
+    .login-card {
+      background: #fff; border-radius: 20px;
+      padding: 1.8rem 1.6rem; width: 100%; max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+    .login-field { margin-bottom: 1.1rem; }
+    .login-field label {
+      display: block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green-mid); margin-bottom: 0.45rem;
+    }
+    .login-field input {
+      width: 100%; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 0.85rem 1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+    }
+    .login-btn {
+      width: 100%; background: var(--green); color: #fff;
+      border: none; border-radius: 10px; padding: 1rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 1rem; cursor: pointer; margin-top: 0.5rem;
+      transition: background 0.2s, transform 0.1s;
+      -webkit-appearance: none;
+    }
+    .login-btn:active { transform: scale(0.98); background: var(--green-mid); }
+    .login-error {
+      background: var(--red-bg); border: 1px solid #f0b8b4;
+      color: var(--red); border-radius: 8px;
+      padding: 0.75rem 1rem; font-size: 0.83rem;
+      margin-top: 0.9rem; display: none; line-height: 1.5;
+    }
+    .login-links { text-align: center; margin-top: 1.2rem; font-size: 0.8rem; color: var(--text-soft); line-height: 1.9; }
+    .login-links a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+
+    /* ══════════════════════════════════
+       APP SHELL
+    ══════════════════════════════════ */
+    #appShell { display: none; height: 100vh; flex-direction: column; }
+
+    /* TOP BAR */
+    .top-bar {
+      background: var(--green); color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: calc(var(--safe-top) + 0.6rem) 1.2rem 0.6rem;
+      height: calc(var(--nav-h) + var(--safe-top));
+      flex-shrink: 0; position: relative; z-index: 50;
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 0.7rem; }
+    .top-bar-logo { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
+    .top-bar-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 800; color: var(--gold-light); line-height: 1.1; }
+    .top-bar-title small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.6rem; color: #8ab5a0; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+    .top-bar-right { display: flex; align-items: center; gap: 0.6rem; }
+    .member-chip {
+      background: rgba(201,150,58,0.2); border: 1px solid rgba(201,150,58,0.35);
+      border-radius: 20px; padding: 0.25rem 0.7rem;
+      font-size: 0.72rem; color: var(--gold-light); font-weight: 600;
+      max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: none;
+      color: #d4ead9; font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .icon-btn:active { background: rgba(255,255,255,0.2); }
+
+    /* SCROLL AREA */
+    .page-scroll {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: calc(var(--tab-h) + var(--safe-bot) + 1rem);
+    }
+
+    /* BOTTOM TAB BAR */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: calc(var(--tab-h) + var(--safe-bot));
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: flex-start; justify-content: space-around;
+      padding-top: 0.5rem;
+      padding-bottom: var(--safe-bot);
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.07);
+    }
+    .tab-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 0.2rem;
+      cursor: pointer; border: none; background: none;
+      padding: 0; position: relative;
+      transition: transform 0.1s;
+    }
+    .tab-item:active { transform: scale(0.92); }
+    .tab-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; transition: background 0.2s;
+    }
+    .tab-item.active .tab-icon { background: rgba(26,71,49,0.1); }
+    .tab-label {
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.02em;
+      color: #b0a090; transition: color 0.2s;
+    }
+    .tab-item.active .tab-label { color: var(--green); }
+    .tab-badge {
+      position: absolute; top: -2px; right: calc(50% - 20px);
+      background: var(--red); color: #fff;
+      font-size: 0.6rem; font-weight: 800;
+      width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    /* ══════════════════════════════════
+       SCREENS
+    ══════════════════════════════════ */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── SECTION HEADER ── */
+    .section-header { padding: 1.4rem 1.2rem 0.6rem; }
+    .section-header .eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.2rem; }
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: var(--green); }
+    .gold-rule { width: 36px; height: 3px; background: var(--gold); border-radius: 2px; margin-top: 0.6rem; }
+
+    /* ══════════════════════════════════
+       HOME SCREEN
+    ══════════════════════════════════ */
+    .home-banner {
+      margin: 1rem 1rem 0;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+      border-radius: 16px; padding: 1.4rem 1.4rem 1.2rem;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(201,150,58,0.2);
+    }
+    .home-banner::after {
+      content: ''; position: absolute; right: -20px; top: -20px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,150,58,0.12) 0%, transparent 70%);
+    }
+    .home-banner h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .home-banner p { color: #b8d4c2; font-size: 0.82rem; line-height: 1.55; }
+    .banner-status { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(82,183,136,0.2); border: 1px solid rgba(82,183,136,0.4); border-radius: 20px; padding: 0.25rem 0.7rem; font-size: 0.72rem; color: #7de0ad; font-weight: 700; margin-top: 0.8rem; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; padding: 0.8rem 1rem; }
+    .stat-pill {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 0.9rem 0.5rem;
+      text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .stat-pill .s-icon { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; }
+    .stat-pill .s-val { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green); font-weight: 800; display: block; }
+    .stat-pill .s-lbl { font-size: 0.62rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 0.1rem; }
+
+    .home-section-title {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-soft);
+      padding: 0.8rem 1.2rem 0.4rem;
+    }
+
+    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; padding: 0 1rem; }
+    .quick-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 1.1rem 1rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+      border-left: 3px solid var(--green-light);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .quick-card:nth-child(2) { border-left-color: var(--gold); }
+    .quick-card:nth-child(3) { border-left-color: var(--green-mid); }
+    .quick-card:nth-child(4) { border-left-color: #e74c3c; }
+    .quick-card:active { transform: scale(0.97); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .quick-card .qc-icon { font-size: 1.6rem; }
+    .quick-card .qc-label { font-size: 0.82rem; font-weight: 700; color: var(--green); line-height: 1.3; }
+    .quick-card .qc-sub { font-size: 0.72rem; color: var(--text-soft); }
+
+    .ann-preview { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .ann-row {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1rem 1.1rem;
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .ann-row .a-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 4px; }
+    .ann-row .a-dot.red { background: var(--red); }
+    .ann-row .a-dot.green { background: var(--green-light); }
+    .ann-row .a-body { flex: 1; }
+    .ann-row .a-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.15rem; }
+    .ann-row .a-preview { font-size: 0.78rem; color: var(--text-soft); line-height: 1.45; }
+    .ann-row .a-date { font-size: 0.68rem; color: #b0a090; margin-top: 0.3rem; }
+
+    /* ══════════════════════════════════
+       DOCUMENTS SCREEN
+    ══════════════════════════════════ */
+    .filter-tabs { display: flex; gap: 0.5rem; padding: 0.8rem 1rem; overflow-x: auto; scrollbar-width: none; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab {
+      flex-shrink: 0; padding: 0.45rem 1rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text-soft); transition: all 0.2s;
+    }
+    .filter-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+    .doc-list { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .doc-item {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 1.1rem 1.2rem;
+      display: flex; align-items: center; gap: 1rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      cursor: pointer; transition: transform 0.15s;
+      text-decoration: none;
+    }
+    .doc-item:active { transform: scale(0.98); }
+    .doc-item-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+      background: rgba(45,106,79,0.08);
+    }
+    .doc-item-icon.gold { background: rgba(201,150,58,0.1); }
+    .doc-item-icon.red { background: rgba(192,57,43,0.08); }
+    .doc-item-body { flex: 1; min-width: 0; }
+    .doc-item-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; line-height: 1.3; }
+    .doc-item-meta { font-size: 0.73rem; color: var(--text-soft); }
+    .doc-item-tag {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.5rem;
+      background: rgba(45,106,79,0.1); color: var(--green-mid);
+      margin-right: 0.4rem;
+    }
+    .doc-item-tag.gold { background: rgba(201,150,58,0.12); color: #7a5010; }
+    .doc-dl-arrow { color: var(--border); font-size: 1.1rem; flex-shrink: 0; }
+
+    .doc-section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-soft);
+      padding: 1rem 1.2rem 0.4rem;
+    }
+
+    /* ══════════════════════════════════
+       DUES SCREEN
+    ══════════════════════════════════ */
+    .dues-hero {
+      margin: 1rem 1rem 0;
+      background: linear-gradient(135deg, var(--green) 0%, #2d6a4f 100%);
+      border-radius: 16px; padding: 1.4rem;
+      border: 1px solid rgba(201,150,58,0.2);
+    }
+    .dues-hero h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.1rem; margin-bottom: 0.8rem; }
+    .dues-status-pill { display: inline-flex; align-items: center; gap: 0.4rem; border-radius: 20px; padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 700; }
+    .dues-status-pill.paid { background: rgba(82,183,136,0.2); border: 1px solid rgba(82,183,136,0.4); color: #7de0ad; }
+    .dues-status-pill.due { background: rgba(231,76,60,0.2); border: 1px solid rgba(231,76,60,0.4); color: #f0a099; }
+    .dues-next { color: #8ab5a0; font-size: 0.8rem; margin-top: 0.6rem; }
+
+    .fee-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; padding: 0.8rem 1rem; }
+    .fee-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1rem; text-align: center;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .fee-card .fc-type { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-soft); margin-bottom: 0.4rem; }
+    .fee-card .fc-amount { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--green); font-weight: 800; }
+    .fee-card .fc-note { font-size: 0.7rem; color: var(--text-soft); margin-top: 0.25rem; }
+
+    .history-list { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .history-item {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1rem 1.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .history-item .hi-left .hi-type { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .history-item .hi-left .hi-date { font-size: 0.73rem; color: var(--text-soft); margin-top: 0.1rem; }
+    .history-item .hi-amount { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 800; color: var(--green); }
+    .history-item .hi-status { font-size: 0.7rem; font-weight: 700; color: #27ae60; text-align: right; }
+
+    .bank-card {
+      margin: 0.8rem 1rem;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-left: 4px solid var(--gold); border-radius: 0 14px 14px 0;
+      padding: 1.2rem 1.4rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .bank-card h4 { font-family: 'Playfair Display', serif; color: var(--green); font-size: 1rem; margin-bottom: 1rem; }
+    .bk-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid #f0e8dc; font-size: 0.85rem; }
+    .bk-row:last-child { border-bottom: none; }
+    .bk-row .bk-lbl { color: var(--text-soft); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .bk-row .bk-val { font-weight: 700; color: var(--text); }
+    .bank-note {
+      background: rgba(201,150,58,0.08); border: 1px solid rgba(201,150,58,0.25);
+      border-radius: 8px; padding: 0.8rem 1rem;
+      font-size: 0.78rem; color: #7a5a1a; line-height: 1.6; margin-top: 0.8rem;
+    }
+
+    /* ══════════════════════════════════
+       ANNOUNCEMENTS SCREEN
+    ══════════════════════════════════ */
+    .ann-full-list { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .ann-full-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 1.2rem 1.3rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .ann-full-card .afc-top { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 0.7rem; }
+    .afc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .afc-icon.urgent { background: #fef0ef; }
+    .afc-icon.event { background: rgba(201,150,58,0.1); }
+    .afc-icon.info { background: rgba(82,183,136,0.12); }
+    .afc-icon.news { background: rgba(45,106,79,0.08); }
+    .afc-header h4 { font-size: 0.92rem; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 0.2rem; }
+    .afc-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.5rem; }
+    .afc-tag.urgent { background: #fef0ef; color: var(--red); }
+    .afc-tag.event { background: rgba(201,150,58,0.12); color: #7a5010; }
+    .afc-tag.info { background: rgba(82,183,136,0.1); color: #1a6640; }
+    .afc-tag.news { background: rgba(45,106,79,0.08); color: var(--green-mid); }
+    .ann-full-card p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; }
+    .ann-full-card .afc-date { font-size: 0.72rem; color: #b0a090; margin-top: 0.7rem; }
+
+    /* ══════════════════════════════════
+       ADMIN SCREEN
+    ══════════════════════════════════ */
+    .admin-gate {
+      padding: 2rem 1.2rem; display: flex; flex-direction: column;
+      align-items: center; gap: 1rem;
+    }
+    .admin-gate .ag-icon { font-size: 3rem; }
+    .admin-gate h3 { font-family: 'Playfair Display', serif; color: var(--green); font-size: 1.2rem; text-align: center; }
+    .admin-gate p { font-size: 0.85rem; color: var(--text-soft); text-align: center; line-height: 1.6; max-width: 280px; }
+    .admin-pin-row { display: flex; gap: 0.6rem; width: 100%; max-width: 280px; }
+    .admin-pin-input {
+      flex: 1; text-align: center; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 0.9rem 0.5rem;
+      font-size: 1.5rem; letter-spacing: 0.3em; font-weight: 800;
+      color: var(--green); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .admin-pin-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,71,49,0.1); }
+    .admin-login-btn {
+      width: 100%; max-width: 280px;
+      background: var(--green); color: #fff; border: none;
+      border-radius: 10px; padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer;
+    }
+    .admin-error { font-size: 0.8rem; color: var(--red); display: none; }
+
+    .admin-panel { display: none; padding: 0 0 1rem; }
+    .admin-section-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-soft);
+      padding: 1rem 1.2rem 0.4rem;
+    }
+    .admin-actions { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .admin-action-btn {
+      display: flex; align-items: center; gap: 0.9rem;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1rem 1.2rem;
+      font-family: 'DM Sans', sans-serif; cursor: pointer;
+      transition: transform 0.15s; width: 100%; text-align: left;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .admin-action-btn:active { transform: scale(0.98); }
+    .admin-action-btn .aa-icon { font-size: 1.4rem; width: 38px; text-align: center; }
+    .admin-action-btn .aa-label { font-size: 0.88rem; font-weight: 700; color: var(--text); display: block; }
+    .admin-action-btn .aa-sub { font-size: 0.75rem; color: var(--text-soft); }
+    .admin-action-btn .aa-arrow { margin-left: auto; color: var(--border); font-size: 1rem; }
+
+    .admin-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; padding: 0 1rem; margin-bottom: 0.3rem; }
+    .admin-stat-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .admin-stat-card .asc-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--green); font-weight: 800; }
+    .admin-stat-card .asc-lbl { font-size: 0.72rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 500; display: none; align-items: flex-end;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-sheet {
+      background: #fff; width: 100%; border-radius: 20px 20px 0 0;
+      padding: 1.5rem 1.5rem calc(var(--safe-bot) + 1.5rem);
+      animation: slideUp 0.3s ease;
+      max-height: 80vh; overflow-y: auto;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 1.2rem; }
+    .modal-title { font-family: 'Playfair Display', serif; color: var(--green); font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .modal-sub { font-size: 0.83rem; color: var(--text-soft); margin-bottom: 1.2rem; line-height: 1.6; }
+    .modal-field { margin-bottom: 1rem; }
+    .modal-field label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.4rem; }
+    .modal-field input, .modal-field select, .modal-field textarea {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; color: var(--text); outline: none;
+      transition: border-color 0.2s;
+    }
+    .modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus { border-color: var(--green-mid); }
+    .modal-field textarea { resize: none; min-height: 80px; }
+    .modal-btns { display: flex; gap: 0.7rem; margin-top: 0.5rem; }
+    .modal-cancel { flex: 1; background: var(--cream); color: var(--text-mid); border: 1.5px solid var(--border); border-radius: 10px; padding: 0.9rem; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+    .modal-confirm { flex: 1; background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 0.9rem; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+    .modal-confirm.gold { background: var(--gold); color: var(--green); }
+
+    /* Install banner */
+    .install-banner {
+      display: none; position: fixed; bottom: calc(var(--tab-h) + var(--safe-bot) + 0.7rem);
+      left: 1rem; right: 1rem; z-index: 90;
+      background: var(--green); color: #fff;
+      border-radius: 14px; padding: 1rem 1.2rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      align-items: center; gap: 1rem;
+    }
+    .install-banner.show { display: flex; }
+    .install-banner p { flex: 1; font-size: 0.82rem; line-height: 1.5; color: #b8d4c2; }
+    .install-banner p strong { color: #fff; display: block; margin-bottom: 0.1rem; }
+    .install-btn { background: var(--gold); color: var(--green); border: none; border-radius: 8px; padding: 0.55rem 1rem; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; flex-shrink: 0; }
+    .install-close { background: none; border: none; color: #8ab5a0; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; padding: 0; }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+    /* Scrollbar hide */
+    .page-scroll::-webkit-scrollbar { display: none; }
+    .page-scroll { scrollbar-width: none; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="loginScreen">
+  <img src="icon-512.png" alt="IPA Logo" class="login-logo"/>
+  <div class="login-title">IPA UK & Ireland</div>
+  <div class="login-sub">Igbere Progressive Association<br/>Members' Portal</div>
+  <div class="login-card">
+    <div class="login-field">
+      <label>Email Address</label>
+      <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email" inputmode="email"/>
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Member password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="loginError">
+      ❌ Incorrect details. Please try again or contact <strong>info@ipaukandireland.org</strong>
+    </div>
+    <div class="login-links">
+      Not a member? <a href="ipa-membership.html">Apply here</a><br/>
+      Forgot password? <a href="mailto:info@ipaukandireland.org">Email the secretary</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════ -->
+<div id="appShell">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <img src="icon-192.png" class="top-bar-logo" alt="IPA"/>
+      <div class="top-bar-title">
+        IPA Members
+        <small>UK & Ireland</small>
+      </div>
+    </div>
+    <div class="top-bar-right">
+      <div class="member-chip" id="memberChip">Member</div>
+      <button class="icon-btn" onclick="doLogout()" title="Sign out">↩</button>
+    </div>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="page-scroll" id="pageScroll">
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="home-banner">
+        <h3>Welcome back 🌿</h3>
+        <p id="homeName">Good to have you here. Here's your member overview.</p>
+        <div class="banner-status">✅ 2026 Dues — Paid</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-pill"><span class="s-icon">📄</span><span class="s-val">8</span><span class="s-lbl">Docs</span></div>
+        <div class="stat-pill"><span class="s-icon">📣</span><span class="s-val">3</span><span class="s-lbl">New</span></div>
+        <div class="stat-pill"><span class="s-icon">🗓️</span><span class="s-val">Jul</span><span class="s-lbl">Meeting</span></div>
+      </div>
+      <div class="home-section-title">Quick Access</div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="goTab('docs')">
+          <div class="qc-icon">📜</div>
+          <div class="qc-label">Constitution</div>
+          <div class="qc-sub">Download PDF</div>
+        </div>
+        <div class="quick-card" onclick="goTab('docs')">
+          <div class="qc-icon">📝</div>
+          <div class="qc-label">Minutes Archive</div>
+          <div class="qc-sub">6 documents</div>
+        </div>
+        <div class="quick-card" onclick="goTab('dues')">
+          <div class="qc-icon">💷</div>
+          <div class="qc-label">Pay Dues</div>
+          <div class="qc-sub">Bank details</div>
+        </div>
+        <div class="quick-card" onclick="goTab('ann')">
+          <div class="qc-icon">📣</div>
+          <div class="qc-label">Announcements</div>
+          <div class="qc-sub">3 new</div>
+        </div>
+      </div>
+      <div class="home-section-title" style="margin-top:0.5rem;">Latest Announcements</div>
+      <div class="ann-preview">
+        <div class="ann-row">
+          <div class="a-dot red"></div>
+          <div class="a-body">
+            <div class="a-title">July Meeting — Save the Date</div>
+            <div class="a-preview">Next General Meeting in July 2026. Date & venue to follow.</div>
+            <div class="a-date">10 May 2026</div>
+          </div>
+        </div>
+        <div class="ann-row">
+          <div class="a-dot"></div>
+          <div class="a-body">
+            <div class="a-title">2026 Dues Reminder</div>
+            <div class="a-preview">Outstanding dues must be cleared by 31 May 2026.</div>
+            <div class="a-date">1 April 2026</div>
+          </div>
+        </div>
+        <div class="ann-row">
+          <div class="a-dot green"></div>
+          <div class="a-body">
+            <div class="a-title">AGM Minutes Now Available</div>
+            <div class="a-preview">January 2026 AGM minutes uploaded to Documents.</div>
+            <div class="a-date">15 Feb 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="screen" id="screen-docs">
+      <div class="section-header">
+        <div class="eyebrow">Members Only</div>
+        <h2>Documents</h2>
+        <div class="gold-rule"></div>
+      </div>
+      <div class="filter-tabs">
+        <div class="filter-tab active" onclick="filterDocs('all',this)">All</div>
+        <div class="filter-tab" onclick="filterDocs('constitution',this)">Constitution</div>
+        <div class="filter-tab" onclick="filterDocs('minutes',this)">Minutes</div>
+        <div class="filter-tab" onclick="filterDocs('finance',this)">Finance</div>
+      </div>
+
+      <div class="doc-section-label">📜 Governing Documents</div>
+      <div class="doc-list">
+        <a href="constitution.pdf" download class="doc-item" data-cat="constitution">
+          <div class="doc-item-icon gold">📜</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">IPA Constitution</div>
+            <div class="doc-item-meta"><span class="doc-item-tag gold">Foundation</span> Ratified 2023 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="standing-orders.pdf" download class="doc-item" data-cat="constitution">
+          <div class="doc-item-icon">📋</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">Standing Orders & Bye-Laws</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">Rules</span> Updated 2024 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+      </div>
+
+      <div class="doc-section-label">📝 Meeting Minutes</div>
+      <div class="doc-list">
+        <a href="minutes/agm-jan-2026.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon gold">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">AGM Minutes — Jan 2026</div>
+            <div class="doc-item-meta"><span class="doc-item-tag gold">Latest</span> January 2026 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="minutes/gm-oct-2025.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">GM Minutes — Oct 2025</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">GM</span> October 2025 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="minutes/gm-jul-2025.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">GM Minutes — Jul 2025</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">GM</span> July 2025 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="minutes/agm-jan-2025.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">AGM Minutes — Jan 2025</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">AGM</span> January 2025 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="minutes/gm-oct-2024.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">GM Minutes — Oct 2024</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">GM</span> October 2024 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="minutes/gm-jul-2024.pdf" download class="doc-item" data-cat="minutes">
+          <div class="doc-item-icon">📝</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">GM Minutes — Jul 2024</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">GM</span> July 2024 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+      </div>
+
+      <div class="doc-section-label">📊 Financial Reports</div>
+      <div class="doc-list">
+        <a href="finance/annual-report-2025.pdf" download class="doc-item" data-cat="finance">
+          <div class="doc-item-icon gold">📊</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">Annual Financial Report 2025</div>
+            <div class="doc-item-meta"><span class="doc-item-tag gold">Finance</span> Year 2025 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+        <a href="finance/annual-report-2024.pdf" download class="doc-item" data-cat="finance">
+          <div class="doc-item-icon">📊</div>
+          <div class="doc-item-body">
+            <div class="doc-item-title">Annual Financial Report 2024</div>
+            <div class="doc-item-meta"><span class="doc-item-tag">Finance</span> Year 2024 · PDF</div>
+          </div>
+          <div class="doc-dl-arrow">⬇</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- DUES -->
+    <div class="screen" id="screen-dues">
+      <div class="section-header">
+        <div class="eyebrow">Finance</div>
+        <h2>Dues & Payments</h2>
+        <div class="gold-rule"></div>
+      </div>
+      <div class="dues-hero">
+        <h3>Your 2026 Status</h3>
+        <div class="dues-status-pill paid">✅ Dues Paid — 2026</div>
+        <div class="dues-next">Next due: January 2027</div>
+      </div>
+      <div class="home-section-title">Annual Fee Structure</div>
+      <div class="fee-cards">
+        <div class="fee-card"><div class="fc-type">Registration</div><div class="fc-amount">£10</div><div class="fc-note">One-time only</div></div>
+        <div class="fee-card"><div class="fc-type">Male — Annual</div><div class="fc-amount">£120</div><div class="fc-note">Per year</div></div>
+        <div class="fee-card"><div class="fc-type">Female — Annual</div><div class="fc-amount">£60</div><div class="fc-note">Per year</div></div>
+        <div class="fee-card"><div class="fc-type">Welfare Levy</div><div class="fc-amount">£20</div><div class="fc-note">Per bereavement</div></div>
+      </div>
+      <div class="home-section-title">Payment History</div>
+      <div class="history-list">
+        <div class="history-item"><div class="hi-left"><div class="hi-type">Annual Dues 2026</div><div class="hi-date">14 Jan 2026</div></div><div style="text-align:right"><div class="hi-amount">£120</div><div class="hi-status">✅ Paid</div></div></div>
+        <div class="history-item"><div class="hi-left"><div class="hi-type">Annual Dues 2025</div><div class="hi-date">8 Jan 2025</div></div><div style="text-align:right"><div class="hi-amount">£120</div><div class="hi-status">✅ Paid</div></div></div>
+        <div class="history-item"><div class="hi-left"><div class="hi-type">Welfare Levy 2025</div><div class="hi-date">3 Jun 2025</div></div><div style="text-align:right"><div class="hi-amount">£20</div><div class="hi-status">✅ Paid</div></div></div>
+        <div class="history-item"><div class="hi-left"><div class="hi-type">Annual Dues 2024</div><div class="hi-date">20 Jan 2024</div></div><div style="text-align:right"><div class="hi-amount">£120</div><div class="hi-status">✅ Paid</div></div></div>
+        <div class="history-item"><div class="hi-left"><div class="hi-type">Registration Fee</div><div class="hi-date">5 Mar 2023</div></div><div style="text-align:right"><div class="hi-amount">£10</div><div class="hi-status">✅ Paid</div></div></div>
+      </div>
+      <div class="home-section-title">Bank Transfer Details</div>
+      <div class="bank-card">
+        <h4>🏦 Pay by Bank Transfer</h4>
+        <div class="bk-row"><span class="bk-lbl">Account Name</span><span class="bk-val">IPA UK & Ireland</span></div>
+        <div class="bk-row"><span class="bk-lbl">Sort Code</span><span class="bk-val">30-96-26</span></div>
+        <div class="bk-row"><span class="bk-lbl">Account No.</span><span class="bk-val">44518068</span></div>
+        <div class="bk-row"><span class="bk-lbl">Bank</span><span class="bk-val">Lloyds Bank Plc</span></div>
+        <div class="bk-row"><span class="bk-lbl">Reference</span><span class="bk-val">Full Name + Year</span></div>
+        <div class="bank-note">⚠️ Use your <strong>full name and year</strong> as reference (e.g. <em>John Obi 2026</em>). Then email your receipt to <strong>info@ipaukandireland.org</strong></div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="screen" id="screen-ann">
+      <div class="section-header">
+        <div class="eyebrow">Members Only</div>
+        <h2>Announcements</h2>
+        <div class="gold-rule"></div>
+      </div>
+      <div class="ann-full-list">
+        <div class="ann-full-card">
+          <div class="afc-top">
+            <div class="afc-icon urgent">🚨</div>
+            <div class="afc-header"><h4>July 2026 General Meeting — Save the Date</h4><span class="afc-tag urgent">Urgent</span></div>
+          </div>
+          <p>The next General Meeting will be held in July 2026. The exact date, time, and venue will be confirmed and circulated to all members via WhatsApp and email at least two weeks in advance. All members are strongly encouraged to attend. Apologies must be submitted to the Secretary in advance.</p>
+          <div class="afc-date">📅 Posted 10 May 2026</div>
+        </div>
+        <div class="ann-full-card">
+          <div class="afc-top">
+            <div class="afc-icon event">📅</div>
+            <div class="afc-header"><h4>2026 Annual Dues — Payment Reminder</h4><span class="afc-tag event">Finance</span></div>
+          </div>
+          <p>Members who have not yet settled their 2026 annual dues are reminded that the deadline is 31 May 2026. Members with outstanding dues may not be eligible to vote at the next General Meeting. Please pay using the bank details in the Dues section and send your receipt to the Treasurer.</p>
+          <div class="afc-date">📅 Posted 1 April 2026</div>
+        </div>
+        <div class="ann-full-card">
+          <div class="afc-top">
+            <div class="afc-icon info">📝</div>
+            <div class="afc-header"><h4>AGM Minutes — January 2026 Available</h4><span class="afc-tag info">Documents</span></div>
+          </div>
+          <p>The minutes from the AGM held on 18 January 2026 have been reviewed, approved and uploaded to the Documents section. Please read the minutes, particularly resolutions passed and the financial report. Raise any corrections with the Secretary within 14 days.</p>
+          <div class="afc-date">📅 Posted 15 February 2026</div>
+        </div>
+        <div class="ann-full-card">
+          <div class="afc-top">
+            <div class="afc-icon news">🌿</div>
+            <div class="afc-header"><h4>Community Project Update — Igbere</h4><span class="afc-tag news">Community</span></div>
+          </div>
+          <p>The first phase of the elderly welfare support project in Igbere has been completed. Funds raised at the October 2025 meeting were disbursed before Christmas. A full project report will be presented at the next General Meeting. Thank you to all members for your generous contributions.</p>
+          <div class="afc-date">📅 Posted 10 January 2026</div>
+        </div>
+        <div class="ann-full-card">
+          <div class="afc-top">
+            <div class="afc-icon event">🎉</div>
+            <div class="afc-header"><h4>New Members Welcome — January 2026</h4><span class="afc-tag event">Members</span></div>
+          </div>
+          <p>IPA UK & Ireland warmly welcomes four new members who joined following the AGM. We look forward to your active participation. Please introduce yourselves at the next meeting!</p>
+          <div class="afc-date">📅 Posted 20 January 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="screen" id="screen-admin">
+      <div class="section-header">
+        <div class="eyebrow">Committee Only</div>
+        <h2>Admin Dashboard</h2>
+        <div class="gold-rule"></div>
+      </div>
+
+      <!-- Admin PIN gate -->
+      <div class="admin-gate" id="adminGate">
+        <div class="ag-icon">🔒</div>
+        <h3>Admin Access</h3>
+        <p>Enter the 4-digit admin PIN to access the committee dashboard.</p>
+        <div class="admin-pin-row">
+          <input class="admin-pin-input" type="password" id="adminPin" maxlength="4" inputmode="numeric" placeholder="••••"/>
+        </div>
+        <button class="admin-login-btn" onclick="adminLogin()">Enter Dashboard</button>
+        <div class="admin-error" id="adminError">❌ Incorrect PIN. Try again.</div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div class="admin-panel" id="adminPanel">
+        <div class="admin-section-title">Overview</div>
+        <div class="admin-stats">
+          <div class="admin-stat-card"><div class="asc-val">24</div><div class="asc-lbl">Total Members</div></div>
+          <div class="admin-stat-card"><div class="asc-val">18</div><div class="asc-lbl">Dues Paid 2026</div></div>
+          <div class="admin-stat-card"><div class="asc-val">6</div><div class="asc-lbl">Outstanding Dues</div></div>
+          <div class="admin-stat-card"><div class="asc-val">£2,640</div><div class="asc-lbl">Collected 2026</div></div>
+        </div>
+
+        <div class="admin-section-title">Member Management</div>
+        <div class="admin-actions">
+          <button class="admin-action-btn" onclick="openModal('addMember')">
+            <span class="aa-icon">➕</span>
+            <div><span class="aa-label">Add New Member</span><span class="aa-sub">Register a new confirmed member</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+          <button class="admin-action-btn" onclick="openModal('recordPayment')">
+            <span class="aa-icon">💷</span>
+            <div><span class="aa-label">Record Dues Payment</span><span class="aa-sub">Mark a member's dues as paid</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+          <button class="admin-action-btn" onclick="openModal('viewMembers')">
+            <span class="aa-icon">👥</span>
+            <div><span class="aa-label">View All Members</span><span class="aa-sub">See full membership list</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+        </div>
+
+        <div class="admin-section-title">Communications</div>
+        <div class="admin-actions">
+          <button class="admin-action-btn" onclick="openModal('postAnnouncement')">
+            <span class="aa-icon">📣</span>
+            <div><span class="aa-label">Post Announcement</span><span class="aa-sub">Publish a notice to all members</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+          <button class="admin-action-btn" onclick="openModal('uploadDoc')">
+            <span class="aa-icon">📄</span>
+            <div><span class="aa-label">Upload Document</span><span class="aa-sub">Add new minutes or reports</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+        </div>
+
+        <div class="admin-section-title">Finance</div>
+        <div class="admin-actions">
+          <button class="admin-action-btn" onclick="openModal('duesReport')">
+            <span class="aa-icon">📊</span>
+            <div><span class="aa-label">Dues Report</span><span class="aa-sub">See who has & hasn't paid</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+          <button class="admin-action-btn" onclick="openModal('sendReminder')">
+            <span class="aa-icon">🔔</span>
+            <div><span class="aa-label">Send Dues Reminder</span><span class="aa-sub">Notify members with outstanding dues</span></div>
+            <span class="aa-arrow">›</span>
+          </button>
+        </div>
+
+        <div style="padding: 1.2rem 1rem 0.5rem; text-align:center;">
+          <button onclick="adminLogout()" style="background:none; border:none; color:var(--text-soft); font-size:0.83rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Sign out of Admin ↩</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-scroll -->
+
+  <!-- BOTTOM TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-item active" id="tab-home" onclick="goTab('home')">
+      <div class="tab-icon">🏠</div>
+      <div class="tab-label">Home</div>
+    </button>
+    <button class="tab-item" id="tab-docs" onclick="goTab('docs')">
+      <div class="tab-icon">📂</div>
+      <div class="tab-label">Documents</div>
+    </button>
+    <button class="tab-item" id="tab-dues" onclick="goTab('dues')">
+      <div class="tab-icon">💷</div>
+      <div class="tab-label">Dues</div>
+    </button>
+    <button class="tab-item" id="tab-ann" onclick="goTab('ann')">
+      <div class="tab-icon">📣</div>
+      <div class="tab-label">News</div>
+      <div class="tab-badge">3</div>
+    </button>
+    <button class="tab-item" id="tab-admin" onclick="goTab('admin')">
+      <div class="tab-icon">⚙️</div>
+      <div class="tab-label">Admin</div>
+    </button>
+  </div>
+
+</div><!-- /appShell -->
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <div>
+    <p><strong>Install IPA Members App</strong>Add to your home screen for quick access</p>
+  </div>
+  <button class="install-btn" onclick="installApp()">Install</button>
+  <button class="install-close" onclick="dismissInstall()">✕</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──
+  // Change these credentials before deploying
+  const MEMBER_PASS = 'ipa2026';   // Member login password
+  const ADMIN_PIN   = '1234';      // Admin dashboard PIN — change this!
+
+  // ── AUTH ──
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    const err   = document.getElementById('loginError');
+    if (!email.includes('@') || pass !== MEMBER_PASS) {
+      err.style.display = 'block'; return;
+    }
+    err.style.display = 'none';
+    sessionStorage.setItem('ipaAuth', 'true');
+    sessionStorage.setItem('ipaEmail', email);
+    enterApp(email);
+  }
+
+  function enterApp(email) {
+    document.getElementById('loginScreen').style.display = 'none';
+    const shell = document.getElementById('appShell');
+    shell.style.display = 'flex';
+    const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    document.getElementById('memberChip').textContent = name.split(' ')[0];
+    document.getElementById('homeName').textContent = 'Welcome back, ' + name.split(' ')[0] + '. Here\'s your member overview.';
+  }
+
+  function doLogout() {
+    sessionStorage.clear();
+    document.getElementById('appShell').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginPass').value = '';
+  }
+
+  if (sessionStorage.getItem('ipaAuth') === 'true') {
+    enterApp(sessionStorage.getItem('ipaEmail') || 'member@ipa.org');
+  }
+
+  // ── NAVIGATION ──
+  function goTab(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+    document.getElementById('pageScroll').scrollTo(0, 0);
+    // Clear announcement badge when viewed
+    if (id === 'ann') document.querySelector('#tab-ann .tab-badge').style.display = 'none';
+  }
+
+  // ── DOCUMENT FILTER ──
+  function filterDocs(cat, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.doc-item').forEach(item => {
+      item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
+    });
+    // Show/hide section labels
+    document.querySelectorAll('.doc-section-label').forEach(lbl => {
+      if (cat === 'all') { lbl.style.display = 'block'; return; }
+      const nextList = lbl.nextElementSibling;
+      const hasVisible = nextList && [...nextList.querySelectorAll('.doc-item')].some(i => i.style.display !== 'none');
+      lbl.style.display = hasVisible ? 'block' : 'none';
+    });
+  }
+
+  // ── ADMIN ──
+  function adminLogin() {
+    const pin = document.getElementById('adminPin').value;
+    if (pin !== ADMIN_PIN) {
+      document.getElementById('adminError').style.display = 'block'; return;
+    }
+    document.getElementById('adminError').style.display = 'none';
+    document.getElementById('adminGate').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    sessionStorage.setItem('ipaAdmin', 'true');
+  }
+
+  function adminLogout() {
+    sessionStorage.removeItem('ipaAdmin');
+    document.getElementById('adminGate').style.display = 'flex';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('adminPin').value = '';
+  }
+
+  if (sessionStorage.getItem('ipaAdmin') === 'true') {
+    document.getElementById('adminGate').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+  }
+
+  // ── MODALS ──
+  const MODALS = {
+    addMember: {
+      title: 'Add New Member',
+      sub: 'Register a confirmed member to the portal.',
+      html: `
+        <div class="modal-field"><label>Full Name *</label><input type="text" placeholder="e.g. Chukwuemeka Obi"/></div>
+        <div class="modal-field"><label>Email Address *</label><input type="email" placeholder="member@email.com"/></div>
+        <div class="modal-field"><label>Phone Number</label><input type="tel" placeholder="+44 7700 000000"/></div>
+        <div class="modal-field"><label>Membership Type</label><select><option>Male Member (£120/yr)</option><option>Female Member (£60/yr)</option></select></div>
+        <div class="modal-field"><label>Village</label><select><option>Agbo</option><option>Amakpo</option><option>Amaiyi</option><option>Amankalu</option><option>Amaofufe</option><option>Amaoji</option><option>Amaukwu</option><option>Eziama</option><option>Ibina Ukwu</option><option>Ibina Nta</option><option>Ohumola</option><option>Okafia</option><option>Umuisi</option></select></div>
+      `,
+      confirmLabel: 'Add Member', confirmClass: ''
+    },
+    recordPayment: {
+      title: 'Record Dues Payment',
+      sub: 'Mark a member\'s dues as received.',
+      html: `
+        <div class="modal-field"><label>Member Name *</label><input type="text" placeholder="Full name of member"/></div>
+        <div class="modal-field"><label>Payment Type</label><select><option>Annual Dues 2026 — Male (£120)</option><option>Annual Dues 2026 — Female (£60)</option><option>Welfare Levy (£20)</option><option>Registration Fee (£10)</option></select></div>
+        <div class="modal-field"><label>Amount Received (£)</label><input type="number" placeholder="120"/></div>
+        <div class="modal-field"><label>Date Received</label><input type="date"/></div>
+        <div class="modal-field"><label>Notes</label><textarea placeholder="Optional notes…"></textarea></div>
+      `,
+      confirmLabel: 'Record Payment', confirmClass: 'gold'
+    },
+    viewMembers: {
+      title: 'All Members',
+      sub: 'Current registered membership list.',
+      html: `<p style="font-size:0.85rem;color:var(--text-mid);line-height:1.7;">The full member directory will be managed via the backend when connected to a database. For now, member records are maintained in the treasurer's spreadsheet.<br/><br/>To request the current list, contact: <strong><a href="mailto:secretary@ipaukandireland.org" style="color:var(--green-mid)">secretary@ipaukandireland.org</a></strong></p>`,
+      confirmLabel: 'Close', confirmClass: ''
+    },
+    postAnnouncement: {
+      title: 'Post Announcement',
+      sub: 'This will be visible to all members in the Announcements tab.',
+      html: `
+        <div class="modal-field"><label>Title *</label><input type="text" placeholder="Announcement title"/></div>
+        <div class="modal-field"><label>Category</label><select><option>Urgent</option><option>Finance</option><option>Documents</option><option>Community</option><option>Members</option><option>Event</option></select></div>
+        <div class="modal-field"><label>Message *</label><textarea placeholder="Write your announcement…" style="min-height:120px"></textarea></div>
+      `,
+      confirmLabel: 'Publish', confirmClass: 'gold'
+    },
+    uploadDoc: {
+      title: 'Upload Document',
+      sub: 'Add a new document to the members\' library.',
+      html: `
+        <div class="modal-field"><label>Document Title *</label><input type="text" placeholder="e.g. GM Minutes — July 2026"/></div>
+        <div class="modal-field"><label>Category</label><select><option>Meeting Minutes</option><option>Constitution</option><option>Financial Report</option><option>Other</option></select></div>
+        <div class="modal-field"><label>Date</label><input type="date"/></div>
+        <p style="font-size:0.8rem;color:var(--text-soft);line-height:1.6;margin-top:0.5rem;">📎 To upload the PDF file, place it in the correct folder on your web server and update the link in the documents list. A file upload feature requires server-side hosting.</p>
+      `,
+      confirmLabel: 'Save', confirmClass: ''
+    },
+    duesReport: {
+      title: 'Dues Report — 2026',
+      sub: 'Summary of member dues status for the current year.',
+      html: `
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="background:var(--cream);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;font-weight:700;color:var(--green);">Total Members</span><span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--green);">24</span>
+          </div>
+          <div style="background:#f0faf5;border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;font-weight:700;color:#27ae60;">✅ Paid</span><span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:#27ae60;">18</span>
+          </div>
+          <div style="background:var(--red-bg);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;font-weight:700;color:var(--red);">⚠️ Outstanding</span><span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--red);">6</span>
+          </div>
+          <div style="background:rgba(201,150,58,0.08);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.85rem;font-weight:700;color:#7a5010;">💷 Total Collected</span><span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--gold);">£2,640</span>
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-soft);margin-top:1rem;line-height:1.6;">Full member-by-member breakdown available in the treasurer's records. Update figures by editing the app's data.</p>
+      `,
+      confirmLabel: 'Close', confirmClass: ''
+    },
+    sendReminder: {
+      title: 'Send Dues Reminder',
+      sub: 'Draft a reminder message for members with outstanding dues.',
+      html: `
+        <div class="modal-field"><label>Send To</label><select><option>All members with outstanding dues (6)</option><option>Specific member</option></select></div>
+        <div class="modal-field"><label>Message</label><textarea style="min-height:120px">Dear Member,
+
+This is a friendly reminder that your 2026 annual dues of £120 (Male) / £60 (Female) are outstanding.
+
+Please make payment to:
+Account: IPA UK & Ireland
+Sort Code: 30-96-26
+Account No: 44518068
+Reference: [Your Full Name] 2026
+
+Thank you.
+IPA UK & Ireland Secretary</textarea></div>
+        <p style="font-size:0.78rem;color:var(--text-soft);line-height:1.6;margin-top:0.5rem;">💡 Copy this message and send via WhatsApp or email. Automated sending requires a backend email service.</p>
+      `,
+      confirmLabel: 'Copy Message', confirmClass: 'gold'
+    }
+  };
+
+  function openModal(key) {
+    const m = MODALS[key];
+    if (!m) return;
+    document.getElementById('modalContent').innerHTML = `
+      <div class="modal-title">${m.title}</div>
+      <div class="modal-sub">${m.sub}</div>
+      ${m.html}
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-confirm ${m.confirmClass}" onclick="confirmModal('${key}')">${m.confirmLabel}</button>
+      </div>
+    `;
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  function confirmModal(key) {
+    if (key === 'sendReminder') {
+      const txt = document.querySelector('#modalContent textarea');
+      if (txt) navigator.clipboard?.writeText(txt.value).then(() => alert('Message copied to clipboard!'));
+    } else if (key !== 'viewMembers' && key !== 'duesReport') {
+      alert('✅ Action saved. (Connect a backend to persist data.)');
+    }
+    closeModal();
+  }
+
+  function closeModal(e) {
+    if (e && e.target !== document.getElementById('modalOverlay')) return;
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+
+  // ── PWA INSTALL ──
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!localStorage.getItem('ipaBannerDismissed')) {
+      document.getElementById('installBanner').classList.add('show');
+    }
+  });
+
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+        document.getElementById('installBanner').classList.remove('show');
+      });
+    }
+  }
+
+  function dismissInstall() {
+    localStorage.setItem('ipaBannerDismissed', 'true');
+    document.getElementById('installBanner').classList.remove('show');
+  }
+
+  // ── SERVICE WORKER ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

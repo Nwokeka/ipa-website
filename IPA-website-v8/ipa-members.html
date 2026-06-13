@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members' Portal — IPA UK & Ireland</title>
+    <link rel="icon" type="image/png" href="favicon-32.png"/>
+  <link rel="apple-touch-icon" href="icon-180.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep: #1a4731;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --gold: #c9963a;
+      --gold-light: #e8b86d;
+      --cream: #fdf6ec;
+      --warm-white: #fffaf3;
+      --text-dark: #1c1c1c;
+      --text-mid: #3d3d3d;
+      --text-light: #7a6a5a;
+      --sidebar-w: 260px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text-dark); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      background: rgba(26,71,49,0.97); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 70px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-logo img { height: 46px; width: 46px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3)); }
+    .nav-logo-text { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.05rem; font-weight: 800; line-height: 1.2; }
+    .nav-logo-text span { display: block; font-size: 0.62rem; color: #b8d4c2; font-family: 'DM Sans', sans-serif; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-back { color: #d4ead9; font-size: 0.85rem; text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold-light); }
+    .nav-member-badge {
+      display: none; align-items: center; gap: 0.5rem;
+      background: rgba(201,150,58,0.15); border: 1px solid rgba(201,150,58,0.3);
+      border-radius: 20px; padding: 0.3rem 0.9rem;
+      font-size: 0.78rem; color: var(--gold-light); font-weight: 600;
+    }
+    .nav-member-badge.show { display: flex; }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--green-deep); padding: 100px 5% 60px;
+      position: relative; overflow: hidden;
+    }
+    #loginScreen::before {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px; border-radius: 50%;
+      border: 1px solid rgba(201,150,58,0.1);
+      box-shadow: 0 0 0 60px rgba(201,150,58,0.04), 0 0 0 120px rgba(201,150,58,0.02);
+    }
+    #loginScreen::after {
+      content: ''; position: absolute; bottom: -80px; left: -80px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(82,183,136,0.08) 0%, transparent 70%);
+    }
+    .login-card {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow: hidden; width: 100%; max-width: 460px;
+      position: relative; z-index: 2;
+      animation: fadeUp 0.6s ease both;
+    }
+    .login-card-top {
+      background: linear-gradient(135deg, #1a4731 0%, #2d6a4f 100%);
+      padding: 2.4rem 2.4rem 2rem; text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .login-logo { width: 80px; height: 80px; margin: 0 auto 1.2rem; display: block; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+    .login-card-top h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .login-card-top p { color: #b8d4c2; font-size: 0.85rem; line-height: 1.6; }
+    .login-card-body { padding: 2rem 2.4rem 2.4rem; }
+    .login-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .login-field label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+    .login-field input {
+      border: 1.5px solid #ddd4c8; border-radius: 6px;
+      padding: 0.85rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; color: var(--text-dark); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,106,79,0.12); }
+    .login-btn {
+      width: 100%; background: var(--green-deep); color: #fff;
+      border: none; border-radius: 6px; padding: 1rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.95rem; letter-spacing: 0.04em; cursor: pointer;
+      transition: background 0.2s, transform 0.15s; margin-top: 0.4rem;
+    }
+    .login-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
+    .login-error {
+      background: #fdf0ef; border: 1px solid #f0b8b4; color: #c0392b;
+      border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.83rem;
+      margin-top: 1rem; display: none; line-height: 1.5;
+    }
+    .login-footer { text-align: center; margin-top: 1.4rem; font-size: 0.8rem; color: var(--text-light); line-height: 1.8; }
+    .login-footer a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+    .login-footer a:hover { text-decoration: underline; }
+
+    /* ── PORTAL LAYOUT ── */
+    #portalScreen { display: none; padding-top: 70px; min-height: 100vh; }
+
+    .portal-layout { display: flex; min-height: calc(100vh - 70px); }
+
+    /* SIDEBAR */
+    .portal-sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--green-deep);
+      position: sticky; top: 70px; height: calc(100vh - 70px);
+      overflow-y: auto; padding: 2rem 0;
+      display: flex; flex-direction: column;
+    }
+    .sidebar-member-info {
+      padding: 0 1.4rem 1.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+    .sidebar-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(201,150,58,0.2); border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 0.8rem;
+    }
+    .sidebar-member-info h4 { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .sidebar-member-info p { font-size: 0.75rem; color: #8ab5a0; }
+    .sidebar-member-info .member-id { font-size: 0.7rem; color: rgba(201,150,58,0.7); margin-top: 0.3rem; font-weight: 600; letter-spacing: 0.05em; }
+
+    .sidebar-nav { flex: 1; }
+    .sidebar-section-label {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: #5a8070;
+      padding: 0.4rem 1.4rem; margin-top: 0.6rem;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1.4rem; cursor: pointer;
+      color: #b8d4c2; font-size: 0.88rem; font-weight: 500;
+      transition: background 0.15s, color 0.15s; border: none;
+      background: none; width: 100%; text-align: left;
+      text-decoration: none;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .sidebar-link.active { background: rgba(201,150,58,0.15); color: var(--gold-light); border-left: 3px solid var(--gold); }
+    .sidebar-link .s-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+    .sidebar-link .badge {
+      margin-left: auto; background: var(--gold); color: var(--green-deep);
+      font-size: 0.65rem; font-weight: 800; border-radius: 10px;
+      padding: 0.1rem 0.5rem; min-width: 18px; text-align: center;
+    }
+    .sidebar-bottom {
+      padding: 1.2rem 1.4rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .logout-btn {
+      display: flex; align-items: center; gap: 0.6rem;
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+      padding: 0.65rem 1rem; color: #8ab5a0; font-size: 0.83rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      cursor: pointer; transition: background 0.2s, color 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    /* MAIN CONTENT */
+    .portal-main { flex: 1; padding: 2.5rem 3rem; overflow-y: auto; }
+
+    .tab-panel { display: none; animation: fadeIn 0.35s ease; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+
+    /* ── SHARED COMPONENTS ── */
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-deep); font-size: 1.8rem; font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+    .page-sub { color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.4rem; line-height: 1.6; }
+    .gold-rule { width: 50px; height: 3px; background: var(--gold); margin: 1rem 0 2rem; border-radius: 2px; }
+
+    /* ── DASHBOARD ── */
+    .dash-welcome {
+      background: linear-gradient(135deg, var(--green-deep) 0%, #2d6a4f 100%);
+      border-radius: 12px; padding: 2rem 2.4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;
+      border: 1px solid rgba(201,150,58,0.2);
+    }
+    .dash-welcome h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .dash-welcome p { color: #b8d4c2; font-size: 0.88rem; line-height: 1.6; max-width: 480px; }
+    .dash-welcome-logo { width: 70px; height: 70px; object-fit: contain; opacity: 0.85; }
+
+    .dash-stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.2rem; margin-bottom: 2rem;
+    }
+    .dash-stat {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.4rem 1.6rem; text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .dash-stat .stat-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .dash-stat .stat-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--green-deep); font-weight: 800; }
+    .dash-stat .stat-label { font-size: 0.75rem; color: var(--text-light); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .dash-card {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.6rem; box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .dash-card h4 {
+      font-family: 'Playfair Display', serif; color: var(--green-deep);
+      font-size: 1rem; margin-bottom: 1rem;
+      padding-bottom: 0.6rem; border-bottom: 1px solid #e8dece;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .dash-quick-links { display: flex; flex-direction: column; gap: 0.6rem; }
+    .dash-quick-link {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.65rem 0.8rem; border-radius: 6px;
+      background: var(--cream); color: var(--green-deep);
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s; border: none; text-align: left;
+      width: 100%; text-decoration: none;
+    }
+    .dash-quick-link:hover { background: #ede3d4; }
+
+    .announcement-item {
+      padding: 0.8rem 0; border-bottom: 1px solid #f0e8dc;
+      display: flex; gap: 0.8rem; align-items: flex-start;
+    }
+    .announcement-item:last-child { border-bottom: none; }
+    .ann-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 5px; }
+    .ann-dot.urgent { background: #e74c3c; }
+    .ann-dot.info { background: var(--green-light); }
+    .ann-text { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
+    .ann-text strong { color: var(--text-dark); display: block; margin-bottom: 0.15rem; }
+    .ann-date { font-size: 0.72rem; color: var(--text-light); margin-top: 0.2rem; }
+
+    /* ── DOCUMENTS ── */
+    .doc-section-header {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-family: 'Playfair Display', serif; color: var(--green-deep);
+      font-size: 1.1rem; font-weight: 800;
+      margin: 2rem 0 1.2rem; padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--gold);
+    }
+    .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.4rem; margin-bottom: 1rem; }
+    .doc-card {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.6rem; display: flex; flex-direction: column; gap: 0.7rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .doc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); border-color: var(--gold); }
+    .doc-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+    .doc-icon { font-size: 2rem; }
+    .doc-tag {
+      font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #fff;
+      background: var(--green-mid); border-radius: 3px;
+      padding: 0.2rem 0.55rem;
+    }
+    .doc-tag.gold { background: var(--gold); color: var(--green-deep); }
+    .doc-card h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1rem; line-height: 1.3; }
+    .doc-card p { font-size: 0.82rem; color: var(--text-light); line-height: 1.65; flex: 1; }
+    .doc-meta { font-size: 0.73rem; color: #b0a090; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .doc-dl-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--green-deep); color: #fff; border: none;
+      border-radius: 5px; padding: 0.6rem 1.1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+      font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s; text-decoration: none;
+      margin-top: auto;
+    }
+    .doc-dl-btn:hover { background: var(--green-mid); }
+    .doc-dl-btn.gold { background: var(--gold); color: var(--green-deep); }
+    .doc-dl-btn.gold:hover { background: var(--gold-light); }
+
+    /* ── DUES / PAYMENT ── */
+    .dues-status-card {
+      background: linear-gradient(135deg, var(--green-deep), #2d6a4f);
+      border-radius: 12px; padding: 2rem 2.4rem; margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+      border: 1px solid rgba(201,150,58,0.25);
+    }
+    .dues-status-left h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .dues-status-left p { color: #b8d4c2; font-size: 0.85rem; }
+    .dues-badge {
+      background: rgba(82,183,136,0.2); border: 1px solid rgba(82,183,136,0.5);
+      color: #7de0ad; border-radius: 20px; padding: 0.4rem 1.2rem;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em;
+    }
+    .dues-badge.overdue { background: rgba(231,76,60,0.2); border-color: rgba(231,76,60,0.4); color: #f0a099; }
+
+    .dues-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+    .dues-table th {
+      background: var(--cream); text-align: left; padding: 0.75rem 1rem;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--green-mid);
+      border-bottom: 2px solid #e8dece;
+    }
+    .dues-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #f0e8dc; color: var(--text-mid); }
+    .dues-table tr:last-child td { border-bottom: none; }
+    .dues-table .paid { color: #27ae60; font-weight: 700; }
+    .dues-table .pending { color: #e67e22; font-weight: 700; }
+    .dues-table .overdue-txt { color: #c0392b; font-weight: 700; }
+
+    .payment-info-card {
+      background: #fff; border: 1.5px solid #e8dece;
+      border-left: 4px solid var(--gold); border-radius: 0 10px 10px 0;
+      padding: 1.8rem 2rem; margin-bottom: 1.6rem;
+    }
+    .payment-info-card h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; margin-bottom: 1.2rem; }
+    .bank-row { display: flex; gap: 1rem; margin-bottom: 0.7rem; font-size: 0.9rem; align-items: baseline; }
+    .bank-row .lbl { color: var(--text-light); min-width: 140px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; }
+    .bank-row .val { color: var(--text-dark); font-weight: 700; font-family: 'Lora', serif; }
+    .bank-note {
+      background: rgba(201,150,58,0.08); border: 1px solid rgba(201,150,58,0.25);
+      border-radius: 6px; padding: 0.85rem 1rem;
+      font-size: 0.82rem; color: #7a5a1a; line-height: 1.6; margin-top: 1rem;
+    }
+    .fee-breakdown {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; margin-bottom: 2rem;
+    }
+    .fee-box {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.4rem 1.6rem; text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .fee-box .fee-type { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 0.5rem; }
+    .fee-box .fee-amount { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--green-deep); font-weight: 800; }
+    .fee-box .fee-note { font-size: 0.78rem; color: var(--text-light); margin-top: 0.3rem; }
+
+    /* ── ANNOUNCEMENTS ── */
+    .ann-card {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.6rem 2rem; margin-bottom: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      display: flex; gap: 1.4rem; align-items: flex-start;
+    }
+    .ann-card-icon {
+      width: 46px; height: 46px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .ann-card-icon.urgent { background: #fef0ef; }
+    .ann-card-icon.info { background: rgba(82,183,136,0.12); }
+    .ann-card-icon.event { background: rgba(201,150,58,0.12); }
+    .ann-card-icon.news { background: rgba(45,106,79,0.1); }
+    .ann-card-body h4 { font-family: 'Playfair Display', serif; color: var(--text-dark); font-size: 1rem; margin-bottom: 0.4rem; }
+    .ann-card-body p { font-size: 0.87rem; color: var(--text-mid); line-height: 1.7; }
+    .ann-card-meta { display: flex; gap: 1rem; margin-top: 0.6rem; flex-wrap: wrap; }
+    .ann-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; border-radius: 3px; padding: 0.2rem 0.6rem;
+    }
+    .ann-tag.urgent { background: #fef0ef; color: #c0392b; }
+    .ann-tag.info { background: rgba(82,183,136,0.15); color: #1a6640; }
+    .ann-tag.event { background: rgba(201,150,58,0.15); color: #7a5010; }
+    .ann-tag.news { background: rgba(45,106,79,0.1); color: var(--green-mid); }
+    .ann-timestamp { font-size: 0.75rem; color: var(--text-light); display: flex; align-items: center; gap: 0.3rem; }
+
+    /* ── CONTACT ── */
+    .contact-grid-portal { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+    .contact-info-card {
+      background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
+      padding: 1.6rem; box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .contact-info-card h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1rem; margin-bottom: 1.2rem; border-bottom: 1px solid #e8dece; padding-bottom: 0.6rem; }
+    .contact-row { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1rem; }
+    .contact-row .c-icon {
+      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(45,106,79,0.1); display: flex; align-items: center;
+      justify-content: center; font-size: 0.95rem;
+    }
+    .contact-row .c-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.15rem; font-weight: 600; }
+    .contact-row .c-val { font-size: 0.9rem; color: var(--text-dark); font-weight: 600; }
+    .contact-row .c-val a { color: var(--green-mid); text-decoration: none; }
+    .contact-row .c-val a:hover { text-decoration: underline; }
+
+    .exec-list { display: flex; flex-direction: column; gap: 0.9rem; }
+    .exec-item { display: flex; align-items: center; gap: 1rem; padding: 0.8rem; border-radius: 8px; background: var(--cream); }
+    .exec-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--green-mid); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .exec-info .exec-name { font-weight: 700; font-size: 0.88rem; color: var(--text-dark); }
+    .exec-info .exec-role { font-size: 0.75rem; color: var(--text-light); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .portal-sidebar { display: none; }
+      .portal-main { padding: 1.5rem; }
+      .dash-grid { grid-template-columns: 1fr; }
+      .contact-grid-portal { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .dash-stats { grid-template-columns: 1fr 1fr; }
+      .fee-breakdown { grid-template-columns: 1fr 1fr; }
+      .dues-status-card { flex-direction: column; }
+    }
+
+    /* ── MINI FOOTER ── */
+    .footer-mini {
+      background: #0a1f14;
+      border-top: 1px solid rgba(201,150,58,0.2);
+      padding: 1.4rem 8%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.8rem;
+    }
+    .footer-mini-logo { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 800; }
+    .footer-mini-copy { font-size: 0.75rem; color: #3d5a4a; }
+    .footer-mini a { color: #5a8070; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
+    .footer-mini a:hover { color: var(--gold-light); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="ipa.png" alt="IPA Logo"/>
+    <div class="nav-logo-text">
+      IPA UK & Ireland
+      <span>Igbere Progressive Association</span>
+    </div>
+  </a>
+  <div class="nav-right">
+    <div class="nav-member-badge" id="navBadge">🟢 <span id="navMemberName">Member</span></div>
+    <a href="index.html" class="nav-back">← Main Site</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-card-top">
+      <img src="ipa.png" alt="IPA Logo" class="login-logo"/>
+      <h2>Members' Portal</h2>
+      <p>Sign in with your registered email and member password to access the portal.</p>
+    </div>
+    <div class="login-card-body">
+      <div class="login-field">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"/>
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Your member password" onkeydown="if(event.key==='Enter') doLogin()"/>
+      </div>
+      <button class="login-btn" onclick="doLogin()">Sign In to Members' Portal →</button>
+      <div class="login-error" id="loginError">
+        ❌ Incorrect email or password. Please check your details or contact <strong>info@ipaukandireland.org</strong> for access.
+      </div>
+      <p class="login-footer">
+        Not yet a member? <a href="ipa-membership.html">Apply for membership →</a><br/>
+        Forgot your password? <a href="mailto:info@ipaukandireland.org">Contact the secretary</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PORTAL (shown after login)
+══════════════════════════════════════════ -->
+<div id="portalScreen">
+  <div class="portal-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="sidebar-member-info">
+        <div class="sidebar-avatar">👤</div>
+        <h4 id="sidebarName">Member</h4>
+        <p id="sidebarEmail" style="font-size:0.75rem; color:#8ab5a0;"></p>
+        <p class="member-id">IPA-2026-MEMBER</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <button class="sidebar-link active" onclick="showTab('dashboard', this)">
+          <span class="s-icon">🏠</span> Dashboard
+        </button>
+        <button class="sidebar-link" onclick="showTab('documents', this)">
+          <span class="s-icon">📂</span> Documents
+        </button>
+        <button class="sidebar-link" onclick="showTab('dues', this)">
+          <span class="s-icon">💷</span> Dues & Payments
+        </button>
+        <button class="sidebar-link" onclick="showTab('announcements', this)">
+          <span class="s-icon">📣</span> Announcements
+          <span class="badge">3</span>
+        </button>
+        <div class="sidebar-section-label">Info</div>
+        <button class="sidebar-link" onclick="showTab('contact', this)">
+          <span class="s-icon">📞</span> Contact & Executives
+        </button>
+        <a href="ipa-membership.html" class="sidebar-link">
+          <span class="s-icon">🌿</span> Membership Form
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="logout-btn" onclick="doLogout()">🚪 Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="portal-main">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Welcome back</p>
+        <h1 class="page-title" id="dashTitle">Member Dashboard</h1>
+        <div class="gold-rule"></div>
+
+        <div class="dash-welcome">
+          <div>
+            <h2>Good to see you 🌿</h2>
+            <p>Welcome to your IPA UK & Ireland members' portal. Access your documents, check dues, and stay up to date with the latest announcements.</p>
+          </div>
+          <img src="ipa.png" alt="" class="dash-welcome-logo"/>
+        </div>
+
+        <div class="dash-stats">
+          <div class="dash-stat"><div class="stat-icon">📄</div><div class="stat-val">8</div><div class="stat-label">Documents</div></div>
+          <div class="dash-stat"><div class="stat-icon">✅</div><div class="stat-val">Paid</div><div class="stat-label">2026 Dues</div></div>
+          <div class="dash-stat"><div class="stat-icon">📣</div><div class="stat-val">3</div><div class="stat-label">New Announcements</div></div>
+          <div class="dash-stat"><div class="stat-icon">🗓️</div><div class="stat-val">Jul</div><div class="stat-label">Next Meeting</div></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card">
+            <h4>📂 Quick Access</h4>
+            <div class="dash-quick-links">
+              <button class="dash-quick-link" onclick="showTab('documents', document.querySelector('[onclick*=documents]'))">📜 IPA Constitution PDF</button>
+              <button class="dash-quick-link" onclick="showTab('documents', document.querySelector('[onclick*=documents]'))">📝 Latest Meeting Minutes</button>
+              <button class="dash-quick-link" onclick="showTab('dues', document.querySelector('[onclick*=dues]'))">💷 View Dues & Payment Info</button>
+              <button class="dash-quick-link" onclick="showTab('announcements', document.querySelector('[onclick*=announcements]'))">📣 Latest Announcements</button>
+            </div>
+          </div>
+          <div class="dash-card">
+            <h4>📣 Recent Announcements</h4>
+            <div class="announcement-item">
+              <div class="ann-dot urgent"></div>
+              <div class="ann-text">
+                <strong>July General Meeting — Save the Date</strong>
+                All members are invited to the next general meeting. Date and venue to be confirmed shortly.
+                <div class="ann-date">Posted: 10 May 2026</div>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="ann-dot"></div>
+              <div class="ann-text">
+                <strong>2026 Annual Dues — Reminder</strong>
+                Members who have not yet paid their 2026 annual dues are kindly reminded to do so.
+                <div class="ann-date">Posted: 1 April 2026</div>
+              </div>
+            </div>
+            <div class="announcement-item">
+              <div class="ann-dot info"></div>
+              <div class="ann-text">
+                <strong>AGM Minutes Now Available</strong>
+                The January 2026 AGM minutes have been uploaded to the documents section.
+                <div class="ann-date">Posted: 15 February 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DOCUMENTS ── -->
+      <div class="tab-panel" id="tab-documents">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Members only</p>
+        <h1 class="page-title">Documents & Downloads</h1>
+        <div class="gold-rule"></div>
+
+        <div class="doc-section-header">📜 Governing Documents</div>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <div class="doc-card-top">
+              <div class="doc-icon">📜</div>
+              <span class="doc-tag gold">Foundation</span>
+            </div>
+            <h4>IPA UK & Ireland Constitution</h4>
+            <p>The founding constitution outlining the objectives, governance structure, and the rights and obligations of all members of the Association.</p>
+            <div class="doc-meta"><span>📅 Ratified 2023</span><span>📄 PDF</span></div>
+            <a href="constitution.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top">
+              <div class="doc-icon">📋</div>
+              <span class="doc-tag">Rules</span>
+            </div>
+            <h4>Standing Orders & Bye-Laws</h4>
+            <p>Supplementary rules governing the conduct of meetings, financial management, disciplinary procedures and day-to-day operations.</p>
+            <div class="doc-meta"><span>📅 Updated 2024</span><span>📄 PDF</span></div>
+            <a href="standing-orders.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+        </div>
+
+        <div class="doc-section-header">📝 Meeting Minutes</div>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag gold">Latest</span></div>
+            <h4>AGM Minutes — January 2026</h4>
+            <p>Minutes from the Annual General Meeting including elections, financial report, project updates and all resolutions passed.</p>
+            <div class="doc-meta"><span>📅 January 2026</span><span>📄 PDF</span></div>
+            <a href="minutes/agm-jan-2026.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
+            <h4>Meeting Minutes — October 2025</h4>
+            <p>General meeting minutes covering community project updates, welfare matters and financial statements.</p>
+            <div class="doc-meta"><span>📅 October 2025</span><span>📄 PDF</span></div>
+            <a href="minutes/gm-oct-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
+            <h4>Meeting Minutes — July 2025</h4>
+            <p>Minutes including welfare fund discussions, back-home project approvals and member updates.</p>
+            <div class="doc-meta"><span>📅 July 2025</span><span>📄 PDF</span></div>
+            <a href="minutes/gm-jul-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">AGM</span></div>
+            <h4>AGM Minutes — January 2025</h4>
+            <p>Annual General Meeting including financial report, constitutional amendments and committee elections.</p>
+            <div class="doc-meta"><span>📅 January 2025</span><span>📄 PDF</span></div>
+            <a href="minutes/agm-jan-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
+            <h4>Meeting Minutes — October 2024</h4>
+            <p>Emergency welfare motions, treasurer's report and community project voting.</p>
+            <div class="doc-meta"><span>📅 October 2024</span><span>📄 PDF</span></div>
+            <a href="minutes/gm-oct-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
+            <h4>Meeting Minutes — July 2024</h4>
+            <p>Project funding proposals, welfare fund review and updates from the back-home committee.</p>
+            <div class="doc-meta"><span>📅 July 2024</span><span>📄 PDF</span></div>
+            <a href="minutes/gm-jul-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+        </div>
+
+        <div class="doc-section-header">📊 Financial Reports</div>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📊</div><span class="doc-tag gold">Finance</span></div>
+            <h4>Annual Financial Report 2025</h4>
+            <p>Full financial report for 2025: income, expenditure, project spending and the current state of all funds.</p>
+            <div class="doc-meta"><span>📅 Year 2025</span><span>📄 PDF</span></div>
+            <a href="finance/annual-report-2025.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-top"><div class="doc-icon">📊</div><span class="doc-tag">Finance</span></div>
+            <h4>Annual Financial Report 2024</h4>
+            <p>Full financial report for 2024 including project spending, member contributions and year-end balances.</p>
+            <div class="doc-meta"><span>📅 Year 2024</span><span>📄 PDF</span></div>
+            <a href="finance/annual-report-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DUES & PAYMENTS ── -->
+      <div class="tab-panel" id="tab-dues">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Finance</p>
+        <h1 class="page-title">Dues & Payment Information</h1>
+        <div class="gold-rule"></div>
+
+        <div class="dues-status-card">
+          <div class="dues-status-left">
+            <h3>Your 2026 Dues Status</h3>
+            <p>Annual dues keep our association running and fund community projects back home.</p>
+          </div>
+          <div class="dues-badge">✅ Paid — 2026</div>
+        </div>
+
+        <h3 style="font-family:'Playfair Display',serif; color:var(--green-deep); margin-bottom:1rem;">Annual Fee Structure</h3>
+        <div class="fee-breakdown">
+          <div class="fee-box">
+            <div class="fee-type">Registration (once only)</div>
+            <div class="fee-amount">£10</div>
+            <div class="fee-note">Paid on joining. Never repeated.</div>
+          </div>
+          <div class="fee-box">
+            <div class="fee-type">Annual Dues — Male</div>
+            <div class="fee-amount">£120</div>
+            <div class="fee-note">Due every January</div>
+          </div>
+          <div class="fee-box">
+            <div class="fee-type">Annual Dues — Female</div>
+            <div class="fee-amount">£60</div>
+            <div class="fee-note">Due every January</div>
+          </div>
+          <div class="fee-box">
+            <div class="fee-type">Welfare Levy</div>
+            <div class="fee-amount">£20</div>
+            <div class="fee-note">Per bereavement call, as required</div>
+          </div>
+        </div>
+
+        <h3 style="font-family:'Playfair Display',serif; color:var(--green-deep); margin-bottom:1rem;">Payment History</h3>
+        <table class="dues-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Date Paid</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2026</td><td>Annual Dues</td><td>£120</td><td>14 Jan 2026</td><td class="paid">✅ Paid</td></tr>
+            <tr><td>2025</td><td>Annual Dues</td><td>£120</td><td>8 Jan 2025</td><td class="paid">✅ Paid</td></tr>
+            <tr><td>2025</td><td>Welfare Levy</td><td>£20</td><td>3 Jun 2025</td><td class="paid">✅ Paid</td></tr>
+            <tr><td>2024</td><td>Annual Dues</td><td>£120</td><td>20 Jan 2024</td><td class="paid">✅ Paid</td></tr>
+            <tr><td>2023</td><td>Registration Fee</td><td>£10</td><td>5 Mar 2023</td><td class="paid">✅ Paid</td></tr>
+            <tr><td>2023</td><td>Annual Dues</td><td>£120</td><td>5 Mar 2023</td><td class="paid">✅ Paid</td></tr>
+          </tbody>
+        </table>
+
+        <div class="payment-info-card">
+          <h4>🏦 Bank Transfer Details</h4>
+          <div class="bank-row"><span class="lbl">Account Name</span><span class="val">IPA UK & Ireland</span></div>
+          <div class="bank-row"><span class="lbl">Sort Code</span><span class="val">30-96-26</span></div>
+          <div class="bank-row"><span class="lbl">Account Number</span><span class="val">44518068</span></div>
+          <div class="bank-row"><span class="lbl">Bank</span><span class="val">Lloyds Bank Plc</span></div>
+          <div class="bank-row"><span class="lbl">Reference</span><span class="val">Your Full Name + Year (e.g. John Obi 2026)</span></div>
+          <div class="bank-note">
+            ⚠️ Always use your <strong>full name and the year</strong> as the payment reference so the treasurer can match your payment. After transferring, send your receipt to <strong>info@ipaukandireland.org</strong> with the subject line "Dues Payment — [Your Name] — [Year]".
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANNOUNCEMENTS ── -->
+      <div class="tab-panel" id="tab-announcements">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Members only</p>
+        <h1 class="page-title">Announcements</h1>
+        <div class="gold-rule"></div>
+
+        <div class="ann-card">
+          <div class="ann-card-icon urgent">🚨</div>
+          <div class="ann-card-body">
+            <h4>July 2026 General Meeting — Save the Date</h4>
+            <p>The next General Meeting of IPA UK & Ireland will be held in July 2026. The exact date, time, and venue will be confirmed and circulated to all members via WhatsApp and email at least two weeks in advance. All members are strongly encouraged to attend. Apologies must be submitted to the Secretary in advance.</p>
+            <div class="ann-card-meta">
+              <span class="ann-tag urgent">Urgent</span>
+              <span class="ann-timestamp">📅 Posted 10 May 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-card-icon event">📅</div>
+          <div class="ann-card-body">
+            <h4>2026 Annual Dues — Payment Reminder</h4>
+            <p>This is a reminder to all members who have not yet settled their 2026 annual dues. The deadline for payment is 31 May 2026. Members with outstanding dues may not be eligible to vote at the next General Meeting. Please make your payment using the bank details in the Dues & Payments section and send your receipt to the Treasurer.</p>
+            <div class="ann-card-meta">
+              <span class="ann-tag event">Finance</span>
+              <span class="ann-timestamp">📅 Posted 1 April 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-card-icon info">📝</div>
+          <div class="ann-card-body">
+            <h4>AGM Minutes — January 2026 Now Available</h4>
+            <p>The minutes from the Annual General Meeting held on 18 January 2026 have been reviewed, approved and uploaded to the Documents section. All members are encouraged to read the minutes, particularly the resolutions passed and the financial report. Please raise any corrections with the Secretary within 14 days.</p>
+            <div class="ann-card-meta">
+              <span class="ann-tag info">Documents</span>
+              <span class="ann-timestamp">📅 Posted 15 February 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-card-icon news">🌿</div>
+          <div class="ann-card-body">
+            <h4>Community Project Update — Igbere Back Home</h4>
+            <p>We are pleased to announce that the first phase of the elderly welfare support project in Igbere has been completed successfully. Funds raised at the October 2025 meeting were disbursed before Christmas. A full project report will be presented at the next General Meeting. Thank you to all members for your generous contributions.</p>
+            <div class="ann-card-meta">
+              <span class="ann-tag news">Community</span>
+              <span class="ann-timestamp">📅 Posted 10 January 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-card-icon event">🎉</div>
+          <div class="ann-card-body">
+            <h4>New Members Welcome — January 2026</h4>
+            <p>IPA UK & Ireland warmly welcomes four new members who joined following the AGM in January 2026. We look forward to your active participation in the association. Please introduce yourselves at the next meeting!</p>
+            <div class="ann-card-meta">
+              <span class="ann-tag event">Members</span>
+              <span class="ann-timestamp">📅 Posted 20 January 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CONTACT & EXECUTIVES ── -->
+      <div class="tab-panel" id="tab-contact">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Get in touch</p>
+        <h1 class="page-title">Contact & Executives</h1>
+        <div class="gold-rule"></div>
+
+        <div class="contact-grid-portal">
+          <div class="contact-info-card">
+            <h4>📬 Association Contact Details</h4>
+            <div class="contact-row">
+              <div class="c-icon">✉️</div>
+              <div>
+                <div class="c-label">General Enquiries</div>
+                <div class="c-val"><a href="mailto:info@ipaukandireland.org">info@ipaukandireland.org</a></div>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="c-icon">💰</div>
+              <div>
+                <div class="c-label">Dues & Payments</div>
+                <div class="c-val"><a href="mailto:treasurer@ipaukandireland.org">treasurer@ipaukandireland.org</a></div>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="c-icon">📝</div>
+              <div>
+                <div class="c-label">Secretary / Minutes</div>
+                <div class="c-val"><a href="mailto:secretary@ipaukandireland.org">secretary@ipaukandireland.org</a></div>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="c-icon">🌐</div>
+              <div>
+                <div class="c-label">Website</div>
+                <div class="c-val"><a href="https://www.ipaukandireland.org" target="_blank">www.ipaukandireland.org</a></div>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="c-icon">📍</div>
+              <div>
+                <div class="c-label">Location</div>
+                <div class="c-val">United Kingdom & Ireland</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <h4>👥 Executive Committee</h4>
+            <div class="exec-list">
+              <div class="exec-item">
+                <div class="exec-avatar">👑</div>
+                <div class="exec-info">
+                  <div class="exec-name">President</div>
+                  <div class="exec-role">Head of Association</div>
+                </div>
+              </div>
+              <div class="exec-item">
+                <div class="exec-avatar">🤝</div>
+                <div class="exec-info">
+                  <div class="exec-name">Vice President</div>
+                  <div class="exec-role">Deputy Head</div>
+                </div>
+              </div>
+              <div class="exec-item">
+                <div class="exec-avatar">📝</div>
+                <div class="exec-info">
+                  <div class="exec-name">General Secretary</div>
+                  <div class="exec-role">Records & Correspondence</div>
+                </div>
+              </div>
+              <div class="exec-item">
+                <div class="exec-avatar">💰</div>
+                <div class="exec-info">
+                  <div class="exec-name">Treasurer</div>
+                  <div class="exec-role">Financial Management</div>
+                </div>
+              </div>
+              <div class="exec-item">
+                <div class="exec-avatar">📣</div>
+                <div class="exec-info">
+                  <div class="exec-name">Publicity Officer</div>
+                  <div class="exec-role">Communications & Events</div>
+                </div>
+              </div>
+              <div class="exec-item">
+                <div class="exec-avatar">🌿</div>
+                <div class="exec-info">
+                  <div class="exec-name">Welfare Officer</div>
+                  <div class="exec-role">Member Welfare & Support</div>
+                </div>
+              </div>
+            </div>
+            <p style="font-size:0.77rem; color:var(--text-light); margin-top:1rem; line-height:1.6;">
+              Executive names will be added here following confirmation by the committee. Contact <a href="mailto:info@ipaukandireland.org" style="color:var(--green-mid); font-weight:600;">info@ipaukandireland.org</a> to update this list.
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-info-card" style="margin-top:1rem;">
+          <h4>💬 WhatsApp Group</h4>
+          <p style="font-size:0.88rem; color:var(--text-mid); line-height:1.7; margin-bottom:1rem;">
+            The main IPA UK & Ireland members' WhatsApp group is the primary channel for day-to-day communication, announcements, and welfare notifications. If you are not yet in the group, contact the General Secretary to be added.
+          </p>
+          <a href="mailto:secretary@ipaukandireland.org?subject=Please add me to the WhatsApp group" class="doc-dl-btn" style="display:inline-flex;">✉️ Request to Join WhatsApp Group</a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // ── AUTH ──
+  // Change this password to your preferred shared member password
+  const MEMBER_PASSWORD = 'ipa2026';
+
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    const err   = document.getElementById('loginError');
+
+    if (!email.includes('@') || pass !== MEMBER_PASSWORD) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+    sessionStorage.setItem('ipaPortalAuth', 'true');
+    sessionStorage.setItem('ipaPortalEmail', email);
+    enterPortal(email);
+  }
+
+  function doLogout() {
+    sessionStorage.removeItem('ipaPortalAuth');
+    sessionStorage.removeItem('ipaPortalEmail');
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('portalScreen').style.display = 'none';
+    document.getElementById('navBadge').classList.remove('show');
+    document.getElementById('loginPass').value = '';
+  }
+
+  function enterPortal(email) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('portalScreen').style.display = 'block';
+
+    const name = email.split('@')[0]
+      .replace(/[._]/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+    document.getElementById('sidebarName').textContent = name;
+    document.getElementById('sidebarEmail').textContent = email;
+    document.getElementById('dashTitle').textContent = 'Welcome, ' + name.split(' ')[0];
+    document.getElementById('navMemberName').textContent = name.split(' ')[0];
+    document.getElementById('navBadge').classList.add('show');
+  }
+
+  // Auto-restore session
+  if (sessionStorage.getItem('ipaPortalAuth') === 'true') {
+    enterPortal(sessionStorage.getItem('ipaPortalEmail') || 'member@ipa.org');
+  }
+
+  // ── TABS ──
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+</script>
+
+
+<footer class="footer-mini">
+  <div class="footer-mini-logo">IPA UK &amp; Ireland</div>
+  <div class="footer-mini-copy">© 2026 Igbere Progressive Association UK &amp; Ireland</div>
+  <a href="index.html">← Back to Main Site</a>
+</footer>
+</body>
+</html>
