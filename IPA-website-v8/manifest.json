@@ -1,8 +1,8 @@
 {
-  "name": "IPA UK & Ireland — Members Portal",
-  "short_name": "IPA Members",
-  "description": "Igbere Progressive Association UK & Ireland — Members Portal",
-  "start_url": "./ipa-app.html",
+  "name": "IPA UK & Ireland â Members Portal",
+  "short_name": "IPA UK & Ireland",
+  "description": "Igbere Progressive Association UK & Ireland â Members Portal",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a4731",
   "theme_color": "#1a4731",
