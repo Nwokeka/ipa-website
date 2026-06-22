@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IPA UK & Ireland — Igbere Progressive Association</title>
+  <title>IPA UK & Ireland â Igbere Progressive Association</title>
     <link rel="icon" type="image/png" href="favicon-32.png"/>
   <link rel="apple-touch-icon" href="icon-180.png"/>
   <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#1a4731"/>
+  <meta name="description" content="Igbere Progressive Association UK &amp; Ireland — uniting Igbere sons and daughters across the UK and Ireland, supporting one another and investing back into our community."/>
+  <meta name="keywords" content="Igbere Progressive Association, IPA UK Ireland, Igbere community UK"/>
+  <meta property="og:title" content="IPA UK &amp; Ireland — Igbere Progressive Association"/>
+  <meta property="og:description" content="Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love."/>
+  <meta property="og:image" content="https://www.ipaukandireland.org/icon-512.png"/>
+  <meta property="og:url" content="https://www.ipaukandireland.org"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,8 +35,10 @@
       --text-light: #7a6a5a;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
+    img { max-width: 100%; height: auto; }
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--warm-white);
@@ -34,7 +46,7 @@
       overflow-x: hidden;
     }
 
-    /* ── NAV ── */
+    /* ââ NAV ââ */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
       background: rgba(26,71,49,0.97);
@@ -96,7 +108,7 @@
     .nav-admin:hover { color: var(--gold-light) !important; border-color: rgba(201,150,58,0.5) !important; }
     .nav-cta:hover { background: var(--gold-light) !important; color: var(--green-deep) !important; }
 
-    /* ── HERO ── */
+    /* ââ HERO ââ */
     #home {
       min-height: 100vh;
       background: var(--green-deep);
@@ -131,6 +143,7 @@
       position: relative; z-index: 2;
       max-width: 720px;
       padding: 0 8%;
+      word-wrap: break-word;
       animation: fadeUp 1s ease both;
     }
     .hero-tag {
@@ -213,7 +226,7 @@
       margin-top: 0.2rem;
     }
 
-    /* ── SECTION SHARED ── */
+    /* ââ SECTION SHARED ââ */
     section { padding: 100px 8%; }
     .section-label {
       font-size: 0.72rem;
@@ -237,7 +250,7 @@
       margin-bottom: 2rem;
     }
 
-    /* ── MISSION BAND ── */
+    /* ââ MISSION BAND ââ */
     .mission-band {
       background: var(--green-mid);
       padding: 60px 8%;
@@ -260,7 +273,7 @@
       line-height: 1.85;
     }
 
-    /* ── ABOUT ── */
+    /* ââ ABOUT ââ */
     #about { background: var(--cream); }
     .about-grid {
       display: grid;
@@ -294,7 +307,7 @@
     }
     .value-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.7; }
 
-    /* ── WHAT WE DO ── */
+    /* ââ WHAT WE DO ââ */
     #what-we-do { background: var(--warm-white); }
     .pillars-grid {
       display: grid;
@@ -323,7 +336,7 @@
     }
     .pillar p { font-size: 0.88rem; color: var(--text-light); line-height: 1.75; }
 
-    /* ── CONTACT ── */
+    /* ââ CONTACT ââ */
     #contact { background: var(--green-deep); }
     #contact .section-label { color: var(--gold-light); }
     #contact .section-title { color: #fff; }
@@ -415,7 +428,7 @@
       line-height: 1.6;
     }
 
-    /* ── FOOTER ── */
+    /* ââ FOOTER ââ */
     footer { background: #0a1f14; border-top: 2px solid rgba(201,150,58,0.25); }
     .footer-top {
       display: grid;
@@ -466,7 +479,7 @@
     .footer-links a { color: #3d5a4a; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--gold-light); }
 
-    /* ── ANIMATION ── */
+    /* ââ ANIMATION ââ */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -478,7 +491,7 @@
     }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── MEMBERS PORTAL ── */
+    /* ââ MEMBERS PORTAL ââ */
     #members-portal { background: var(--cream); }
     .portal-gate {
       max-width: 520px; margin: 3rem auto 0;
@@ -535,7 +548,7 @@
     .portal-hint a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
     .portal-hint a:hover { text-decoration: underline; }
 
-    /* Portal — logged in view */
+    /* Portal â logged in view */
     .portal-dashboard { display: none; }
     .portal-welcome {
       background: var(--green-deep); border-radius: 10px;
@@ -607,7 +620,7 @@
     }
 
 
-    /* ── HAMBURGER MENU ── */
+    /* ââ HAMBURGER MENU ââ */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -677,11 +690,11 @@
     }
     .mobile-menu .mob-cta:hover { background: var(--gold-light) !important; }
 
-    /* ── RESPONSIVE ── */
+    /* ââ RESPONSIVE ââ */
     @media (max-width: 768px) {
       nav { padding: 0 4%; }
       .nav-links { display: none; }
-      .hamburger { display: flex; }
+      .hamburger { display: flex; min-height: 44px; min-width: 44px; align-items: center; justify-content: center; }
       section { padding: 70px 5%; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -729,7 +742,7 @@
   <a href="ipa-announcements.html">Announcements</a>
   <a href="ipa-membership.html">Membership</a>
   <a href="ipa-members.html" class="mob-cta">Members Portal</a>
-  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">🛡️ Admin (Executives)</a>
+  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">ð¡ï¸ Admin (Executives)</a>
 </div>
 
 <!-- HERO -->
@@ -737,13 +750,13 @@
   <div class="hero-bg-pattern"></div>
   <div class="hero-ornament"></div>
   <div class="hero-content">
-    <div class="hero-tag">🌿 Igbere Progressive Association · UK & Ireland</div>
+    <div class="hero-tag">ð¿ Igbere Progressive Association Â· UK & Ireland</div>
     <h1 class="hero-title">
       One Family,<br>
       <em>Far From Home.</em>
     </h1>
     <p class="hero-sub">
-      We are Igbere sons and daughters across the UK and Ireland — supporting one another in our new cities, and investing back into the community we love.
+      We are Igbere sons and daughters across the UK and Ireland â supporting one another in our new cities, and investing back into the community we love.
     </p>
     <div class="hero-buttons">
       <a href="#contact" class="btn-primary">Join the Association</a>
@@ -752,7 +765,7 @@
   </div>
   <div class="hero-stats">
     <div class="stat">
-      <div class="stat-num">🇬🇧🇮🇪</div>
+      <div class="stat-num">ð¬ð§ð®ðª</div>
       <div class="stat-label">UK & Ireland</div>
     </div>
     <div class="stat">
@@ -768,8 +781,8 @@
 
 <!-- MISSION BAND -->
 <div class="mission-band">
-  <p class="mission-quote">"No one should feel <span>alone</span> in a strange city — and no one back home should be <span>forgotten</span>."</p>
-  <p class="mission-text">The Igbere Progressive Association UK & Ireland exists to build a bridge — between our members here who need support and solidarity, and the community back home that needs investment and care. We are both refuge and resource.</p>
+  <p class="mission-quote">"No one should feel <span>alone</span> in a strange city â and no one back home should be <span>forgotten</span>."</p>
+  <p class="mission-text">The Igbere Progressive Association UK & Ireland exists to build a bridge â between our members here who need support and solidarity, and the community back home that needs investment and care. We are both refuge and resource.</p>
 </div>
 
 <!-- ABOUT -->
@@ -781,26 +794,26 @@
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>We are men and women from Igbere who made the journey to the United Kingdom and Ireland — leaving behind familiar faces, warm neighbourhoods, and the comfort of home. In a new land, we found each other.</p>
+      <p>We are men and women from Igbere who made the journey to the United Kingdom and Ireland â leaving behind familiar faces, warm neighbourhoods, and the comfort of home. In a new land, we found each other.</p>
       <p>The Igbere Progressive Association UK & Ireland was born out of that recognition: that we are stronger together. We meet, we share, we support. When one of us struggles, the others show up. When one succeeds, we all celebrate.</p>
-      <p>But our vision extends beyond ourselves. Time and again, we pool our resources to fund meaningful projects back home — for the elderly who shaped us, the youth who will carry the torch, and the community that lives in our hearts no matter how far we travel.</p>
+      <p>But our vision extends beyond ourselves. Time and again, we pool our resources to fund meaningful projects back home â for the elderly who shaped us, the youth who will carry the torch, and the community that lives in our hearts no matter how far we travel.</p>
     </div>
     <div class="about-values reveal">
       <div class="value-card">
-        <h4>🤝 Solidarity</h4>
-        <p>No member faces a difficult moment alone. We show up — practically, financially, and emotionally — for one another in our adopted cities.</p>
+        <h4>ð¤ Solidarity</h4>
+        <p>No member faces a difficult moment alone. We show up â practically, financially, and emotionally â for one another in our adopted cities.</p>
       </div>
       <div class="value-card">
-        <h4>🌱 Giving Back</h4>
+        <h4>ð± Giving Back</h4>
         <p>We never forget where we came from. Regular contributions fund projects that improve life for the elderly, the young, and the wider Igbere community.</p>
       </div>
       <div class="value-card">
-        <h4>🏡 Belonging</h4>
-        <p>We create a home away from home — a space where Igbere culture, language, and warmth are kept alive across the miles.</p>
+        <h4>ð¡ Belonging</h4>
+        <p>We create a home away from home â a space where Igbere culture, language, and warmth are kept alive across the miles.</p>
       </div>
       <div class="value-card">
-        <h4>📈 Progress</h4>
-        <p>We believe in growth — of our members, our community back home, and the legacy we leave for those who come after us.</p>
+        <h4>ð Progress</h4>
+        <p>We believe in growth â of our members, our community back home, and the legacy we leave for those who come after us.</p>
       </div>
     </div>
   </div>
@@ -815,22 +828,22 @@
   </div>
   <div class="pillars-grid">
     <div class="pillar reveal">
-      <div class="pillar-icon">🏙️</div>
+      <div class="pillar-icon">ðï¸</div>
       <h3>Member Support</h3>
       <p>Helping members settle, navigate systems, find community, and get back on their feet when life gets hard in a new city.</p>
     </div>
     <div class="pillar reveal">
-      <div class="pillar-icon">👴🏾</div>
+      <div class="pillar-icon">ð´ð¾</div>
       <h3>Elderly Care Back Home</h3>
       <p>Funding welfare support, healthcare assistance, and comfort projects for our elders in Igbere who sacrificed so much for us.</p>
     </div>
     <div class="pillar reveal">
-      <div class="pillar-icon">🎓</div>
+      <div class="pillar-icon">ð</div>
       <h3>Youth Empowerment</h3>
-      <p>Scholarships, skills training, and mentorship for the youth of Igbere — investing in the next generation's potential.</p>
+      <p>Scholarships, skills training, and mentorship for the youth of Igbere â investing in the next generation's potential.</p>
     </div>
     <div class="pillar reveal">
-      <div class="pillar-icon">🔨</div>
+      <div class="pillar-icon">ð¨</div>
       <h3>Community Projects</h3>
       <p>Pooling resources to build and improve infrastructure, facilities, and services that benefit the whole Igbere community.</p>
     </div>
@@ -843,32 +856,32 @@
     <div class="section-label" style="color: var(--gold-light);">Community Impact</div>
     <h2 class="section-title" style="color: #fff;">See What Your Membership Funds</h2>
     <div class="gold-line" style="margin: 0 auto 1.2rem;"></div>
-    <p style="font-family:'Lora',serif; color:#b8d4c2; font-size:1rem; line-height:1.8; max-width:560px; margin:0 auto;">From boreholes and scholarships to health centres and street lighting — here is the real difference IPA UK & Ireland is making in Igbere.</p>
+    <p style="font-family:'Lora',serif; color:#b8d4c2; font-size:1rem; line-height:1.8; max-width:560px; margin:0 auto;">From boreholes and scholarships to health centres and street lighting â here is the real difference IPA UK & Ireland is making in Igbere.</p>
   </div>
   <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.5rem; margin-bottom:2.5rem;">
     <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
-      <div style="font-size:2.2rem; margin-bottom:0.8rem;">✅</div>
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">â</div>
       <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Completed Projects</div>
       <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Infrastructure, welfare and education initiatives successfully delivered.</p>
     </div>
     <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
-      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🔄</div>
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">ð</div>
       <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Ongoing Work</div>
       <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Active programmes currently running back home in Igbere.</p>
     </div>
     <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
-      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🎯</div>
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">ð¯</div>
       <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Fundraising Goals</div>
-      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Support our current drives — health centre, school renovation, and more.</p>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">Support our current drives â health centre, school renovation, and more.</p>
     </div>
     <div class="reveal" style="background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,58,0.2); border-radius:10px; padding:1.8rem 1.6rem; text-align:center;">
-      <div style="font-size:2.2rem; margin-bottom:0.8rem;">🎥</div>
+      <div style="font-size:2.2rem; margin-bottom:0.8rem;">ð¥</div>
       <div style="font-family:'Playfair Display',serif; color:var(--gold-light); font-size:1.1rem; font-weight:800; margin-bottom:0.4rem;">Videos & Photos</div>
-      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">See our work in action — ceremonies, handovers, and community moments.</p>
+      <p style="font-size:0.83rem; color:#8ab5a0; line-height:1.7;">See our work in action â ceremonies, handovers, and community moments.</p>
     </div>
   </div>
   <div style="text-align:center;">
-    <a href="ipa-projects.html" style="display:inline-block; background:var(--gold); color:var(--green-deep); padding:0.9rem 2.4rem; border-radius:2px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.05em; text-decoration:none; transition:background 0.2s;">View All Projects →</a>
+    <a href="ipa-projects.html" style="display:inline-block; background:var(--gold); color:var(--green-deep); padding:0.9rem 2.4rem; border-radius:2px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.05em; text-decoration:none; transition:background 0.2s;">View All Projects â</a>
   </div>
 </section>
 
@@ -881,18 +894,18 @@
   </div>
   <div class="contact-grid">
     <div class="contact-info reveal">
-      <p>Whether you are from Igbere and living in the UK or Ireland, or you simply want to support our work — we warmly welcome you. Reach out and let's connect.</p>
+      <p>Whether you are from Igbere and living in the UK or Ireland, or you simply want to support our work â we warmly welcome you. Reach out and let's connect.</p>
       <div class="contact-details">
         <div class="contact-item">
-          <div class="icon">📍</div>
+          <div class="icon">ð</div>
           <span>United Kingdom & Ireland</span>
         </div>
         <div class="contact-item">
-          <div class="icon">✉️</div>
+          <div class="icon">âï¸</div>
           <span>info@ipaukandireland.org</span>
         </div>
         <div class="contact-item">
-          <div class="icon">🌐</div>
+          <div class="icon">ð</div>
           <span>www.ipaukandireland.org</span>
         </div>
       </div>
@@ -914,7 +927,7 @@
           <input type="email" placeholder="your@email.com" id="email"/>
         </div>
         <div class="form-group">
-          <label>I am reaching out to…</label>
+          <label>I am reaching out toâ¦</label>
           <select id="reason">
             <option value="">Select a reason</option>
             <option>Join the Association</option>
@@ -926,11 +939,11 @@
         </div>
         <div class="form-group">
           <label>Message</label>
-          <textarea placeholder="Tell us a little about yourself or your enquiry…" id="message"></textarea>
+          <textarea placeholder="Tell us a little about yourself or your enquiryâ¦" id="message"></textarea>
         </div>
-        <button class="form-submit" onclick="submitForm()">Send Message →</button>
+        <button class="form-submit" onclick="submitForm()">Send Message â</button>
         <div class="form-success" id="formSuccess">
-          ✅ Thank you! Your message has been received. A member of IPA UK & Ireland will be in touch with you shortly. Welcome to the family! 🌿
+          â Thank you! Your message has been received. A member of IPA UK & Ireland will be in touch with you shortly. Welcome to the family! ð¿
         </div>
       </div>
     </div>
@@ -950,11 +963,11 @@
           <div class="footer-tagline">Igbere Progressive Association</div>
         </div>
       </div>
-      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love.</p>
+      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland â supporting one another and investing back into the community we love.</p>
       <div class="footer-social">
-        <a href="mailto:info@ipaukandireland.org" class="social-link" title="Email us">✉️</a>
-        <a href="#" class="social-link" title="Facebook">📘</a>
-        <a href="#" class="social-link" title="WhatsApp">💬</a>
+        <a href="mailto:info@ipaukandireland.org" class="social-link" title="Email us">âï¸</a>
+        <a href="#" class="social-link" title="Facebook - Coming Soon" aria-label="Facebook coming soon">ð</a>
+        <a href="https://chat.whatsapp.com/ipa-uk-ireland" class="social-link" title="WhatsApp - IPA UK &amp; Ireland" target="_blank" rel="noopener">ð¬</a>
       </div>
     </div>
     <div class="footer-col">
@@ -972,13 +985,13 @@
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <p class="footer-contact-item">✉️ info@ipaukandireland.org</p>
-      <p class="footer-contact-item">🌐 www.ipaukandireland.org</p>
-      <p class="footer-contact-item">📍 United Kingdom &amp; Ireland</p>
+      <p class="footer-contact-item">âï¸ info@ipaukandireland.org</p>
+      <p class="footer-contact-item">ð www.ipaukandireland.org</p>
+      <p class="footer-contact-item">ð United Kingdom &amp; Ireland</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
+    <div class="footer-copy">Â© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
     <div class="footer-links">
       <a href="#home">Home</a>
       <a href="ipa-membership.html">Membership</a>
