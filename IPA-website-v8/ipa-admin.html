@@ -201,6 +201,8 @@
     .act-suspend { background: rgba(230,126,34,0.15); color: var(--amber); }
     .act-reinstate { background: rgba(82,183,136,0.15); color: #1a7a4a; }
     .act-remove { background: rgba(192,57,43,0.1); color: var(--red); }
+    .act-edit { background: rgba(52,130,200,0.12); color: #1a4a7a; }
+    .act-resetpw { background: rgba(130,80,200,0.12); color: #5a1a9a; }
 
     /* Modals */
     .modal-overlay {
@@ -414,7 +416,7 @@
             <thead>
               <tr>
                 <th>Mem. No.</th><th>Full Name</th><th>Email</th>
-                <th>Joined</th><th>Last Dues</th><th>Status</th><th>Actions</th>
+                <th>Phone</th><th>Owed / Balance</th><th>Status</th><th>Actions</th>
               </tr>
             </thead>
             <tbody id="membersTableBody"></tbody>
@@ -557,6 +559,62 @@
     </div><!-- /admin-content -->
   </div><!-- /admin-main -->
 </div><!-- /admin-shell -->
+
+<!-- EDIT MEMBER MODAL -->
+<div class="modal-overlay" id="editMemberModal">
+  <div class="modal" style="max-width:480px;">
+    <h3>✏️ Edit Member Details</h3>
+    <p style="font-size:0.85rem;color:#888;margin-bottom:1rem;">Update the details for <strong id="editModalName">—</strong>.</p>
+    <div class="modal-field">
+      <label>Full Name</label>
+      <input type="text" id="editName" placeholder="Full name"/>
+    </div>
+    <div class="modal-field">
+      <label>Email Address</label>
+      <input type="email" id="editEmail" placeholder="Email address"/>
+    </div>
+    <div class="modal-field">
+      <label>Phone Number</label>
+      <input type="tel" id="editPhone" placeholder="Phone number"/>
+    </div>
+    <div class="modal-field">
+      <label>Amount Owed (£)</label>
+      <input type="number" id="editAmountOwed" placeholder="0.00" min="0" step="0.01"/>
+    </div>
+    <div class="modal-field">
+      <label>Amount Paid (£)</label>
+      <input type="number" id="editAmountPaid" placeholder="0.00" min="0" step="0.01"/>
+    </div>
+    <div id="editDuesBalance" style="font-size:0.85rem;color:#555;margin-top:0.3rem;padding:0.5rem 0.8rem;background:#f7f5f0;border-radius:6px;display:none;"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="modal-confirm" onclick="saveEditMember()">Save Changes →</button>
+    </div>
+    <div class="modal-success" id="editModalSuccess">✅ Member details updated successfully!</div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD MODAL -->
+<div class="modal-overlay" id="resetPwModal">
+  <div class="modal" style="max-width:440px;">
+    <h3>🔓 Reset Member Password</h3>
+    <p style="font-size:0.85rem;margin-bottom:1rem;">Reset the password for <strong id="resetPwModalName">—</strong>. A new password will be generated and saved. Share it with the member securely.</p>
+    <div class="modal-field">
+      <label>New Password</label>
+      <div style="display:flex;gap:0.5rem;">
+        <input type="text" id="resetPwInput" placeholder="Enter or generate a new password" style="flex:1"/>
+        <button onclick="generateResetPw()" style="background:var(--green-deep);color:#fff;border:none;border-radius:6px;padding:0 0.9rem;cursor:pointer;font-size:0.78rem;font-weight:700;white-space:nowrap;">Generate</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeResetPwModal()">Cancel</button>
+      <button class="modal-confirm" onclick="saveResetPw()">Reset Password →</button>
+    </div>
+    <div class="modal-success" id="resetPwSuccess">
+      ✅ Password reset! Share with member: <span class="generated-pw" id="resetPwSaved"></span>
+    </div>
+  </div>
+</div>
 
 <!-- PASSWORD MODAL -->
 <div class="modal-overlay" id="passwordModal">
@@ -729,10 +787,12 @@
   // ── MEMBER ACTIONS (use data-id attributes, not inline onclick with name) ──
   function actionBtns(m) {
     let btns = `<button class="act-btn act-password" data-action="view" data-id="${m.id}">👁 View</button>`;
+    btns += `<button class="act-btn act-edit" data-action="edit" data-id="${m.id}">✏️ Edit</button>`;
     if (m.status === 'pending')
       btns += `<button class="act-btn act-approve" data-action="approve" data-id="${m.id}">✅ Approve</button>`;
     if (m.status !== 'suspended')
       btns += `<button class="act-btn act-password" data-action="setpw" data-id="${m.id}" data-name="${esc(m.name)}">🔑 Set PW</button>`;
+    btns += `<button class="act-btn act-resetpw" data-action="resetpw" data-id="${m.id}" data-name="${esc(m.name)}">🔓 Reset PW</button>`;
     if (m.status === 'active' || m.status === 'overdue')
       btns += `<button class="act-btn act-suspend" data-action="suspend" data-id="${m.id}">🔒 Suspend</button>`;
     if (m.status === 'suspended')
@@ -749,8 +809,10 @@
     const id     = btn.dataset.id;
     const name   = btn.dataset.name || '';
     if (action === 'view')      viewMember(id);
+    if (action === 'edit')      openEditModal(id);
     if (action === 'approve')   approveMember(id);
     if (action === 'setpw')     openPasswordModal(id, name);
+    if (action === 'resetpw')   openResetPwModal(id, name);
     if (action === 'suspend')   suspendMember(id);
     if (action === 'reinstate') reinstateMember(id);
     if (action === 'remove')    confirmRemoveMember(id, name);
@@ -763,16 +825,23 @@
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#b0a090;padding:2rem">No members found.</td></tr>';
       return;
     }
-    tbody.innerHTML = list.map(m => `
-      <tr>
+    tbody.innerHTML = list.map(m => {
+      const owed = parseFloat(m.amountOwed) || 0;
+      const paid = parseFloat(m.amountPaid) || 0;
+      const balance = owed - paid;
+      const balanceStr = owed > 0
+        ? `<span style="color:${balance>0?'#c03900':'#1a7a4a'};font-weight:700;">${balance>0?'£'+balance.toFixed(2)+' owed':'✅ Cleared'}</span><br><small style="color:#999;font-size:0.75rem;">£${owed.toFixed(2)} owed · £${paid.toFixed(2)} paid</small>`
+        : '—';
+      return `<tr>
         <td><strong>${m.id}</strong></td>
         <td>${m.name}</td>
         <td>${m.email}</td>
-        <td>${m.joined || '—'}</td>
-        <td>${m.lastDues || '—'}</td>
+        <td>${m.phone || '—'}</td>
+        <td>${balanceStr}</td>
         <td>${statusPill(m.status)}</td>
         <td>${actionBtns(m)}</td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   }
 
   function renderPendingTable(list) {
@@ -927,6 +996,8 @@
     document.getElementById('modalSuccess').style.display = 'block';
     document.getElementById('modalSavedPw').textContent = pw;
     await refreshAll();
+    // Auto-close the popup after 2.5 seconds
+    setTimeout(function() { closePasswordModal(); }, 2500);
   }
 
   // ── ADD MEMBER ──
@@ -1095,6 +1166,82 @@
   // Set today's date as default for announcement date
   const dateField = document.getElementById('aDate');
   if (dateField) dateField.value = new Date().toISOString().slice(0,10);
+
+  // ── EDIT MEMBER MODAL ──
+  let _editTargetId = null;
+  function openEditModal(id) {
+    const m = _members.find(x => x.id === id);
+    if (!m) return;
+    _editTargetId = id;
+    document.getElementById('editModalName').textContent = m.name + ' (' + m.id + ')';
+    document.getElementById('editName').value  = m.name  || '';
+    document.getElementById('editEmail').value = m.email || '';
+    document.getElementById('editPhone').value = m.phone || '';
+    document.getElementById('editAmountOwed').value = m.amountOwed || '';
+    document.getElementById('editAmountPaid').value = m.amountPaid || '';
+    document.getElementById('editModalSuccess').style.display = 'none';
+    updateDuesBalance();
+    document.getElementById('editMemberModal').classList.add('open');
+  }
+  function updateDuesBalance() {
+    const owed = parseFloat(document.getElementById('editAmountOwed').value) || 0;
+    const paid = parseFloat(document.getElementById('editAmountPaid').value) || 0;
+    const bal  = owed - paid;
+    const el   = document.getElementById('editDuesBalance');
+    if (owed > 0 || paid > 0) {
+      el.style.display = 'block';
+      el.innerHTML = bal > 0
+        ? '<strong style="color:#c03900">Balance due: £' + bal.toFixed(2) + '</strong>'
+        : '<strong style="color:#1a7a4a">✅ Cleared — fully paid</strong>';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+  document.getElementById('editAmountOwed') && document.getElementById('editAmountOwed').addEventListener('input', updateDuesBalance);
+  document.getElementById('editAmountPaid') && document.getElementById('editAmountPaid').addEventListener('input', updateDuesBalance);
+
+  function closeEditModal() {
+    document.getElementById('editMemberModal').classList.remove('open');
+    _editTargetId = null;
+  }
+  async function saveEditMember() {
+    const name  = document.getElementById('editName').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+    const amountOwed = document.getElementById('editAmountOwed').value;
+    const amountPaid = document.getElementById('editAmountPaid').value;
+    if (!name || !email) { alert('Name and email are required.'); return; }
+    await apiFetch('/api/members/' + _editTargetId, 'PUT', { name, email, phone, amountOwed, amountPaid });
+    document.getElementById('editModalSuccess').style.display = 'block';
+    await refreshAll();
+    setTimeout(function() { closeEditModal(); }, 2000);
+  }
+
+  // ── RESET PASSWORD MODAL (Admin-initiated) ──
+  let _resetPwTargetId = null;
+  function openResetPwModal(id, name) {
+    _resetPwTargetId = id;
+    document.getElementById('resetPwModalName').textContent = name;
+    document.getElementById('resetPwInput').value = generatePw();
+    document.getElementById('resetPwSuccess').style.display = 'none';
+    document.getElementById('resetPwModal').classList.add('open');
+  }
+  function closeResetPwModal() {
+    document.getElementById('resetPwModal').classList.remove('open');
+    _resetPwTargetId = null;
+  }
+  function generateResetPw() {
+    document.getElementById('resetPwInput').value = generatePw();
+  }
+  async function saveResetPw() {
+    const pw = document.getElementById('resetPwInput').value.trim();
+    if (!pw) { alert('Please enter or generate a password first.'); return; }
+    await apiFetch('/api/members/' + _resetPwTargetId, 'PUT', { password: pw });
+    document.getElementById('resetPwSaved').textContent = pw;
+    document.getElementById('resetPwSuccess').style.display = 'block';
+    await refreshAll();
+    setTimeout(function() { closeResetPwModal(); }, 2500);
+  }
 </script>
 </body>
 </html>
