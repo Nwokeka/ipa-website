@@ -355,6 +355,9 @@
         <button class="sidebar-link" onclick="showTab('addmember', this)">
           <span class="icon">➕</span> Add New Member
         </button>
+        <button class="sidebar-link" onclick="showTab('president', this)">
+          <span class="icon">👤</span> President's Welcome
+        </button>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-section-label">Announcements</div>
@@ -559,6 +562,49 @@
             </thead>
             <tbody id="birthdayTableBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- PRESIDENT'S WELCOME -->
+      <div class="tab-panel" id="tab-president">
+        <div class="panel-title">President's Welcome</div>
+        <div class="panel-sub">Upload the current President's photo and welcome message. This appears on the About section of the main website for all visitors and members to see.</div>
+
+        <div class="settings-card" style="max-width:640px;">
+          <h3>👤 Update President's Welcome</h3>
+          <p style="font-size:0.85rem;color:#888;margin-bottom:1.5rem;">When a new President is elected, simply upload their photo, name and message here. It will update on the website immediately.</p>
+
+          <div class="settings-field">
+            <label>President's Full Name</label>
+            <input type="text" id="presName" placeholder="e.g. Chukwuemeka Obi"/>
+          </div>
+
+          <div class="settings-field">
+            <label>Welcome Message</label>
+            <textarea id="presMessage" rows="6" placeholder="Write the President's welcome message here — a warm greeting to members and visitors of the IPA UK &amp; Ireland website…" style="border:1.5px solid #ddd4c8;border-radius:6px;padding:0.7rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;width:100%;resize:vertical;"></textarea>
+          </div>
+
+          <div class="settings-field">
+            <label>President's Photo</label>
+            <div id="presPhotoDropZone" style="border:2px dashed #c8b89a;border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;background:#fdf9f4;transition:border-color 0.2s;" onclick="document.getElementById('presPhotoInput').click()">
+              <div id="presPhotoPreviewWrap" style="margin-bottom:0.8rem;display:none;">
+                <img id="presPhotoPreview" src="" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid #c9963a;display:inline-block;"/>
+              </div>
+              <div style="font-size:1.5rem;margin-bottom:0.4rem;">📷</div>
+              <div style="font-weight:600;color:var(--green-deep);margin-bottom:0.2rem;">Click to select a photo</div>
+              <div id="presPhotoName" style="font-size:0.8rem;color:#888;">JPG or PNG, max 2MB — passport-style photo recommended</div>
+            </div>
+            <input type="file" id="presPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="onPresPhotoSelected(this)"/>
+          </div>
+
+          <button class="settings-save" onclick="savePresidentWelcome()" id="presBtn">Save &amp; Publish to Website →</button>
+          <div class="settings-msg" id="presMsg"></div>
+        </div>
+
+        <!-- Current preview -->
+        <div class="settings-card" style="max-width:640px;margin-top:1.5rem;">
+          <h3>🌐 Currently Live on Website</h3>
+          <div id="presCurrentPreview" style="color:var(--text-light);font-size:0.85rem;">Loading current president info…</div>
         </div>
       </div>
 
@@ -1229,6 +1275,103 @@
   // Set today's date for document upload date field
   const docDateField = document.getElementById('docDate');
   if (docDateField) docDateField.value = new Date().toISOString().slice(0,10);
+
+  // ── PRESIDENT'S WELCOME ──
+  let _pendingPresPhoto = null;
+  let _pendingPresPhotoMime = null;
+
+  function onPresPhotoSelected(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      document.getElementById('presMsg').className = 'settings-msg err';
+      document.getElementById('presMsg').textContent = '❌ Photo too large. Please use an image under 2MB.';
+      input.value = ''; return;
+    }
+    _pendingPresPhoto = file;
+    _pendingPresPhotoMime = file.type;
+    document.getElementById('presPhotoName').textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+    document.getElementById('presPhotoDropZone').style.borderColor = 'var(--green-mid)';
+    document.getElementById('presPhotoDropZone').style.background = '#f0faf5';
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('presPhotoPreview').src = e.target.result;
+      document.getElementById('presPhotoPreviewWrap').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function savePresidentWelcome() {
+    const name    = document.getElementById('presName').value.trim();
+    const message = document.getElementById('presMessage').value.trim();
+    const msg     = document.getElementById('presMsg');
+    const btn     = document.getElementById('presBtn');
+    if (!name || !message) {
+      msg.className = 'settings-msg err'; msg.textContent = '❌ Please enter the President\'s name and welcome message.'; return;
+    }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    msg.className = ''; msg.textContent = '';
+    try {
+      let photoBase64 = null;
+      if (_pendingPresPhoto) {
+        photoBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(_pendingPresPhoto);
+        });
+      }
+      const payload = { name, message };
+      if (photoBase64) { payload.photo = photoBase64; payload.photoMime = _pendingPresPhotoMime; }
+      const res = await apiFetch('/api/president', 'POST', payload);
+      if (res.success) {
+        msg.className = 'settings-msg ok';
+        msg.textContent = '✅ President\'s welcome published! It is now live on the main website.';
+        _pendingPresPhoto = null;
+        await loadPresidentPreview();
+      } else {
+        msg.className = 'settings-msg err';
+        msg.textContent = '❌ ' + (res.error || 'Save failed. Please try again.');
+      }
+    } catch(e) {
+      msg.className = 'settings-msg err'; msg.textContent = '❌ Error: ' + e.message;
+    }
+    btn.disabled = false; btn.textContent = 'Save & Publish to Website →';
+  }
+
+  async function loadPresidentPreview() {
+    const container = document.getElementById('presCurrentPreview');
+    if (!container) return;
+    try {
+      const data = await apiFetch('/api/president');
+      if (data && data.name) {
+        document.getElementById('presName').value = data.name || '';
+        document.getElementById('presMessage').value = data.message || '';
+        let photoHtml = '';
+        if (data.photo) {
+          const byteChars = atob(data.photo);
+          const bytes = new Uint8Array(byteChars.length);
+          for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+          const blob = new Blob([bytes], { type: data.photoMime || 'image/jpeg' });
+          const url = URL.createObjectURL(blob);
+          photoHtml = '<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:3px solid #c9963a;vertical-align:middle;margin-right:1rem;"/>';
+          document.getElementById('presPhotoPreview').src = url;
+          document.getElementById('presPhotoPreviewWrap').style.display = 'block';
+        }
+        container.innerHTML = '<div style="display:flex;align-items:center;flex-wrap:wrap;gap:1rem;">' + photoHtml + '<div><strong style="color:var(--green-deep);">' + esc(data.name) + '</strong><br><span style="font-size:0.82rem;color:#888;">President, IPA UK &amp; Ireland</span><br><em style="font-size:0.85rem;color:#555;margin-top:0.3rem;display:block;">"' + esc((data.message||'').slice(0,120)) + (data.message && data.message.length > 120 ? '…' : '') + '"</em></div></div>';
+      } else {
+        container.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">No president\'s welcome set yet. Use the form above to add one.</p>';
+      }
+    } catch(e) {
+      container.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Could not load current info.</p>';
+    }
+  }
+
+  // Load president preview when tab is opened
+  document.querySelectorAll('[onclick*="president"]').forEach(btn => {
+    btn.addEventListener('click', function() { loadPresidentPreview(); });
+  });
 
   // ── DOCUMENTS ──
   let _documents = [];
