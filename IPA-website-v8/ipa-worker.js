@@ -215,6 +215,34 @@ export default {
       }
     }
 
+    // ── MEMBER CHANGE PASSWORD ──
+    if (path === '/api/members/change-password' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const { email, currentPassword, newPassword } = body;
+        if (!email || !currentPassword || !newPassword) {
+          return new Response(JSON.stringify({ success: false, error: 'Missing required fields.' }), { status: 400, headers: CORS });
+        }
+        if (newPassword.length < 8) {
+          return new Response(JSON.stringify({ success: false, error: 'New password must be at least 8 characters.' }), { status: 400, headers: CORS });
+        }
+        const raw = await env.IPA_DATA.get('members');
+        let members = raw ? JSON.parse(raw) : [];
+        const idx = members.findIndex(m => m.email.toLowerCase() === email.toLowerCase());
+        if (idx === -1) {
+          return new Response(JSON.stringify({ success: false, error: 'Member not found.' }), { status: 404, headers: CORS });
+        }
+        if (members[idx].password !== currentPassword) {
+          return new Response(JSON.stringify({ success: false, error: 'Current password is incorrect.' }), { status: 401, headers: CORS });
+        }
+        members[idx].password = newPassword;
+        await env.IPA_DATA.put('members', JSON.stringify(members));
+        return new Response(JSON.stringify({ success: true }), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
     // ── ADMIN LOGIN ──
     if (path === '/api/admin/login' && request.method === 'POST') {
       try {
