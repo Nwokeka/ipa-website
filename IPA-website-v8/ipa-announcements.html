@@ -3,10 +3,17 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Announcements — IPA UK & Ireland</title>
+  <title>Announcements â IPA UK & Ireland</title>
   <link rel="icon" type="image/png" href="favicon-32.png"/>
   <link rel="apple-touch-icon" href="icon-180.png"/>
   <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#1a4731"/>
+  <meta name="description" content="Latest news and announcements from the Igbere Progressive Association UK &amp; Ireland."/>
+  <meta property="og:title" content="Announcements — IPA UK &amp; Ireland"/>
+  <meta property="og:image" content="https://www.ipaukandireland.org/icon-512.png"/>
+  <meta property="og:url" content="https://www.ipaukandireland.org"/>
+  <meta property="og:type" content="website"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,10 +29,11 @@
       --text-mid: #3d3d3d;
       --text-light: #7a6a5a;
     }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    * { -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text-dark); overflow-x: hidden; }
 
-    /* ── NAV ── */
+    /* ââ NAV ââ */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
       background: rgba(26,71,49,0.97); backdrop-filter: blur(10px);
@@ -56,7 +64,7 @@
     .mobile-menu a:hover { color: var(--gold-light); }
     .mobile-menu .mob-cta { margin-top: 0.5rem; background: var(--gold); color: var(--green-deep) !important; text-align: center; padding: 0.8rem !important; border-radius: 2px; font-weight: 700 !important; border-bottom: none !important; }
 
-    /* ── PAGE HERO ── */
+    /* ââ PAGE HERO ââ */
     .page-hero {
       background: var(--green-deep);
       padding: 130px 8% 70px;
@@ -80,7 +88,7 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── FILTER BAR ── */
+    /* ââ FILTER BAR ââ */
     .filter-bar {
       background: #fff; border-bottom: 1px solid #ede4d8;
       padding: 0 8%; display: flex; gap: 0; overflow-x: auto;
@@ -90,7 +98,7 @@
     .filter-btn:hover { color: var(--green-mid); }
     .filter-btn.active { color: var(--green-deep); border-bottom-color: var(--gold); }
 
-    /* ── MAIN LAYOUT ── */
+    /* ââ MAIN LAYOUT ââ */
     .announcements-layout {
       display: grid;
       grid-template-columns: 1fr 320px;
@@ -100,7 +108,7 @@
       margin: 0 auto;
     }
 
-    /* ── BIRTHDAY SPOTLIGHT ── */
+    /* ââ BIRTHDAY SPOTLIGHT ââ */
     .birthday-spotlight {
       background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
       border-radius: 14px;
@@ -110,7 +118,7 @@
       overflow: hidden;
     }
     .birthday-spotlight::before {
-      content: '🎂';
+      content: 'ð';
       position: absolute; right: 1.5rem; top: 50%;
       transform: translateY(-50%);
       font-size: 6rem; opacity: 0.12;
@@ -128,7 +136,7 @@
     .birthday-chip .bday-day { font-weight: 700; color: var(--gold-light); }
     .no-birthdays { color: #8ab5a0; font-size: 0.88rem; font-style: italic; }
 
-    /* ── ANNOUNCEMENT CARDS ── */
+    /* ââ ANNOUNCEMENT CARDS ââ */
     .announcement-feed { display: flex; flex-direction: column; gap: 1.4rem; }
 
     .announcement-card {
@@ -166,7 +174,7 @@
     .empty-feed h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; margin-bottom: 0.5rem; }
     .empty-feed p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
 
-    /* ── SIDEBAR ── */
+    /* ââ SIDEBAR ââ */
     .announcements-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
 
     .sidebar-widget {
@@ -200,7 +208,7 @@
     .legend-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.82rem; color: var(--text-mid); }
     .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-    /* ── FOOTER ── */
+    /* ââ FOOTER ââ */
     footer { background: #0a1f14; border-top: 2px solid rgba(201,150,58,0.25); }
     .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 3rem; padding: 4rem 8% 3rem; }
     .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
@@ -220,11 +228,11 @@
     .footer-links a { color: #3d5a4a; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--gold-light); }
 
-    /* ── REVEAL ── */
+    /* ââ REVEAL ââ */
     .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── RESPONSIVE ── */
+    /* ââ RESPONSIVE ââ */
     @media (max-width: 900px) {
       .announcements-layout { grid-template-columns: 1fr; }
       .announcements-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
@@ -232,7 +240,7 @@
     @media (max-width: 768px) {
       nav { padding: 0 4%; }
       .nav-links { display: none; }
-      .hamburger { display: flex; }
+      .hamburger { display: flex; min-height: 44px; min-width: 44px; align-items: center; justify-content: center; }
       .announcements-layout { padding: 40px 5%; }
       .filter-bar { padding: 0 4%; }
       .announcements-sidebar { grid-template-columns: 1fr; }
@@ -271,28 +279,28 @@
   <a href="ipa-announcements.html" onclick="closeMenu()">Announcements</a>
   <a href="ipa-membership.html">Membership</a>
   <a href="ipa-members.html" class="mob-cta">Members Portal</a>
-  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">🛡️ Admin (Executives)</a>
+  <a href="ipa-admin.html" style="color:rgba(201,150,58,0.7);font-size:0.85rem;">ð¡ï¸ Admin (Executives)</a>
 </div>
 
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-content">
-    <div class="page-hero-tag">🌿 Community Updates</div>
+    <div class="page-hero-tag">ð¿ Community Updates</div>
     <h1>IPA <em>Announcements</em></h1>
     <p>Birthdays, bereavements, new arrivals, events and news from our IPA family across the UK and Ireland.</p>
-    <div class="hero-month-badge" id="heroMonthBadge">📅 Loading...</div>
+    <div class="hero-month-badge" id="heroMonthBadge">ð Loading...</div>
   </div>
 </div>
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterAnnouncements('all', this)">All</button>
-  <button class="filter-btn" onclick="filterAnnouncements('birthday', this)">🎂 Birthdays</button>
-  <button class="filter-btn" onclick="filterAnnouncements('bereavement', this)">🙏 Bereavements</button>
-  <button class="filter-btn" onclick="filterAnnouncements('baby', this)">👶 New Arrivals</button>
-  <button class="filter-btn" onclick="filterAnnouncements('event', this)">🎉 Events</button>
-  <button class="filter-btn" onclick="filterAnnouncements('achievement', this)">🏆 Achievements</button>
-  <button class="filter-btn" onclick="filterAnnouncements('notice', this)">📢 Notices</button>
+  <button class="filter-btn" onclick="filterAnnouncements('birthday', this)">ð Birthdays</button>
+  <button class="filter-btn" onclick="filterAnnouncements('bereavement', this)">ð Bereavements</button>
+  <button class="filter-btn" onclick="filterAnnouncements('baby', this)">ð¶ New Arrivals</button>
+  <button class="filter-btn" onclick="filterAnnouncements('event', this)">ð Events</button>
+  <button class="filter-btn" onclick="filterAnnouncements('achievement', this)">ð Achievements</button>
+  <button class="filter-btn" onclick="filterAnnouncements('notice', this)">ð¢ Notices</button>
 </div>
 
 <!-- MAIN LAYOUT -->
@@ -302,8 +310,8 @@
   <div>
     <!-- BIRTHDAY SPOTLIGHT -->
     <div class="birthday-spotlight reveal" id="birthdaySpotlight">
-      <div class="birthday-spotlight-label">🎂 This Month's Birthdays</div>
-      <h2 id="spotlightMonthTitle">Celebrating in —</h2>
+      <div class="birthday-spotlight-label">ð This Month's Birthdays</div>
+      <h2 id="spotlightMonthTitle">Celebrating in â</h2>
       <div class="birthday-names" id="birthdayNamesList">
         <span class="no-birthdays">Loading birthdays...</span>
       </div>
@@ -318,7 +326,7 @@
 
     <!-- UPCOMING BIRTHDAYS -->
     <div class="sidebar-widget">
-      <div class="widget-header">🎂 Upcoming Birthdays</div>
+      <div class="widget-header">ð Upcoming Birthdays</div>
       <div class="widget-body" id="upcomingBdayWidget">
         <p style="font-size:0.82rem;color:var(--text-light);">Loading...</p>
       </div>
@@ -326,7 +334,7 @@
 
     <!-- UPCOMING EVENTS -->
     <div class="sidebar-widget">
-      <div class="widget-header">🗓️ Upcoming Events</div>
+      <div class="widget-header">ðï¸ Upcoming Events</div>
       <div class="widget-body" id="upcomingEventsWidget">
         <p style="font-size:0.82rem;color:var(--text-light);">No upcoming events posted yet.</p>
       </div>
@@ -334,7 +342,7 @@
 
     <!-- CATEGORY LEGEND -->
     <div class="sidebar-widget">
-      <div class="widget-header">📋 Categories</div>
+      <div class="widget-header">ð Categories</div>
       <div class="widget-body">
         <div class="legend-item"><div class="legend-dot" style="background:#f0a8c0"></div> New Arrival (Baby)</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Event / Meeting</div>
@@ -358,7 +366,7 @@
           <div class="footer-tagline">Igbere Progressive Association</div>
         </div>
       </div>
-      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love.</p>
+      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland â supporting one another and investing back into the community we love.</p>
     </div>
     <div class="footer-col">
       <h4>Quick Links</h4>
@@ -375,13 +383,13 @@
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <p class="footer-contact-item">✉️ info@ipaukandireland.org</p>
-      <p class="footer-contact-item">🌐 www.ipaukandireland.org</p>
-      <p class="footer-contact-item">📍 United Kingdom &amp; Ireland</p>
+      <p class="footer-contact-item">âï¸ info@ipaukandireland.org</p>
+      <p class="footer-contact-item">ð www.ipaukandireland.org</p>
+      <p class="footer-contact-item">ð United Kingdom &amp; Ireland</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
+    <div class="footer-copy">Â© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
     <div class="footer-links">
       <a href="index.html">Home</a>
       <a href="ipa-membership.html">Membership</a>
@@ -396,11 +404,11 @@
   const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   const CATEGORY_CONFIG = {
-    bereavement: { label: 'Bereavement', emoji: '🙏' },
-    baby:        { label: 'New Arrival', emoji: '👶' },
-    event:       { label: 'Event',       emoji: '🎉' },
-    achievement: { label: 'Achievement', emoji: '🏆' },
-    notice:      { label: 'Notice',      emoji: '📢' },
+    bereavement: { label: 'Bereavement', emoji: 'ð' },
+    baby:        { label: 'New Arrival', emoji: 'ð¶' },
+    event:       { label: 'Event',       emoji: 'ð' },
+    achievement: { label: 'Achievement', emoji: 'ð' },
+    notice:      { label: 'Notice',      emoji: 'ð¢' },
   };
 
   let _members = [];
@@ -422,7 +430,7 @@
   function getMembers() { return _members; }
   function getAnnouncements() { return _announcements; }
 
-  // ── INIT ──
+  // ââ INIT ââ
   async function init() {
     await loadData();
     const now = new Date();
@@ -430,7 +438,7 @@
     const nextMonth = (thisMonth + 1) % 12;
 
     // Set hero badge
-    document.getElementById('heroMonthBadge').textContent = `📅 ${MONTHS[thisMonth]} ${now.getFullYear()} Announcements`;
+    document.getElementById('heroMonthBadge').textContent = `ð ${MONTHS[thisMonth]} ${now.getFullYear()} Announcements`;
 
     // Birthday spotlight
     renderBirthdaySpotlight(thisMonth);
@@ -453,7 +461,7 @@
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
-  // ── BIRTHDAYS ──
+  // ââ BIRTHDAYS ââ
   function getMembersWithBirthdayInMonth(month) {
     return getMembers().filter(m => {
       if (!m.birthdayMonth) return false;
@@ -473,7 +481,7 @@
     members.sort((a,b) => parseInt(a.birthdayDay||0) - parseInt(b.birthdayDay||0));
     container.innerHTML = members.map(m => {
       const day = m.birthdayDay ? `<span class="bday-day">${ordinal(parseInt(m.birthdayDay))}</span>` : '';
-      return `<div class="birthday-chip">🎂 ${m.name.split(' ')[0]} ${day}</div>`;
+      return `<div class="birthday-chip">ð ${m.name.split(' ')[0]} ${day}</div>`;
     }).join('');
   }
 
@@ -504,13 +512,13 @@
         <div class="bday-avatar">${initials}</div>
         <div class="bday-info">
           <div class="bday-name">${item.name}</div>
-          <div class="bday-date-str">🎂 ${dateStr}</div>
+          <div class="bday-date-str">ð ${dateStr}</div>
         </div>
       </div>`;
     }).join('');
   }
 
-  // ── ANNOUNCEMENTS FEED ──
+  // ââ ANNOUNCEMENTS FEED ââ
   function renderFeed(filterCat) {
     const feed = document.getElementById('announcementFeed');
     let items = getAnnouncements();
@@ -526,24 +534,24 @@
       items = items.filter(a => a.category === filterCat);
     }
     if (filterCat === 'birthday') {
-      feed.innerHTML = '<div class="empty-feed"><div class="icon">🎂</div><h4>Birthdays are shown above</h4><p>This month\'s birthdays are displayed in the birthday spotlight at the top of the page. Use the sidebar to see upcoming birthdays in the coming months.</p></div>';
+      feed.innerHTML = '<div class="empty-feed"><div class="icon">ð</div><h4>Birthdays are shown above</h4><p>This month\'s birthdays are displayed in the birthday spotlight at the top of the page. Use the sidebar to see upcoming birthdays in the coming months.</p></div>';
       return;
     }
 
     if (!items.length) {
-      feed.innerHTML = '<div class="empty-feed"><div class="icon">📭</div><h4>No announcements yet</h4><p>Check back soon — the executive team will post updates here.</p></div>';
+      feed.innerHTML = '<div class="empty-feed"><div class="icon">ð­</div><h4>No announcements yet</h4><p>Check back soon â the executive team will post updates here.</p></div>';
       return;
     }
 
     feed.innerHTML = items.map(a => {
-      const cfg = CATEGORY_CONFIG[a.category] || { label: a.category, emoji: '📢' };
+      const cfg = CATEGORY_CONFIG[a.category] || { label: a.category, emoji: 'ð¢' };
       const dateStr = formatDate(a.date);
       return `<div class="announcement-card cat-${a.category} ${a.pinned ? 'pinned' : ''} reveal">
         <div class="card-inner">
           <div class="card-top">
             <div class="card-category-row">
               <span class="cat-badge ${a.category}">${cfg.emoji} ${cfg.label}</span>
-              ${a.pinned ? '<span class="pin-badge">📌 Pinned</span>' : ''}
+              ${a.pinned ? '<span class="pin-badge">ð Pinned</span>' : ''}
             </div>
             <span class="card-date">${dateStr}</span>
           </div>
@@ -580,7 +588,7 @@
       </div>`).join('');
   }
 
-  // ── FILTER ──
+  // ââ FILTER ââ
   function filterAnnouncements(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -589,7 +597,7 @@
     renderFeed(cat);
   }
 
-  // ── HELPERS ──
+  // ââ HELPERS ââ
   function formatDate(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr + 'T00:00:00');
@@ -600,7 +608,7 @@
     return n + (s[(v-20)%10] || s[v] || s[0]);
   }
 
-  // ── HAMBURGER ──
+  // ââ HAMBURGER ââ
   function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');
     document.getElementById('hamburger').classList.toggle('open');
