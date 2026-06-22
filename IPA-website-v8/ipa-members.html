@@ -425,7 +425,14 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .portal-sidebar { display: none; }
+      .portal-sidebar {
+        position: fixed; top: 0; left: -280px; height: 100vh; z-index: 1000;
+        width: 260px !important; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+      }
+      .portal-sidebar.mobile-open { left: 0; }
+      .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+      .mobile-menu-overlay.active { display: block; }
+      .mobile-menu-btn { display: flex; }
       .portal-main { padding: 1.5rem; }
       .dash-grid { grid-template-columns: 1fr; }
       .contact-grid-portal { grid-template-columns: 1fr; }
@@ -448,7 +455,11 @@
     .footer-mini-copy { font-size: 0.75rem; color: #3d5a4a; }
     .footer-mini a { color: #5a8070; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
     .footer-mini a:hover { color: var(--gold-light); }
-  </style>
+  
+      @media (max-width: 900px) {
+        .mobile-menu-btn { display: flex !important; }
+      }
+    </style>
 </head>
 <body>
 
@@ -544,7 +555,11 @@
     </aside>
 
     <!-- MAIN CONTENT -->
+    <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
     <main class="portal-main">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="openMobileMenu()" style="display:none; align-items:center; gap:0.5rem; padding:0.6rem 1rem; background:var(--green-dark); color:#fff; border:none; border-radius:8px; font-size:0.9rem; cursor:pointer; margin-bottom:1rem;">
+        ☰ Menu
+      </button>
 
       <!-- ── DASHBOARD ── -->
       <div class="tab-panel active" id="tab-dashboard">
@@ -927,6 +942,16 @@
     enterPortal(email);
   }
 
+  function openMobileMenu() {
+    document.querySelector('.portal-sidebar').classList.add('mobile-open');
+    document.getElementById('mobileOverlay').classList.add('active');
+    document.getElementById('mobileMenuBtn').style.display = 'none';
+  }
+  function closeMobileMenu() {
+    document.querySelector('.portal-sidebar').classList.remove('mobile-open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+    document.getElementById('mobileMenuBtn').style.display = '';
+  }
   function doLogout() {
     sessionStorage.removeItem('ipaPortalAuth');
     sessionStorage.removeItem('ipaPortalEmail');
@@ -958,6 +983,7 @@
 
   // ── TABS ──
   function showTab(id, btn) {
+    if (window.innerWidth <= 900) { closeMobileMenu(); }
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
     document.getElementById('tab-' + id).classList.add('active');
