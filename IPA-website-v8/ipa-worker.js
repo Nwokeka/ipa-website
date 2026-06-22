@@ -338,6 +338,42 @@ export default {
       }
     }
 
+    // ── GET PRESIDENT INFO ──
+    if (path === '/api/president' && request.method === 'GET') {
+      try {
+        const raw = await env.IPA_DATA.get('president');
+        if (!raw) return new Response(JSON.stringify({}), { status: 200, headers: CORS });
+        return new Response(raw, { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
+    // ── SAVE PRESIDENT INFO ──
+    if (path === '/api/president' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const { name, message, photo, photoMime } = body;
+        if (!name || !message) {
+          return new Response(JSON.stringify({ success: false, error: 'Name and message are required.' }), { status: 400, headers: CORS });
+        }
+        // Get existing data to preserve photo if none uploaded
+        const existing = await env.IPA_DATA.get('president');
+        const prev = existing ? JSON.parse(existing) : {};
+        const data = {
+          name,
+          message,
+          photo:     photo     || prev.photo     || null,
+          photoMime: photoMime || prev.photoMime || 'image/jpeg',
+          updatedAt: new Date().toISOString()
+        };
+        await env.IPA_DATA.put('president', JSON.stringify(data));
+        return new Response(JSON.stringify({ success: true }), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
     return new Response(JSON.stringify({ error: 'Not found', path }), { status: 404, headers: CORS });
   }
 };
