@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Our Projects â IPA UK & Ireland</title>
+  <title>Our Projects — IPA UK & Ireland</title>
   <link rel="icon" type="image/png" href="favicon-32.png"/>
   <link rel="apple-touch-icon" href="icon-180.png"/>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#1a4731"/>
-  <meta name="description" content="See the community projects funded by IPA UK &amp; Ireland — boreholes, scholarships, health centres and more."/>
+  <meta name="description" content="Community projects by IPA UK &amp; Ireland."/>
   <meta property="og:title" content="Projects — IPA UK &amp; Ireland"/>
   <meta property="og:image" content="https://www.ipaukandireland.org/icon-512.png"/>
   <meta property="og:url" content="https://www.ipaukandireland.org"/>
-  <meta property="og:type" content="website"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
@@ -31,10 +30,9 @@
       --text-light: #7a6a5a;
     }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    * { -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text-dark); overflow-x: hidden; }
 
-    /* ââ NAV ââ */
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
       background: rgba(26,71,49,0.97);
@@ -64,7 +62,7 @@
     .mobile-menu a:hover { color: var(--gold-light); }
     .mobile-menu .mob-cta { margin-top: 0.5rem; background: var(--gold); color: var(--green-deep) !important; text-align: center; padding: 0.8rem !important; border-radius: 2px; font-weight: 700 !important; border-bottom: none !important; }
 
-    /* ââ PAGE HERO ââ */
+    /* ── PAGE HERO ── */
     .page-hero {
       background: var(--green-deep);
       padding: 130px 8% 70px;
@@ -83,7 +81,7 @@
     .page-hero h1 em { font-style: italic; color: var(--gold-light); }
     .page-hero p { font-family: 'Lora', serif; color: #b8d4c2; font-size: 1.05rem; line-height: 1.8; max-width: 600px; }
 
-    /* ââ FILTER TABS ââ */
+    /* ── FILTER TABS ── */
     .filter-bar {
       background: #fff;
       border-bottom: 1px solid #ede4d8;
@@ -104,7 +102,7 @@
     .filter-btn:hover { color: var(--green-mid); }
     .filter-btn.active { color: var(--green-deep); border-bottom-color: var(--gold); }
 
-    /* ââ SECTIONS ââ */
+    /* ── SECTIONS ── */
     .projects-section { padding: 70px 8%; }
     .projects-section:nth-child(even) { background: var(--cream); }
     .section-header { margin-bottom: 2.5rem; }
@@ -112,7 +110,7 @@
     .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); font-weight: 800; color: var(--green-deep); margin-bottom: 0.8rem; }
     .gold-line { width: 50px; height: 3px; background: var(--gold); }
 
-    /* ââ PROJECT CARDS ââ */
+    /* ── PROJECT CARDS ── */
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
     .project-card {
       background: #fff; border-radius: 10px;
@@ -145,7 +143,7 @@
     .project-meta { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.75rem; color: #b0a090; margin-bottom: 1rem; }
     .project-meta span { display: flex; align-items: center; gap: 0.3rem; }
 
-    /* ââ FUNDRAISING ââ */
+    /* ── FUNDRAISING ── */
     .fundraising-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
     .fund-card {
       background: #fff; border-radius: 10px;
@@ -172,7 +170,7 @@
     }
     .fund-donate-btn:hover { background: var(--gold-light); }
 
-    /* ââ VIDEOS ââ */
+    /* ── VIDEOS ── */
     .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
     .video-card {
       background: #fff; border-radius: 10px;
@@ -199,7 +197,7 @@
     .video-body p { font-size: 0.82rem; color: var(--text-light); line-height: 1.65; }
     .video-date { font-size: 0.72rem; color: #b0a090; margin-top: 0.5rem; }
 
-    /* ââ EMPTY STATE ââ */
+    /* ── EMPTY STATE ── */
     .empty-state {
       text-align: center; padding: 3rem 2rem;
       background: #fff; border-radius: 10px;
@@ -209,7 +207,7 @@
     .empty-state h4 { font-family: 'Playfair Display', serif; color: var(--green-deep); font-size: 1.1rem; margin-bottom: 0.5rem; }
     .empty-state p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
 
-    /* ââ CTA BAND ââ */
+    /* ── CTA BAND ── */
     .cta-band {
       background: var(--green-mid);
       padding: 60px 8%;
@@ -223,7 +221,7 @@
     .btn-outline { background: transparent; color: #d4ead9; padding: 0.85rem 2rem; border: 1px solid rgba(255,255,255,0.3); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; text-decoration: none; transition: border-color 0.2s, color 0.2s; display: inline-block; }
     .btn-outline:hover { border-color: var(--gold-light); color: var(--gold-light); }
 
-    /* ââ FOOTER ââ */
+    /* ── FOOTER ── */
     footer { background: #0a1f14; border-top: 2px solid rgba(201,150,58,0.25); }
     .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 3rem; padding: 4rem 8% 3rem; }
     .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
@@ -243,11 +241,11 @@
     .footer-links a { color: #3d5a4a; font-size: 0.78rem; text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--gold-light); }
 
-    /* ââ REVEAL ââ */
+    /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ââ RESPONSIVE ââ */
+    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 0 4%; }
       .nav-links { display: none; }
@@ -296,59 +294,59 @@
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-content">
-    <div class="page-hero-tag">ð¿ Community Impact</div>
+    <div class="page-hero-tag">🌿 Community Impact</div>
     <h1>Our <em>Projects</em></h1>
-    <p>From the UK and Ireland, we reach back home to Igbere â funding real projects that transform lives. Here is what your membership and generosity makes possible.</p>
+    <p>From the UK and Ireland, we reach back home to Igbere — funding real projects that transform lives. Here is what your membership and generosity makes possible.</p>
   </div>
 </div>
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterSection('all', this)">All</button>
-  <button class="filter-btn" onclick="filterSection('completed', this)">â Completed</button>
-  <button class="filter-btn" onclick="filterSection('ongoing', this)">ð Ongoing</button>
-  <button class="filter-btn" onclick="filterSection('fundraising', this)">ð¯ Fundraising</button>
-  <button class="filter-btn" onclick="filterSection('videos', this)">ð¥ Videos</button>
+  <button class="filter-btn" onclick="filterSection('completed', this)">✅ Completed</button>
+  <button class="filter-btn" onclick="filterSection('ongoing', this)">🔄 Ongoing</button>
+  <button class="filter-btn" onclick="filterSection('fundraising', this)">🎯 Fundraising</button>
+  <button class="filter-btn" onclick="filterSection('videos', this)">🎥 Videos</button>
 </div>
 
 <!-- COMPLETED PROJECTS -->
 <section class="projects-section" id="sec-completed">
   <div class="section-header reveal">
-    <div class="section-label">â Completed</div>
+    <div class="section-label">✅ Completed</div>
     <h2 class="section-title">Projects We Have Delivered</h2>
     <div class="gold-line"></div>
   </div>
   <div class="projects-grid" id="completedGrid">
-    <!-- Sample card â admins will populate via admin panel -->
+    <!-- Sample card — admins will populate via admin panel -->
     <div class="project-card reveal">
       <div class="project-img placeholder">
-        <span>ðï¸</span>
+        <span>🏗️</span>
         <span class="project-status-badge badge-completed">Completed</span>
       </div>
       <div class="project-body">
         <div class="project-category">Infrastructure</div>
         <h3>Sample: Community Borehole Project</h3>
-        <p>Clean water access provided to over 200 households in Igbere. This is a placeholder â your admin team will upload real project photos and details.</p>
+        <p>Clean water access provided to over 200 households in Igbere. This is a placeholder — your admin team will upload real project photos and details.</p>
         <div class="project-meta">
-          <span>ð 2024</span>
-          <span>ð Igbere</span>
-          <span>ð¥ 200+ beneficiaries</span>
+          <span>📅 2024</span>
+          <span>📍 Igbere</span>
+          <span>👥 200+ beneficiaries</span>
         </div>
       </div>
     </div>
     <div class="project-card reveal">
       <div class="project-img placeholder">
-        <span>ð</span>
+        <span>🎓</span>
         <span class="project-status-badge badge-completed">Completed</span>
       </div>
       <div class="project-body">
         <div class="project-category">Education</div>
-        <h3>Sample: Youth Scholarship Fund â 2023</h3>
+        <h3>Sample: Youth Scholarship Fund — 2023</h3>
         <p>Five scholarships awarded to outstanding Igbere students for university education. Replace this with your real completed project details.</p>
         <div class="project-meta">
-          <span>ð 2023</span>
-          <span>ð Igbere</span>
-          <span>ð¥ 5 scholars</span>
+          <span>📅 2023</span>
+          <span>📍 Igbere</span>
+          <span>👥 5 scholars</span>
         </div>
       </div>
     </div>
@@ -358,24 +356,24 @@
 <!-- ONGOING PROJECTS -->
 <section class="projects-section" id="sec-ongoing">
   <div class="section-header reveal">
-    <div class="section-label">ð Ongoing</div>
+    <div class="section-label">🔄 Ongoing</div>
     <h2 class="section-title">Work Currently in Progress</h2>
     <div class="gold-line"></div>
   </div>
   <div class="projects-grid" id="ongoingGrid">
     <div class="project-card reveal">
       <div class="project-img placeholder">
-        <span>ð´ð¾</span>
+        <span>👴🏾</span>
         <span class="project-status-badge badge-ongoing">Ongoing</span>
       </div>
       <div class="project-body">
         <div class="project-category">Welfare</div>
         <h3>Sample: Elderly Support Programme</h3>
-        <p>Monthly welfare packages for elderly community members in Igbere. This is a placeholder â upload your real project photo and description via the admin panel.</p>
+        <p>Monthly welfare packages for elderly community members in Igbere. This is a placeholder — upload your real project photo and description via the admin panel.</p>
         <div class="project-meta">
-          <span>ð Started 2023</span>
-          <span>ð Igbere</span>
-          <span>ð¥ 30+ elders</span>
+          <span>📅 Started 2023</span>
+          <span>📍 Igbere</span>
+          <span>👥 30+ elders</span>
         </div>
       </div>
     </div>
@@ -385,49 +383,49 @@
 <!-- FUNDRAISING -->
 <section class="projects-section" id="sec-fundraising">
   <div class="section-header reveal">
-    <div class="section-label">ð¯ Fundraising</div>
+    <div class="section-label">🎯 Fundraising</div>
     <h2 class="section-title">Help Us Reach Our Goals</h2>
     <div class="gold-line"></div>
   </div>
   <div class="fundraising-grid">
     <div class="fund-card reveal">
-      <div class="fund-icon">ð¥</div>
+      <div class="fund-icon">🏥</div>
       <h3>Community Health Centre</h3>
       <p>We are raising funds to build a basic health facility in Igbere that will serve the entire community, reducing the distance people travel for medical care.</p>
       <div class="progress-bar-wrap">
         <div class="progress-bar" style="width: 42%"></div>
       </div>
       <div class="progress-labels">
-        <span>Raised: <strong>Â£21,000</strong></span>
-        <span>Goal: <strong>Â£50,000</strong></span>
+        <span>Raised: <strong>£21,000</strong></span>
+        <span>Goal: <strong>£50,000</strong></span>
       </div>
-      <a href="index.html#contact" class="fund-donate-btn">Support This Project â</a>
+      <a href="index.html#contact" class="fund-donate-btn">Support This Project →</a>
     </div>
     <div class="fund-card reveal">
-      <div class="fund-icon">ð«</div>
+      <div class="fund-icon">🏫</div>
       <h3>School Renovation Fund</h3>
-      <p>Renovating classrooms and providing furniture and learning materials for the primary school in Igbere town â giving children the environment they deserve.</p>
+      <p>Renovating classrooms and providing furniture and learning materials for the primary school in Igbere town — giving children the environment they deserve.</p>
       <div class="progress-bar-wrap">
         <div class="progress-bar" style="width: 68%"></div>
       </div>
       <div class="progress-labels">
-        <span>Raised: <strong>Â£6,800</strong></span>
-        <span>Goal: <strong>Â£10,000</strong></span>
+        <span>Raised: <strong>£6,800</strong></span>
+        <span>Goal: <strong>£10,000</strong></span>
       </div>
-      <a href="index.html#contact" class="fund-donate-btn">Support This Project â</a>
+      <a href="index.html#contact" class="fund-donate-btn">Support This Project →</a>
     </div>
     <div class="fund-card reveal">
-      <div class="fund-icon">ð¡</div>
+      <div class="fund-icon">💡</div>
       <h3>Solar Street Lighting</h3>
       <p>Installing solar-powered street lights along the main road in Igbere to improve safety and enable evening activity in the community.</p>
       <div class="progress-bar-wrap">
         <div class="progress-bar" style="width: 25%"></div>
       </div>
       <div class="progress-labels">
-        <span>Raised: <strong>Â£2,500</strong></span>
-        <span>Goal: <strong>Â£10,000</strong></span>
+        <span>Raised: <strong>£2,500</strong></span>
+        <span>Goal: <strong>£10,000</strong></span>
       </div>
-      <a href="index.html#contact" class="fund-donate-btn">Support This Project â</a>
+      <a href="index.html#contact" class="fund-donate-btn">Support This Project →</a>
     </div>
   </div>
 </section>
@@ -435,39 +433,39 @@
 <!-- VIDEOS -->
 <section class="projects-section" id="sec-videos">
   <div class="section-header reveal">
-    <div class="section-label">ð¥ Videos</div>
+    <div class="section-label">🎥 Videos</div>
     <h2 class="section-title">See Our Work in Action</h2>
     <div class="gold-line"></div>
   </div>
   <div class="videos-grid">
     <div class="video-card reveal">
       <div class="video-thumb" onclick="alert('Add your YouTube or video link here via the Admin panel')">
-        <div class="play-btn">â¶</div>
+        <div class="play-btn">▶</div>
       </div>
       <div class="video-body">
         <h4>Sample: Borehole Commissioning Ceremony</h4>
         <p>Community gathering for the official opening of the water project. Replace this via the Admin panel with a real YouTube link.</p>
-        <div class="video-date">ð Upload date: TBC</div>
+        <div class="video-date">📅 Upload date: TBC</div>
       </div>
     </div>
     <div class="video-card reveal">
       <div class="video-thumb" onclick="alert('Add your YouTube or video link here via the Admin panel')">
-        <div class="play-btn">â¶</div>
+        <div class="play-btn">▶</div>
       </div>
       <div class="video-body">
         <h4>Sample: Annual General Meeting Highlights</h4>
         <p>Key moments from the IPA UK & Ireland AGM. Admins can add the real video link from the admin panel.</p>
-        <div class="video-date">ð Upload date: TBC</div>
+        <div class="video-date">📅 Upload date: TBC</div>
       </div>
     </div>
     <div class="video-card reveal">
       <div class="video-thumb" onclick="alert('Add your YouTube or video link here via the Admin panel')">
-        <div class="play-btn">â¶</div>
+        <div class="play-btn">▶</div>
       </div>
       <div class="video-body">
         <h4>Sample: Scholarship Awards Day</h4>
         <p>Presentation of IPA scholarships to deserving students in Igbere. Upload your real video via the Admin panel.</p>
-        <div class="video-date">ð Upload date: TBC</div>
+        <div class="video-date">📅 Upload date: TBC</div>
       </div>
     </div>
   </div>
@@ -476,7 +474,7 @@
 <!-- CTA BAND -->
 <div class="cta-band">
   <h2>Be Part of the Change</h2>
-  <p>Every member's contribution â in time, skills, or dues â makes projects like these possible. Join IPA UK & Ireland and help us do more.</p>
+  <p>Every member's contribution — in time, skills, or dues — makes projects like these possible. Join IPA UK & Ireland and help us do more.</p>
   <div class="cta-buttons">
     <a href="ipa-membership.html" class="btn-primary">Become a Member</a>
     <a href="index.html#contact" class="btn-outline">Make a Donation</a>
@@ -494,7 +492,7 @@
           <div class="footer-tagline">Igbere Progressive Association</div>
         </div>
       </div>
-      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland â supporting one another and investing back into the community we love.</p>
+      <p class="footer-desc">Uniting Igbere sons and daughters across the UK and Ireland — supporting one another and investing back into the community we love.</p>
     </div>
     <div class="footer-col">
       <h4>Quick Links</h4>
@@ -511,13 +509,13 @@
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <p class="footer-contact-item">âï¸ info@ipaukandireland.org</p>
-      <p class="footer-contact-item">ð www.ipaukandireland.org</p>
-      <p class="footer-contact-item">ð United Kingdom &amp; Ireland</p>
+      <p class="footer-contact-item">✉️ info@ipaukandireland.org</p>
+      <p class="footer-contact-item">🌐 www.ipaukandireland.org</p>
+      <p class="footer-contact-item">📍 United Kingdom &amp; Ireland</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">Â© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
+    <div class="footer-copy">© 2026 Igbere Progressive Association UK &amp; Ireland. All rights reserved.</div>
     <div class="footer-links">
       <a href="index.html">Home</a>
       <a href="ipa-membership.html">Membership</a>
