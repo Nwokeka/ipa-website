@@ -264,6 +264,23 @@
       margin: 2rem 0 1.2rem; padding-bottom: 0.6rem;
       border-bottom: 2px solid var(--gold);
     }
+    .doc-filter-btn {
+      background: #fff; border: 1.5px solid #ddd4c8; border-radius: 20px;
+      padding: 0.4rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      transition: all 0.15s; color: var(--text-mid);
+    }
+    .doc-filter-btn.active, .doc-filter-btn:hover {
+      background: var(--green-deep); color: #fff; border-color: var(--green-deep);
+    }
+    .portal-doc-row {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem; background: #fff; border-radius: 10px;
+      margin-bottom: 0.6rem; border: 1.5px solid #e8dece;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04); flex-wrap: wrap;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .portal-doc-row:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
     .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.4rem; margin-bottom: 1rem; }
     .doc-card {
       background: #fff; border: 1.5px solid #e8dece; border-radius: 10px;
@@ -593,94 +610,21 @@
       <!-- ── DOCUMENTS ── -->
       <div class="tab-panel" id="tab-documents">
         <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Members only</p>
-        <h1 class="page-title">Documents & Downloads</h1>
+        <h1 class="page-title">Documents &amp; Downloads</h1>
         <div class="gold-rule"></div>
 
-        <div class="doc-section-header">📜 Governing Documents</div>
-        <div class="doc-grid">
-          <div class="doc-card">
-            <div class="doc-card-top">
-              <div class="doc-icon">📜</div>
-              <span class="doc-tag gold">Foundation</span>
-            </div>
-            <h4>IPA UK & Ireland Constitution</h4>
-            <p>The founding constitution outlining the objectives, governance structure, and the rights and obligations of all members of the Association.</p>
-            <div class="doc-meta"><span>📅 Ratified 2023</span><span>📄 PDF</span></div>
-            <a href="constitution.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top">
-              <div class="doc-icon">📋</div>
-              <span class="doc-tag">Rules</span>
-            </div>
-            <h4>Standing Orders & Bye-Laws</h4>
-            <p>Supplementary rules governing the conduct of meetings, financial management, disciplinary procedures and day-to-day operations.</p>
-            <div class="doc-meta"><span>📅 Updated 2024</span><span>📄 PDF</span></div>
-            <a href="standing-orders.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+          <button id="docFilterAll" class="doc-filter-btn active" onclick="filterDocs('all',this)">📂 All</button>
+          <button id="docFilterConstitution" class="doc-filter-btn" onclick="filterDocs('constitution',this)">📜 Constitution</button>
+          <button id="docFilterMinutes" class="doc-filter-btn" onclick="filterDocs('minutes',this)">📝 Minutes</button>
+          <button id="docFilterFinancial" class="doc-filter-btn" onclick="filterDocs('financial',this)">💷 Financial</button>
+          <button id="docFilterOther" class="doc-filter-btn" onclick="filterDocs('other',this)">📄 Other</button>
         </div>
 
-        <div class="doc-section-header">📝 Meeting Minutes</div>
-        <div class="doc-grid">
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag gold">Latest</span></div>
-            <h4>AGM Minutes — January 2026</h4>
-            <p>Minutes from the Annual General Meeting including elections, financial report, project updates and all resolutions passed.</p>
-            <div class="doc-meta"><span>📅 January 2026</span><span>📄 PDF</span></div>
-            <a href="minutes/agm-jan-2026.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
-            <h4>Meeting Minutes — October 2025</h4>
-            <p>General meeting minutes covering community project updates, welfare matters and financial statements.</p>
-            <div class="doc-meta"><span>📅 October 2025</span><span>📄 PDF</span></div>
-            <a href="minutes/gm-oct-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
-            <h4>Meeting Minutes — July 2025</h4>
-            <p>Minutes including welfare fund discussions, back-home project approvals and member updates.</p>
-            <div class="doc-meta"><span>📅 July 2025</span><span>📄 PDF</span></div>
-            <a href="minutes/gm-jul-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">AGM</span></div>
-            <h4>AGM Minutes — January 2025</h4>
-            <p>Annual General Meeting including financial report, constitutional amendments and committee elections.</p>
-            <div class="doc-meta"><span>📅 January 2025</span><span>📄 PDF</span></div>
-            <a href="minutes/agm-jan-2025.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
-            <h4>Meeting Minutes — October 2024</h4>
-            <p>Emergency welfare motions, treasurer's report and community project voting.</p>
-            <div class="doc-meta"><span>📅 October 2024</span><span>📄 PDF</span></div>
-            <a href="minutes/gm-oct-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📝</div><span class="doc-tag">GM</span></div>
-            <h4>Meeting Minutes — July 2024</h4>
-            <p>Project funding proposals, welfare fund review and updates from the back-home committee.</p>
-            <div class="doc-meta"><span>📅 July 2024</span><span>📄 PDF</span></div>
-            <a href="minutes/gm-jul-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
-          </div>
-        </div>
-
-        <div class="doc-section-header">📊 Financial Reports</div>
-        <div class="doc-grid">
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📊</div><span class="doc-tag gold">Finance</span></div>
-            <h4>Annual Financial Report 2025</h4>
-            <p>Full financial report for 2025: income, expenditure, project spending and the current state of all funds.</p>
-            <div class="doc-meta"><span>📅 Year 2025</span><span>📄 PDF</span></div>
-            <a href="finance/annual-report-2025.pdf" download class="doc-dl-btn gold">⬇ Download PDF</a>
-          </div>
-          <div class="doc-card">
-            <div class="doc-card-top"><div class="doc-icon">📊</div><span class="doc-tag">Finance</span></div>
-            <h4>Annual Financial Report 2024</h4>
-            <p>Full financial report for 2024 including project spending, member contributions and year-end balances.</p>
-            <div class="doc-meta"><span>📅 Year 2024</span><span>📄 PDF</span></div>
-            <a href="finance/annual-report-2024.pdf" download class="doc-dl-btn">⬇ Download PDF</a>
+        <div id="portalDocsList">
+          <div style="text-align:center;padding:3rem;color:var(--text-light);">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
+            <p>Loading documents…</p>
           </div>
         </div>
       </div>
@@ -1078,6 +1022,92 @@
       msg.style.color = '#c03900';
       msg.textContent = '❌ Connection error. Please try again or contact the secretary.';
     });
+  }
+
+  // ── PORTAL DOCUMENTS ──
+  const API_BASE = 'https://ipa-api.ipaukandireland.workers.dev';
+  let _portalDocs = [];
+  let _activeDocFilter = 'all';
+
+  const DOC_CAT_ICONS_P  = { constitution: '📜', minutes: '📝', financial: '💷', other: '📄' };
+  const DOC_CAT_LABELS_P = { constitution: 'Constitution', minutes: 'Meeting Minutes', financial: 'Financial', other: 'Other' };
+
+  async function loadPortalDocuments() {
+    try {
+      const r = await fetch(API_BASE + '/api/documents');
+      const data = await r.json();
+      _portalDocs = Array.isArray(data) ? data : [];
+    } catch(e) { _portalDocs = []; }
+    renderPortalDocs();
+  }
+
+  function filterDocs(cat, btn) {
+    _activeDocFilter = cat;
+    document.querySelectorAll('.doc-filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderPortalDocs();
+  }
+
+  function renderPortalDocs() {
+    const container = document.getElementById('portalDocsList');
+    if (!container) return;
+    const list = _activeDocFilter === 'all' ? _portalDocs : _portalDocs.filter(d => d.category === _activeDocFilter);
+    const sorted = [...list].sort((a,b) => new Date(b.date) - new Date(a.date));
+    if (!sorted.length) {
+      container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-light);"><div style="font-size:2rem;margin-bottom:0.5rem;">📂</div><p>No documents in this category yet.</p></div>';
+      return;
+    }
+    container.innerHTML = sorted.map(d => `
+      <div class="portal-doc-row">
+        <div style="font-size:2rem;flex-shrink:0;">${DOC_CAT_ICONS_P[d.category]||'📄'}</div>
+        <div style="flex:1;min-width:180px;">
+          <div style="font-weight:700;color:var(--green-deep);font-size:0.95rem;">${escHtml(d.title)}</div>
+          <div style="font-size:0.78rem;color:#888;margin-top:0.2rem;">${DOC_CAT_LABELS_P[d.category]||'Other'} · ${d.date} · ${d.size||''}</div>
+          ${d.description ? '<div style="font-size:0.82rem;color:#666;margin-top:0.25rem;">'+escHtml(d.description)+'</div>' : ''}
+        </div>
+        <button onclick="downloadPortalDoc('${d.id}','${escHtml(d.filename)}')" style="background:var(--green-deep);color:#fff;border:none;border-radius:6px;padding:0.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">⬇ Download</button>
+      </div>`).join('');
+  }
+
+  function escHtml(str) {
+    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  async function downloadPortalDoc(id, filename) {
+    const btn = event.target;
+    btn.textContent = 'Loading…'; btn.disabled = true;
+    try {
+      const r = await fetch(API_BASE + '/api/documents/' + id + '/download');
+      const res = await r.json();
+      if (res.data) {
+        const byteChars = atob(res.data);
+        const bytes = new Uint8Array(byteChars.length);
+        for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+        const blob = new Blob([bytes], { type: res.mimeType || 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename || 'document.pdf';
+        a.click(); URL.revokeObjectURL(url);
+      } else {
+        alert('Could not download this document. Please try again.');
+      }
+    } catch(e) { alert('Download failed. Please try again.'); }
+    btn.textContent = '⬇ Download'; btn.disabled = false;
+  }
+
+  // Auto-load documents when portal opens or documents tab is clicked
+  document.querySelectorAll('[onclick*="documents"]').forEach(btn => {
+    btn.addEventListener('click', function() { loadPortalDocuments(); });
+  });
+  // Also load documents when the portal is entered (initial login)
+  const _origEnterPortal = enterPortal;
+  enterPortal = function(email) {
+    _origEnterPortal(email);
+    loadPortalDocuments();
+  };
+  // If already logged in, load now
+  if (sessionStorage.getItem('ipaPortalAuth') === 'true') {
+    loadPortalDocuments();
   }
 </script>
 
