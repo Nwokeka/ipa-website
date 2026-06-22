@@ -277,6 +277,67 @@ export default {
       }
     }
 
+    // ── GET ALL DOCUMENTS ──
+    if (path === '/api/documents' && request.method === 'GET') {
+      try {
+        const raw = await env.IPA_DATA.get('documents');
+        const docs = raw ? JSON.parse(raw) : [];
+        // Return metadata only (no file content) for listing
+        const meta = docs.map(d => ({ id: d.id, title: d.title, category: d.category, date: d.date, description: d.description, filename: d.filename, size: d.size }));
+        return new Response(JSON.stringify(meta), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
+    // ── DOWNLOAD A DOCUMENT (returns base64 data) ──
+    if (path.startsWith('/api/documents/') && path.endsWith('/download') && request.method === 'GET') {
+      try {
+        const id = path.split('/')[3];
+        const raw = await env.IPA_DATA.get('documents');
+        const docs = raw ? JSON.parse(raw) : [];
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return new Response(JSON.stringify({ error: 'Document not found' }), { status: 404, headers: CORS });
+        return new Response(JSON.stringify({ success: true, data: doc.data, filename: doc.filename, mimeType: doc.mimeType || 'application/pdf' }), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
+    // ── UPLOAD A DOCUMENT ──
+    if (path === '/api/documents' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const { title, category, date, description, filename, data, mimeType } = body;
+        if (!title || !data || !filename) {
+          return new Response(JSON.stringify({ success: false, error: 'title, filename and data are required.' }), { status: 400, headers: CORS });
+        }
+        const raw = await env.IPA_DATA.get('documents');
+        const docs = raw ? JSON.parse(raw) : [];
+        const id = 'DOC-' + Date.now();
+        const sizekb = Math.round((data.length * 0.75) / 1024);
+        docs.push({ id, title, category: category || 'other', date: date || new Date().toISOString().slice(0,10), description: description || '', filename, data, mimeType: mimeType || 'application/pdf', size: sizekb + ' KB', uploadedAt: new Date().toISOString() });
+        await env.IPA_DATA.put('documents', JSON.stringify(docs));
+        return new Response(JSON.stringify({ success: true, id }), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
+    // ── DELETE A DOCUMENT ──
+    if (path.startsWith('/api/documents/') && request.method === 'DELETE') {
+      try {
+        const id = path.split('/')[3];
+        const raw = await env.IPA_DATA.get('documents');
+        let docs = raw ? JSON.parse(raw) : [];
+        docs = docs.filter(d => d.id !== id);
+        await env.IPA_DATA.put('documents', JSON.stringify(docs));
+        return new Response(JSON.stringify({ success: true }), { status: 200, headers: CORS });
+      } catch(e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+      }
+    }
+
     return new Response(JSON.stringify({ error: 'Not found', path }), { status: 404, headers: CORS });
   }
 };
