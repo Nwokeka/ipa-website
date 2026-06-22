@@ -517,6 +517,9 @@
         <a href="ipa-membership.html" class="sidebar-link">
           <span class="s-icon">🌿</span> Membership Form
         </a>
+        <button class="sidebar-link" onclick="showTab('changepw', this)">
+          <span class="s-icon">🔑</span> Change Password
+        </button>
       </nav>
       <div class="sidebar-bottom">
         <button class="logout-btn" onclick="doLogout()">🚪 Sign Out</button>
@@ -928,6 +931,34 @@
         </div>
       </div>
 
+      <!-- ── CHANGE PASSWORD ── -->
+      <div class="tab-panel" id="tab-changepw">
+        <p class="page-sub" style="font-size:0.8rem; color:var(--text-light); margin-bottom:0.3rem;">Account Settings</p>
+        <h1 class="page-title">Change Your Password</h1>
+        <div class="gold-rule"></div>
+        <div style="max-width:480px; background:#fff; border-radius:14px; padding:2rem; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-top:1.5rem;">
+          <h3 style="font-family:'Playfair Display',serif; color:var(--green-deep); margin-bottom:0.5rem;">🔑 Set a New Password</h3>
+          <p style="font-size:0.85rem; color:#888; margin-bottom:1.5rem;">You can change the password assigned to you by the admin to one you prefer. Your new password must be at least 8 characters long.</p>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:#555; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.05em;">Current Password</label>
+            <input type="password" id="cpwCurrent" placeholder="Enter your current password" style="width:100%; border:1.5px solid #ddd4c8; border-radius:8px; padding:0.75rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;"/>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:#555; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.05em;">New Password</label>
+            <input type="password" id="cpwNew" placeholder="Choose a new password (min 8 chars)" style="width:100%; border:1.5px solid #ddd4c8; border-radius:8px; padding:0.75rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;"/>
+          </div>
+          <div style="margin-bottom:1.5rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:#555; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.05em;">Confirm New Password</label>
+            <input type="password" id="cpwConfirm" placeholder="Repeat your new password" style="width:100%; border:1.5px solid #ddd4c8; border-radius:8px; padding:0.75rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;"/>
+          </div>
+          <button onclick="changeMemberPassword()" style="background:var(--green-deep); color:#fff; border:none; border-radius:8px; padding:0.85rem 2rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; width:100%;">Update My Password →</button>
+          <div id="cpwMsg" style="margin-top:1rem; font-size:0.85rem; display:none;"></div>
+        </div>
+        <div style="max-width:480px; background:#f7f5f0; border-radius:10px; padding:1.2rem 1.5rem; margin-top:1.5rem; border:1px solid #e8e0d0;">
+          <p style="font-size:0.82rem; color:#777; margin:0;">💡 <strong>Forgotten your password?</strong> Contact the secretary at <a href="mailto:info@ipaukandireland.org" style="color:var(--green-deep);">info@ipaukandireland.org</a> to have it reset.</p>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -987,6 +1018,66 @@
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
     document.getElementById('tab-' + id).classList.add('active');
     if (btn) btn.classList.add('active');
+  }
+
+  // ── CHANGE MEMBER PASSWORD ──
+  // Passwords are managed by the backend API per-member.
+  // This function calls the API to update the logged-in member's password.
+  function changeMemberPassword() {
+    const current = document.getElementById('cpwCurrent').value;
+    const newPw   = document.getElementById('cpwNew').value;
+    const confirm = document.getElementById('cpwConfirm').value;
+    const msg     = document.getElementById('cpwMsg');
+
+    msg.style.display = 'none';
+
+    if (!current) {
+      msg.style.display = 'block';
+      msg.style.color = '#c03900';
+      msg.textContent = '❌ Please enter your current password.';
+      return;
+    }
+    if (newPw.length < 8) {
+      msg.style.display = 'block';
+      msg.style.color = '#c03900';
+      msg.textContent = '❌ New password must be at least 8 characters long.';
+      return;
+    }
+    if (newPw !== confirm) {
+      msg.style.display = 'block';
+      msg.style.color = '#c03900';
+      msg.textContent = '❌ New passwords do not match. Please try again.';
+      return;
+    }
+
+    const email = sessionStorage.getItem('ipaPortalEmail') || '';
+    const API_BASE = 'https://ipa-api.ipaukandireland.workers.dev';
+
+    fetch(API_BASE + '/api/members/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, currentPassword: current, newPassword: newPw })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        msg.style.display = 'block';
+        msg.style.color = '#1a7a4a';
+        msg.textContent = '✅ Password updated successfully! Please use your new password next time you sign in.';
+        document.getElementById('cpwCurrent').value = '';
+        document.getElementById('cpwNew').value = '';
+        document.getElementById('cpwConfirm').value = '';
+      } else {
+        msg.style.display = 'block';
+        msg.style.color = '#c03900';
+        msg.textContent = '❌ ' + (res.error || 'Could not update password. Please check your current password and try again.');
+      }
+    })
+    .catch(function() {
+      msg.style.display = 'block';
+      msg.style.color = '#c03900';
+      msg.textContent = '❌ Connection error. Please try again or contact the secretary.';
+    });
   }
 </script>
 
